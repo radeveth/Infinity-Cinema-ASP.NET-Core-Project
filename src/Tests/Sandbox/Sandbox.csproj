@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435" PrivateAssets="all">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\InfinityCinema.Common\InfinityCinema.Common.csproj" />
+    <ProjectReference Include="..\..\Data\InfinityCinema.Data.Common\InfinityCinema.Data.Common.csproj" />
+    <ProjectReference Include="..\..\Data\InfinityCinema.Data.Models\InfinityCinema.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Data\InfinityCinema.Data\InfinityCinema.Data.csproj" />
+    <ProjectReference Include="..\..\Services\InfinityCinema.Services.Data\InfinityCinema.Services.Data.csproj" />
+    <ProjectReference Include="..\..\Services\InfinityCinema.Services.Mapping\InfinityCinema.Services.Mapping.csproj" />
+    <ProjectReference Include="..\..\Services\InfinityCinema.Services.Messaging\InfinityCinema.Services.Messaging.csproj" />
+    <ProjectReference Include="..\..\Services\InfinityCinema.Services\InfinityCinema.Services.csproj" />
+  </ItemGroup>
+
+</Project>

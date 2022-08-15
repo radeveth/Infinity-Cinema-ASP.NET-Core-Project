@@ -7,22 +7,47 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Data.Common.Models;
+    using InfinityCinema.Data.Configurations;
+    using InfinityCinema.Data.Migrations;
     using InfinityCinema.Data.Models;
 
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Migrations;
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
+    public class InfinityCinemaDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         private static readonly MethodInfo SetIsDeletedQueryFilterMethod =
-            typeof(ApplicationDbContext).GetMethod(
+            typeof(InfinityCinemaDbContext).GetMethod(
                 nameof(SetIsDeletedQueryFilter),
                 BindingFlags.NonPublic | BindingFlags.Static);
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public InfinityCinemaDbContext(DbContextOptions<InfinityCinemaDbContext> options)
             : base(options)
         {
         }
+
+        public DbSet<Actor> Actors { get; set; }
+
+        public DbSet<Genre> Genres { get; set; }
+
+        public DbSet<Language> Languages { get; set; }
+
+        public DbSet<Movie> Movies { get; set; }
+
+        public DbSet<MovieActor> MovieActors { get; set; }
+
+        public DbSet<MovieComment> MovieComments { get; set; }
+
+        public DbSet<MovieGenre> MovieGenres { get; set; }
+
+        public DbSet<MovieLanguage> MovieLanguages { get; set; }
+
+        public DbSet<MoviePlatform> MoviePlatform { get; set; }
+
+        public DbSet<Platform> Platforms { get; set; }
+
+        public DbSet<StarRating> StarRatings { get; set; }
 
         public DbSet<Setting> Settings { get; set; }
 
@@ -47,6 +72,18 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfiguration(new ActorConfiguration());
+            builder.ApplyConfiguration(new ApplicationUserConfiguration());
+            builder.ApplyConfiguration(new GenreConfiguration());
+            builder.ApplyConfiguration(new LanguageConfiguration());
+            builder.ApplyConfiguration(new MovieActorConfiguration());
+            builder.ApplyConfiguration(new MovieCommentConfiguration());
+            builder.ApplyConfiguration(new MovieConfiguration());
+            builder.ApplyConfiguration(new MovieGenreConfiguration());
+            builder.ApplyConfiguration(new MovieLanguageConfiguration());
+            builder.ApplyConfiguration(new MoviePlatformConfiguration());
+            builder.ApplyConfiguration(new PlatformConfiguration());
+
             // Needed for Identity models configuration
             base.OnModelCreating(builder);
 

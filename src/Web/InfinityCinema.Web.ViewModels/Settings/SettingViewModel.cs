@@ -1,9 +1,8 @@
 ﻿namespace InfinityCinema.Web.ViewModels.Settings
 {
+    using AutoMapper;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Mapping;
-
-    using AutoMapper;
 
     public class SettingViewModel : IMapFrom<Setting>, IHaveCustomMappings
     {

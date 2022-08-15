@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InfinityCinema.Data.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(InfinityCinemaDbContext))]
     [Migration("20220607060115_InitialCreate")]
     partial class InitialCreate
     {

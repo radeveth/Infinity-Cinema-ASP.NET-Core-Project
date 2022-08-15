@@ -5,6 +5,7 @@
     using System.IO;
     using System.Threading.Tasks;
 
+    using CommandLine;
     using InfinityCinema.Data;
     using InfinityCinema.Data.Common;
     using InfinityCinema.Data.Common.Repositories;
@@ -13,9 +14,6 @@
     using InfinityCinema.Data.Seeding;
     using InfinityCinema.Services.Data;
     using InfinityCinema.Services.Messaging;
-
-    using CommandLine;
-
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +31,7 @@
             // Seed data on application startup
             using (var serviceScope = serviceProvider.CreateScope())
             {
-                var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var dbContext = serviceScope.ServiceProvider.GetRequiredService<InfinityCinemaDbContext>();
                 dbContext.Database.Migrate();
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
             }
@@ -68,12 +66,12 @@
 
             services.AddSingleton<IConfiguration>(configuration);
 
-            services.AddDbContext<ApplicationDbContext>(
+            services.AddDbContext<InfinityCinemaDbContext>(
                 options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
                     .UseLoggerFactory(new LoggerFactory()));
 
             services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
-                .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddRoles<ApplicationRole>().AddEntityFrameworkStores<InfinityCinemaDbContext>();
 
             services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));

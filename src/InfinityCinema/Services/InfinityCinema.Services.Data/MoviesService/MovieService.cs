@@ -17,21 +17,22 @@
 
         public string CreateMovie(MovieFormModel movieModel)
         {
-            Movie movie = new Movie()
-            {
-                Name = movieModel.Name,
-                DateOfReleased = movieModel.DateOfReleased,
-                Resolution = movieModel.Resolution,
-                Description = movieModel.Description,
-                TrailerPath = movieModel.TrailerPath,
-                ImageUrl = movieModel.ImageUrl,
-                Duration = TimeSpan.Parse(movieModel.Duration),
-            };
+            // DirectorMovie movie = new DirectorMovie()
+            // {
+            //    Name = movieModel.Name,
+            //    DateOfReleased = movieModel.DateOfReleased,
+            //    Resolution = movieModel.Resolution,
+            //    Description = movieModel.Description,
+            //    TrailerPath = movieModel.TrailerPath,
+            //    ImageUrl = movieModel.ImageUrl,
+            //    Duration = TimeSpan.Parse(movieModel.Duration),
+            // };
 
-            this.dbContext.Movies.Add(movie);
-            this.dbContext.SaveChanges();
+            // this.dbContext.Movies.Add(movie);
+            // this.dbContext.SaveChanges();
 
-            return $"Move {movie.Name} was successfully added!";
+            // return $"Move {movie.Name} was successfully added!";
+            return null;
         }
     }
 }

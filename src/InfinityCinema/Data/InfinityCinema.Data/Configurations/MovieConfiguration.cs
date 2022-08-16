@@ -37,6 +37,21 @@
                 .HasMany(m => m.Comments)
                 .WithOne(r => r.Movie)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            movieBuilder
+                .HasMany(m => m.Images)
+                .WithOne(i => i.Movie)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            movieBuilder
+                .HasMany(m => m.DirectorMovies)
+                .WithOne(d => d.Movie)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            movieBuilder
+                .HasMany(m => m.MovieCountries)
+                .WithOne(m => m.Movie)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

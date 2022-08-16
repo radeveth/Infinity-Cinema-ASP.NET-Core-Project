@@ -27,7 +27,15 @@
 
         public DbSet<Actor> Actors { get; set; }
 
+        public DbSet<Country> Countries { get; set; }
+
+        public DbSet<Director> Directors { get; set; }
+
+        public DbSet<DirectorMovie> DirectorMovies { get; set; }
+
         public DbSet<Genre> Genres { get; set; }
+
+        public DbSet<Image> Images { get; set; }
 
         public DbSet<Language> Languages { get; set; }
 
@@ -36,6 +44,8 @@
         public DbSet<MovieActor> MovieActors { get; set; }
 
         public DbSet<MovieComment> MovieComments { get; set; }
+
+        public DbSet<MovieCountry> MovieCountries { get; set; }
 
         public DbSet<MovieGenre> MovieGenres { get; set; }
 
@@ -72,11 +82,14 @@
         {
             builder.ApplyConfiguration(new ActorConfiguration());
             builder.ApplyConfiguration(new ApplicationUserConfiguration());
+            builder.ApplyConfiguration(new DirectorConfiguration());
+            builder.ApplyConfiguration(new DirectorMovieConfiguration());
             builder.ApplyConfiguration(new GenreConfiguration());
             builder.ApplyConfiguration(new LanguageConfiguration());
             builder.ApplyConfiguration(new MovieActorConfiguration());
             builder.ApplyConfiguration(new MovieCommentConfiguration());
             builder.ApplyConfiguration(new MovieConfiguration());
+            builder.ApplyConfiguration(new MovieCountryConfiguration());
             builder.ApplyConfiguration(new MovieGenreConfiguration());
             builder.ApplyConfiguration(new MovieLanguageConfiguration());
             builder.ApplyConfiguration(new MoviePlatformConfiguration());

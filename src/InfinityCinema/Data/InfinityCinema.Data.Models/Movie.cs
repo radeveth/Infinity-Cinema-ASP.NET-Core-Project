@@ -13,10 +13,13 @@
     {
         public Movie()
         {
+            this.Images = new HashSet<Image>();
             this.MovieGenres = new HashSet<MovieGenre>();
             this.MovieActors = new HashSet<MovieActor>();
+            this.DirectorMovies = new HashSet<DirectorMovie>();
             this.MoviePlatforms = new HashSet<MoviePlatform>();
             this.MovieLanguages = new HashSet<MovieLanguage>();
+            this.MovieCountries = new HashSet<MovieCountry>();
             this.StarRatings = new HashSet<StarRating>();
             this.Comments = new HashSet<MovieComment>();
         }
@@ -39,17 +42,19 @@
         public string TrailerPath { get; set; }
 
         [Required]
-        [MaxLength(ImageUrlMaxLength)]
-        public string ImageUrl { get; set; }
-
-        [Required]
         public TimeSpan Duration { get; set; }
+
+        public virtual ICollection<Image> Images { get; set; }
 
         public virtual ICollection<MovieGenre> MovieGenres { get; set; }
 
         public virtual ICollection<MovieActor> MovieActors { get; set; }
 
+        public virtual ICollection<DirectorMovie> DirectorMovies { get; set; }
+
         public virtual ICollection<MoviePlatform> MoviePlatforms { get; set; }
+
+        public virtual ICollection<MovieCountry> MovieCountries { get; set; }
 
         public virtual ICollection<MovieLanguage> MovieLanguages { get; set; }
 

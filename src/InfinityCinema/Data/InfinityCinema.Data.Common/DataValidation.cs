@@ -13,8 +13,6 @@
 
             public const int TrailerPathMaxLength = 2048;
 
-            public const int ImageUrlMaxLength = 2048;
-
             public const int DurationAsStringMinLength = 5;
             public const int DurationAsStringMaxLength = 50;
         }
@@ -60,6 +58,23 @@
         public class ApplicationUserValidation
         {
             public const int FullNameMaxLength = 120;
+        }
+
+        public class ImageValidation
+        {
+            public const int UrlMaxLength = 2048;
+        }
+
+        public class DirectorValidation
+        {
+            public const int FirstNameMaxLength = 60;
+            public const int LastNameMaxLength = 60;
+        }
+
+        public class CountryValidation
+        {
+            public const int NameMaxLength = 60;
+            public const int AbbreviationMaxLength = 10;
         }
     }
 }

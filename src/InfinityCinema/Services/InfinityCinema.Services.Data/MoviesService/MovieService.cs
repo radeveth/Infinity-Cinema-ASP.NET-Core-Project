@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
@@ -15,7 +16,7 @@
             this.dbContext = dbContext;
         }
 
-        public string CreateMovie(MovieFormModel movieModel)
+        public Task<string> CreateMovie(CreateMovieFormModel movieModel)
         {
             // DirectorMovie movie = new DirectorMovie()
             // {

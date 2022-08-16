@@ -1,4 +1,5 @@
-﻿@model MovieFormModel
+﻿@using InfinityCinema.Services.Data.BaseLogicService
+@model BaseLogicFormModel
 
 @{
     ViewData["Title"] = "Create Movie";
@@ -9,7 +10,7 @@
         <h2 class="heading-margin text-center">@ViewBag.Title</h2>
 
         <form method="post" class="fw-bold">
-            <div class="form-group form-margin">
+            @*<div class="form-group form-margin">
                 <label asp-for="Name"></label>
                 <input asp-for="Name" class="form-control" placeholder="Movie Name">
                 <span asp-validation-for="Name" class="small text-danger"></span>
@@ -39,11 +40,6 @@
                 <input asp-for="TrailerPath" class="form-control" placeholder="Film Trailer path">
                 <span asp-validation-for="TrailerPath" class="small text-danger"></span>
             </div>
-            @*<div class="form-group form-margin">
-                <label asp-for="ImageUrl"></label>
-                <input asp-for="ImageUrl" class="form-control" placeholder="Random Image url of particular film">
-                <span asp-validation-for="ImageUrl" class="small text-danger"></span>
-            </div>*@
             <div class="form-group form-margin">
                 <label asp-for="Duration"></label>
                 <input asp-for="Duration" class="form-control" placeholder="@DateTime.UtcNow.Year">
@@ -53,10 +49,25 @@
                 <label asp-for="Language"></label>
                 <input asp-for="Language" class="form-control" placeholder="English, Spanish, etc...">
                 <span asp-validation-for="Language" class="small text-danger"></span>
-            </div>
+            </div>*@
+            @*<div class="form-group form-margin" id="imagesContainer">
+                <label asp-for="Images"></label>
+                <button class="btn btn-success" onclick="AddImage()">Add</button>
+            </div>*@
 
             <input class="btn btn-primary mt-3 float-end" type="submit" value="Next Step" />
 
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        var imagesIndex = 0;
+        function AddImage() {
+            console.log(imagesIndex);
+            $("#imagesContainer").append("<div><input type='text' name='Images[" + imagesIndex + "].Url' class='form - control' placeholder='Random Image url of particular film'> <span asp-validation-for='Images["+imagesIndex+"].Url' class='small text - danger'></span></div>");
+            imagesIndex++;
+        }
+    </script>
+}

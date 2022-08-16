@@ -1,7 +1,9 @@
 ﻿namespace InfinityCinema.Services.Data.MoviesService
 {
+    using System.Threading.Tasks;
+
     public interface IMovieService
     {
-        string CreateMovie(MovieFormModel movie);
+        Task<string> CreateMovie(CreateMovieFormModel movie);
     }
 }

@@ -67,13 +67,21 @@
 
         public class DirectorValidation
         {
+            public const int FirstNameMinLength = 2;
             public const int FirstNameMaxLength = 60;
+
+            public const int LastNameMinLength = 2;
             public const int LastNameMaxLength = 60;
+
+            public const int FullNameMinLength = FirstNameMinLength + LastNameMinLength;
+            public const int FullNameMaxLength = FirstNameMaxLength + LastNameMaxLength;
         }
 
         public class CountryValidation
         {
+            public const int NameMinLength = 2;
             public const int NameMaxLength = 60;
+
             public const int AbbreviationMaxLength = 10;
         }
     }

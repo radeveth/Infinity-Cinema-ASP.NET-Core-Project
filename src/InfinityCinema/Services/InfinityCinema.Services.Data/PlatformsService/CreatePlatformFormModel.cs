@@ -4,7 +4,7 @@
 
     using static InfinityCinema.Data.Common.DataValidation.PlatformValidation;
 
-    public class PlatformFormModel
+    public class CreatePlatformFormModel
     {
         private const string NameErrorMessage = "The Platform Name field should be between {2} and {1} characters.";
         private const string SitePathMaxLengthErrorMessage = "The Site Path cannot be more than {1} symbols.";

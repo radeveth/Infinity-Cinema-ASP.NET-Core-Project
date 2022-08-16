@@ -1,6 +1,8 @@
 ﻿namespace InfinityCinema.Services.Data.MoviesService
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
@@ -9,14 +11,15 @@
 
     using static InfinityCinema.Data.Common.DataValidation;
 
-    public class MovieFormModel
+    public class CreateMovieFormModel
     {
         private const string MovieNameErrorMessage = "The Mouvie Name field should be between {2} and {1} characters.";
         private const string DateOfReleasedMaxValueErrorMessage = "The Date of Released field should be between {0} and {1}.";
         private const string TrailerPathMaxLengthErrorMessage = "The Trailer Path cannot be more than {1} symbols.";
-        private const string ImageUrlMaxLengthErrorMessage = "The Image Url cannot be more than {1} symbols.";
         private const string DurationLengthErrorMessage = "The Duration field should be between {2} and {1} characters.";
         private const string LanguageMaxLengthErrorMessage = "The Language field must be smaller than {1}";
+        private const string DirectorFullNameLengthErrorMessage = "The Director Name field should be between {2} and {1} characters.";
+        private const string CountryNameLengthErrorMessage = "The Country Name field should be between {2} and {1} characters.";
         private DateTime dateOfReleased = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
 
         [Required]
@@ -44,16 +47,19 @@
         [StringLength(MovieValidation.TrailerPathMaxLength, ErrorMessage = TrailerPathMaxLengthErrorMessage)]
         public string TrailerPath { get; set; }
 
-        // [Url]
-        // [Required]
-        // [Display(Name = "Image Url")]
-        // [StringLength(MovieValidation.ImageUrlMaxLength, ErrorMessage = ImageUrlMaxLengthErrorMessage)]
-        // public string ImageUrl { get; set; }
         [Required]
         [StringLength(MovieValidation.DurationAsStringMaxLength, MinimumLength = MovieValidation.DurationAsStringMinLength, ErrorMessage = DurationLengthErrorMessage)]
         public string Duration { get; set; } // Can be with TimeSpan type
 
+        [Required]
+        [StringLength(DirectorValidation.FullNameMaxLength, MinimumLength = DirectorValidation.FullNameMinLength, ErrorMessage = DirectorFullNameLengthErrorMessage)]
+        public string Director { get; set; }
+
         [StringLength(LanguageValidation.NameMaxLength, ErrorMessage = LanguageMaxLengthErrorMessage)]
         public string Language { get; set; }
+
+        [Required]
+        [StringLength(CountryValidation.NameMaxLength, MinimumLength = CountryValidation.NameMinLength, ErrorMessage = CountryNameLengthErrorMessage)]
+        public string Country { get; set; }
     }
 }

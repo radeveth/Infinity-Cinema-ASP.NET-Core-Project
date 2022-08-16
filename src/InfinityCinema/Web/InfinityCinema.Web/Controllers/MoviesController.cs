@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Web.Controllers
 {
+    using InfinityCinema.Services.Data.BaseLogicService;
     using InfinityCinema.Services.Data.MoviesService;
     using Microsoft.AspNetCore.Mvc;
 
@@ -14,20 +15,21 @@
 
         public IActionResult Create()
         {
-            return this.View(new MovieFormModel());
+            return this.View(new BaseLogicFormModel());
         }
 
         [HttpPost]
-        public IActionResult Create(MovieFormModel movieModel)
+        public IActionResult Create(BaseLogicFormModel movieModel)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View(movieModel);
             }
 
-            string result = this.movieService.CreateMovie(movieModel);
+            // string result = this.movieService.CreateMovie(movieModel);
 
-            return this.Json(result);
+            // return this.Json(result);
+            return null;
         }
     }
 }

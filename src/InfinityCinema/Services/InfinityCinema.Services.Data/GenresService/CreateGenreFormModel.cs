@@ -4,7 +4,7 @@
 
     using static InfinityCinema.Data.Common.DataValidation.GenreValidation;
 
-    public class GenreFormModel
+    public class CreateGenreFormModel
     {
         private const string ImageUrlMaxLengthErrorMessage = "The Genre Image Url cannot be more than {1} symbols.";
         private const string NameLengthErrorMessage = "The Genre Name field should be between {2} and {1} characters.";

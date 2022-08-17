@@ -5,7 +5,7 @@
 
     public class PlatformService : IPlatformService
     {
-        public Task<string> CreateAsync(CreatePlatformFormModel platformFormModel)
+        public Task<string> CreateAsync(PlatformFormModel platformFormModel)
         {
             throw new NotImplementedException();
         }

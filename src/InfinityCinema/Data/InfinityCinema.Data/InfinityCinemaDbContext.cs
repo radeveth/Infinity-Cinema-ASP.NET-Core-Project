@@ -31,8 +31,6 @@
 
         public DbSet<Director> Directors { get; set; }
 
-        public DbSet<DirectorMovie> DirectorMovies { get; set; }
-
         public DbSet<Genre> Genres { get; set; }
 
         public DbSet<Image> Images { get; set; }
@@ -83,7 +81,6 @@
             builder.ApplyConfiguration(new ActorConfiguration());
             builder.ApplyConfiguration(new ApplicationUserConfiguration());
             builder.ApplyConfiguration(new DirectorConfiguration());
-            builder.ApplyConfiguration(new DirectorMovieConfiguration());
             builder.ApplyConfiguration(new GenreConfiguration());
             builder.ApplyConfiguration(new LanguageConfiguration());
             builder.ApplyConfiguration(new MovieActorConfiguration());

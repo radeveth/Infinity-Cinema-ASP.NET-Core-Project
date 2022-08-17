@@ -4,6 +4,6 @@
 
     public interface IPlatformService
     {
-        Task<string> CreateAsync(CreatePlatformFormModel platformFormModel);
+        Task<string> CreateAsync(PlatformFormModel platformFormModel);
     }
 }

@@ -1,0 +1,40 @@
+{
+  "env": {
+    "browser": true,
+    "es2020": true
+  },
+
+  "extends": ["airbnb-base"],
+
+  "settings": {
+    "import/resolver": "webpack"
+  },
+
+  "globals": {
+    "VirtualSelect": "readonly",
+    "PopoverComponent": "readonly"
+  },
+
+  "parserOptions": {
+    "sourceType": "module"
+  },
+
+  "rules": {
+    "import/prefer-default-export": "off",
+    "quote-props": ["error", "consistent"],
+    "operator-linebreak": ["error", "after", { "overrides": { "?": "before", ":": "before" } }],
+    "radix": ["error", "as-needed"],
+    "max-len": [
+      "error",
+      {
+        "code": 120
+      }
+    ],
+    "object-curly-newline": [
+      "error",
+      {
+        "ObjectPattern": { "multiline": true }
+      }
+    ]
+  }
+}

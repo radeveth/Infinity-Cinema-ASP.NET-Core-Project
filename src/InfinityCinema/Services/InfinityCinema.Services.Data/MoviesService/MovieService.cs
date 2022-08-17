@@ -16,7 +16,7 @@
             this.dbContext = dbContext;
         }
 
-        public Task<string> CreateMovie(CreateMovieFormModel movieModel)
+        public Task<string> CreateMovie(MovieFormModel movieModel)
         {
             // DirectorMovie movie = new DirectorMovie()
             // {

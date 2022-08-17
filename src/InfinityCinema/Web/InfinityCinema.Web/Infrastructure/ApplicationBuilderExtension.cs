@@ -1,6 +1,5 @@
 ﻿namespace InfinityCinema.Web.Infrastructure
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -49,6 +48,7 @@
             };
 
             data.Genres.AddRange(genres);
+            data.SaveChanges();
         }
     }
 }

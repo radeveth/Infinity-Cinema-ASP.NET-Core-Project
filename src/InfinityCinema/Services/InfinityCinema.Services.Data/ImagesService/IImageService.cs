@@ -4,6 +4,6 @@
 
     public interface IImageService
     {
-        Task<string> CreateAsync(AddImageFormModel imageFormModel);
+        Task<string> CreateAsync(ImageFormModel imageFormModel);
     }
 }

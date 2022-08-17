@@ -5,7 +5,7 @@
 
     public class ActorService : IActorService
     {
-        public Task<string> CreateAsync(CreateActorFormModel actorFprmModel)
+        public Task<string> CreateAsync(ActorFormModel actorFprmModel)
         {
             throw new NotImplementedException();
         }

@@ -12,7 +12,7 @@
     {
         public Director()
         {
-            this.DirectorMovies = new HashSet<DirectorMovie>();
+            this.Movies = new HashSet<Movie>();
         }
 
         [Required]
@@ -23,6 +23,6 @@
         [MaxLength(LastNameMaxLength)]
         public string LastName { get; set; }
 
-        public virtual ICollection<DirectorMovie> DirectorMovies { get; set; }
+        public virtual ICollection<Movie> Movies { get; set; }
     }
 }

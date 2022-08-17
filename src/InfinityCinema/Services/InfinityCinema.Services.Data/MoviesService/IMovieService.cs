@@ -4,6 +4,6 @@
 
     public interface IMovieService
     {
-        Task<string> CreateMovie(CreateMovieFormModel movie);
+        Task<string> CreateMovie(MovieFormModel movie);
     }
 }

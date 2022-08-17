@@ -4,6 +4,6 @@
 
     public interface IActorService
     {
-        Task<string> CreateAsync(CreateActorFormModel actorFprmModel);
+        Task<string> CreateAsync(ActorFormModel actorFprmModel);
     }
 }

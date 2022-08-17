@@ -44,8 +44,9 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             movieBuilder
-                .HasMany(m => m.DirectorMovies)
-                .WithOne(d => d.Movie)
+                .HasOne(m => m.Director)
+                .WithMany(d => d.Movies)
+                .HasForeignKey(m => m.DirectorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             movieBuilder

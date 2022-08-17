@@ -16,7 +16,6 @@
             this.Images = new HashSet<Image>();
             this.MovieGenres = new HashSet<MovieGenre>();
             this.MovieActors = new HashSet<MovieActor>();
-            this.DirectorMovies = new HashSet<DirectorMovie>();
             this.MoviePlatforms = new HashSet<MoviePlatform>();
             this.MovieLanguages = new HashSet<MovieLanguage>();
             this.MovieCountries = new HashSet<MovieCountry>();
@@ -44,13 +43,16 @@
         [Required]
         public TimeSpan Duration { get; set; }
 
+        [Required]
+        public virtual int DirectorId { get; set; }
+
+        public virtual Director Director { get; set; }
+
         public virtual ICollection<Image> Images { get; set; }
 
         public virtual ICollection<MovieGenre> MovieGenres { get; set; }
 
         public virtual ICollection<MovieActor> MovieActors { get; set; }
-
-        public virtual ICollection<DirectorMovie> DirectorMovies { get; set; }
 
         public virtual ICollection<MoviePlatform> MoviePlatforms { get; set; }
 

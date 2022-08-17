@@ -5,7 +5,7 @@
 
     public class ImageService : IImageService
     {
-        public Task<string> CreateAsync(AddImageFormModel imageFormModel)
+        public Task<string> CreateAsync(ImageFormModel imageFormModel)
         {
             throw new NotImplementedException();
         }

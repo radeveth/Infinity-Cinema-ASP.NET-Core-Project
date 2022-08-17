@@ -9,7 +9,7 @@
         public void Configure(EntityTypeBuilder<Director> directorBuilder)
         {
             directorBuilder
-                .HasMany(d => d.DirectorMovies)
+                .HasMany(d => d.Movies)
                 .WithOne(d => d.Director)
                 .OnDelete(DeleteBehavior.Restrict);
         }

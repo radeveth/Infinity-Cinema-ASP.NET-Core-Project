@@ -12,6 +12,7 @@
     using InfinityCinema.Services.Data.SettingsService;
     using InfinityCinema.Services.Mapping;
     using InfinityCinema.Services.Messaging;
+    using InfinityCinema.Web.Infrastructure;
     using InfinityCinema.Web.ViewModels;
 
     using Microsoft.AspNetCore.Builder;
@@ -91,6 +92,8 @@
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            app.PrepaerDatabase();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

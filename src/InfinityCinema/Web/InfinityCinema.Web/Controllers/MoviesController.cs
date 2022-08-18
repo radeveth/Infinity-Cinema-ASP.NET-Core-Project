@@ -3,6 +3,7 @@
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.MoviesService;
     using Microsoft.AspNetCore.Mvc;
+    using System;
 
     public class MoviesController : BaseController
     {
@@ -17,20 +18,23 @@
 
         public IActionResult Create()
         {
-            var movieFormModel = new MovieFormModel()
-            {
-                Genres = this.genreService.GetMovieGenres(),
-            };
-
-            return this.View(new CreateMovieServiceModel() { OverallMovieInformation = movieFormModel });
+            return this.View(new CreateMovieServiceModel() { OverallMovieInformation = CreateInitializateOfinitialization(new MovieFormModel(), this.genreService) });
         }
 
         [HttpPost]
         public IActionResult Create(CreateMovieServiceModel movieModel)
         {
+            var isGenreExist = this.genreService.IsGenresExists(movieModel.OverallMovieInformation.GenresId);
+
+            if (!isGenreExist)
+            {
+                this.ModelState.AddModelError(string.Empty, "One of given genre does not exist");
+            }
+
             if (!this.ModelState.IsValid)
             {
-                return this.View(movieModel);
+                return this.View(new CreateMovieServiceModel()
+                    { OverallMovieInformation = CreateInitializateOfinitialization(new MovieFormModel(), this.genreService) });
             }
 
             // string result = this.movieService.CreateMovie(movieModel);
@@ -38,5 +42,11 @@
             // return this.Json(result);
             return null;
         }
+
+        private static MovieFormModel CreateInitializateOfinitialization(MovieFormModel movieFormModel, IGenreService genreService)
+            => new MovieFormModel()
+                {
+                    Genres = genreService.GetMovieGenres(),
+                };
     }
 }

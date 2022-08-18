@@ -13,5 +13,7 @@
         [Display(Name = "Image Url")]
         [StringLength(UrlMaxLength, ErrorMessage = ImageUrlMaxLengthErrorMessage)]
         public string ImageUrl { get; set; }
+
+        public int MovieId { get; set; }
     }
 }

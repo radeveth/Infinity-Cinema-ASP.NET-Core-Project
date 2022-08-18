@@ -6,7 +6,6 @@
 
     public class GenreFormModel
     {
-        private const string ImageUrlMaxLengthErrorMessage = "The Genre Image Url cannot be more than {1} symbols.";
         private const string NameLengthErrorMessage = "The Genre Name field should be between {2} and {1} characters.";
 
         public int Id { get; set; }
@@ -15,6 +14,7 @@
         [StringLength(NameMaxLength, MinimumLength = NameMinLength, ErrorMessage = NameLengthErrorMessage)]
         public string Name { get; set; }
 
+        // private const string ImageUrlMaxLengthErrorMessage = "The Genre Image Url cannot be more than {1} symbols.";
         // [Display(Name = "Genre Image")]
         // [StringLength(ImageUrlMaxLength, ErrorMessage = ImageUrlMaxLengthErrorMessage)]
         // public string GenreImaqgeUrl { get; set; }

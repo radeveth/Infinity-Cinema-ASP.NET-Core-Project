@@ -44,7 +44,6 @@
                 new Genre() { Name = "Romance", ImageUrl = "https://previews.123rf.com/images/pedrolieb/pedrolieb1210/pedrolieb121000028/16084913-clap-film-of-cinema-romance-genre-clapperboard-text-illustration-.jpg" },
                 new Genre() { Name = "Thriller", ImageUrl = "https://previews.123rf.com/images/pedrolieb/pedrolieb1210/pedrolieb121000031/16084898-clap-film-of-cinema-thriller-genre-clapperboard-text-illustration-.jpg" },
                 new Genre() { Name = "Western", ImageUrl = "https://previews.123rf.com/images/pedrolieb/pedrolieb1210/pedrolieb121000032/16084902-clap-film-of-cinema-western-genre-clapperboard-text-illustration-.jpg" },
-
             };
 
             data.Genres.AddRange(genres);

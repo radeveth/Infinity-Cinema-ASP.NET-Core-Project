@@ -8,8 +8,6 @@
     {
         private const string DirectorFullNameLengthErrorMessage = "The Director Name field should be between {2} and {1} characters.";
 
-        public int Id { get; set; }
-
         [Required]
         [StringLength(FullNameMaxLength, MinimumLength = FullNameMinLength, ErrorMessage = DirectorFullNameLengthErrorMessage)]
         public string FullName { get; set; }

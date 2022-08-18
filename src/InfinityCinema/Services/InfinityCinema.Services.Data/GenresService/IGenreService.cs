@@ -3,10 +3,14 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using InfinityCinema.Data.Models;
+
     public interface IGenreService
     {
-        Task<string> CreateAsync(GenreFormModel genreFormModel);
+        Task<Genre> CreateAsync(GenreFormModel genreFormModel);
 
         IEnumerable<GenreFormModel> GetMovieGenres();
+
+        bool IsGenresExists(ICollection<int> ids);
     }
 }

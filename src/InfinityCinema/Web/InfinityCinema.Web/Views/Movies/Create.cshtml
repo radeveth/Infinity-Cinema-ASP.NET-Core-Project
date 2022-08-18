@@ -4,80 +4,169 @@
     ViewData["Title"] = "Create Movie";
 }
 
+<div class="image-fliud" style="background-image: url(https://images.pexels.com/photos/3945321/pexels-photo-3945321.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);">
+    <div>
+        <br />
+        <h2 class="heading-margin text-center" style="">@ViewBag.Title</h2>
 
-@*<--Movie Form Model!-->*@
-<div class="row">
-    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-        <h2 class="heading-margin text-center">@ViewBag.Title</h2>
+        <div class="row">
+            <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+                <form method="post" class="fw-bold">
+                    <div id="form-container">
 
-        <form method="post" class="fw-bold">
-            <div class="form-group form-margin">
-                <label asp-for="OverallMovieInformation.Name"></label>
-                <input asp-for="OverallMovieInformation.Name" class="form-control" placeholder="Movie Name">
-                <span asp-validation-for="OverallMovieInformation.Name" class="small text-danger"></span>
-            </div>
-            <div class="form-group form-margin">
-                <label asp-for="OverallMovieInformation.GenresId"></label>
-                <select asp-for="OverallMovieInformation.GenresId" class="form-control" multiple data-search="false" data-silent-initial-value-set="true">
-                    @foreach (var genre in Model.OverallMovieInformation.Genres)
-                    {
-                        <option value="@genre.Id">@genre.Name</option>
-                    }
-                </select>
-                <span asp-validation-for="OverallMovieInformation.GenresId" class="small text-danger"></span>
-            </div>
-            <div class="form-group form-margin">
-                <label asp-for="OverallMovieInformation.DateOfReleased"></label>
-                <input asp-for="OverallMovieInformation.DateOfReleased" class="form-control" placeholder="@DateTime.UtcNow.Year">
-                <span asp-validation-for="OverallMovieInformation.DateOfReleased" class="small text-danger"></span>
-            </div>
-            <div class="form-margin"></div>
-            <div class="form-group">
-                <label asp-for="OverallMovieInformation.Resolution" class="form-label"></label>
-                <select asp-for="OverallMovieInformation.Resolution" class="form-control">
-                    <option value="0">Unknown</option>
-                    <option value="1" selected>HD</option>
-                    <option value="2">SD</option>
-                    <option value="3">4K</option>
-                </select>
-            </div>
-            <div class="form-group form-margin">
-                <label asp-for="OverallMovieInformation.Description"></label>
-                <textarea asp-for="OverallMovieInformation.Description" rows="4" class="form-control" placeholder=""></textarea>
-                <span asp-validation-for="OverallMovieInformation.Description" class="small text-danger"></span>
-            </div>
-            <div class="form-group form-margin">
-                <label asp-for="OverallMovieInformation.TrailerPath"></label>
-                <input asp-for="OverallMovieInformation.TrailerPath" class="form-control" placeholder="Film Trailer path">
-                <span asp-validation-for="OverallMovieInformation.TrailerPath" class="small text-danger"></span>
-            </div>
-            <div class="form-group form-margin">
-                <label asp-for="OverallMovieInformation.Duration"></label>
-                <input asp-for="OverallMovieInformation.Duration" class="form-control" placeholder="@DateTime.UtcNow.Year">
-                <span asp-validation-for="OverallMovieInformation.Duration" class="small text-danger"></span>
-            </div>
-            <div class="form-group form-margin">
-                <label asp-for="OverallMovieInformation.Language"></label>
-                <input asp-for="OverallMovieInformation.Language" class="form-control" placeholder="English, Spanish, etc...">
-                <span asp-validation-for="OverallMovieInformation.Language" class="small text-danger"></span>
-            </div>
-            <div class="form-group form-margin" id="imagesContainer">
-                <label asp-for="Images"></label>
-                <a class="btn btn-primary rounded-pill" onclick="AddImages()">Add</a>
-            </div>
+                        <!--Movie Form Model-->
+                        <div id="movie-form-model">
+                            <div class="form-group form-margin">
+                                <label asp-for="OverallMovieInformation.Name"></label>
+                                <input asp-for="OverallMovieInformation.Name" class="form-control" placeholder="Movie Name">
+                                <span asp-validation-for="OverallMovieInformation.Name" class="small text-danger"></span>
+                            </div>
+                            <div class="form-group form-margin">
+                                <label asp-for="OverallMovieInformation.GenresId"></label>
+                                <select asp-for="OverallMovieInformation.GenresId" class="form-control multiple" data-search="false" data-silent-initial-value-set="true">
+                                    @foreach (var genre in Model.OverallMovieInformation.Genres)
+                                    {
+                                        <option value="@genre.Id">@genre.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="OverallMovieInformation.GenresId" class="small text-danger"></span>
+                            </div>
+                            <div class="form-group form-margin">
+                                <label asp-for="OverallMovieInformation.DateOfReleased"></label>
+                                <input asp-for="OverallMovieInformation.DateOfReleased" class="form-control" placeholder="@DateTime.UtcNow.Year">
+                                <span asp-validation-for="OverallMovieInformation.DateOfReleased" class="small text-danger"></span>
+                            </div>
+                            <div class="form-margin"></div>
+                            <div class="form-group">
+                                <label asp-for="OverallMovieInformation.Resolution" class="form-label"></label>
+                                <select asp-for="OverallMovieInformation.Resolution" class="form-control">
+                                    <option value="0">Unknown</option>
+                                    <option value="1" selected>HD</option>
+                                    <option value="2">SD</option>
+                                    <option value="3">4K</option>
+                                </select>
+                            </div>
+                            <div class="form-group form-margin">
+                                <label asp-for="OverallMovieInformation.Description"></label>
+                                <textarea asp-for="OverallMovieInformation.Description" rows="4" class="form-control" placeholder=""></textarea>
+                                <span asp-validation-for="OverallMovieInformation.Description" class="small text-danger"></span>
+                            </div>
+                            <div class="form-group form-margin">
+                                <label asp-for="OverallMovieInformation.TrailerPath"></label>
+                                <input asp-for="OverallMovieInformation.TrailerPath" class="form-control" placeholder="Film Trailer path">
+                                <span asp-validation-for="OverallMovieInformation.TrailerPath" class="small text-danger"></span>
+                            </div>
+                            <div class="form-group form-margin">
+                                <label asp-for="OverallMovieInformation.Duration"></label>
+                                <input asp-for="OverallMovieInformation.Duration" class="form-control" placeholder="@DateTime.UtcNow.Year">
+                                <span asp-validation-for="OverallMovieInformation.Duration" class="small text-danger"></span>
+                            </div>
+                            <div class="form-group form-margin mb-1">
+                                <label asp-for="OverallMovieInformation.Language"></label>
+                                <input asp-for="OverallMovieInformation.Language" class="form-control" placeholder="English, Spanish, etc...">
+                                <span asp-validation-for="OverallMovieInformation.Language" class="small text-danger"></span>
+                            </div>
+                            <input class="btn btn-primary rounded-pill float-end" type="submit" value="Next Step" id="next-step-btn" />
+                        </div>
 
-            <input class="btn btn-primary mt-3 float-end" type="submit" value="Next Step" />
+                        <!--Image, Actor, Pltform Form Model-->
+                        <div id="image-actor-platform-form-model" class="d-none">
+                            <div class="form-group form-margin" id="images-form-model">
+                                <label asp-for="Images"></label>
+                                <input class="btn btn-primary rounded-pill" type="submit" value="Add Image" id="add-image-btn" />
+                            </div>
 
-        </form>
+                            <div class="form-group form-margin" id="actors-form-model">
+                                <label asp-for="Actors"></label>
+                                <input class="btn btn-primary rounded-pill" type="submit" value="Add Actor" id="add-actor-btn" />
+                            </div>
+
+                            <div class="form-group form-margin" id="platforms-form-model">
+                                <label asp-for="Platforms"></label>
+                                <input class="btn btn-primary rounded-pill" type="submit" value="Add Platform" id="add-platform-btn">
+                            </div>
+
+                            <input class="btn btn-primary rounded-pill float-start" type="submit" value="Previous Step" id="previous-step-btn" />
+                        </div>
+
+
+                        <input class="btn btn-primary mt-3 float-end mb-4 d-none" type="submit" value="Create" id="create-movie-btn" />
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
+
 @section Scripts {
     <script>
+        // Form Models Elements
+        let movieFormModelElement = document.getElementById('movie-form-model');
+        let imageActorPlatformFormModelElement = document.getElementById('image-actor-platform-form-model');
+
+        // Buttons Elements
+        let nextStepMovieButtonElement = document.getElementById('next-step-btn');
+        let prviousStepMovieButtonElement = document.getElementById('previous-step-btn');
+        let createMovieButtonElement = document.getElementById('create-movie-btn');
+
+        nextStepMovieButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            movieFormModelElement.classList.add('d-none');
+            imageActorPlatformFormModelElement.classList.remove('d-none');
+
+            createMovieButtonElement.classList.remove('d-none');
+        });
+
+        prviousStepMovieButtonElement.addEventListener('clcik', (e) => {
+            e.preventDefault();
+
+            createMovieButtonElement.classList.add('d-none');
+
+            movieFormModelElement.classList.remove('d-none');
+            imageActorPlatformFormModelElement.classList.add('d-none');
+        });
+
+    </script>
+
+    <script>
+        // Images
+        let addImageButtonElement = document.getElementById('add-image-btn');
+
         var imagesIndex = 0;
-        function AddImages() {
-            $("#imagesContainer").append("<div class='form-control'>Image Url: <input type='text' name='Images["+imagesIndex+"].Url' class='form-control' placeholder='Random Image url of particular film'> </div>");
+        addImageButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            $('#images-form-model').append("Image Url: <input name='Images[" + imagesIndex + "].ImageUrl' class='form-control' placeholder='Random Image url of particular film'>");
             imagesIndex++;
+        });
+
+        // Actors
+        let addActorButtonElement = document.getElementById('add-actor-btn');
+
+        var actorsIndex = 0;
+        addActorButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            $('#actors-form-model').append("First Name: <input name='Actors[" + actorsIndex + "].FirstName' class='form-control' placeholder='Actor First Name'>");
+            $('#actors-form-model').append("Last Name: <input name='Actors[" + actorsIndex + "].LastName' class='form-control' placeholder='Actor Last Name'>");
+            actorsIndex++;
+        });
+
+        // Platforms
+        let addPlatformButtonElement = document.getElementById('add-platform-btn');
+        console.log(addPlatformButtonElement);
+
+        var platformsIndex = 0;
+        addPlatformButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            $('#platforms-form-model').append("Name: <input name='Platforms[" + platformsIndex + "].Name' class='form-control' placeholder='Platform Name'>");
+            $('#platforms-form-model').append("Path Url: <input name='Platforms[" + platformsIndex + "].PathUrl' class='form-control' placeholder='Pltform Path Url'>");
+            $('#platforms-form-model').append("Icon Url: <input name='Platforms[" + platformsIndex + "].IconUrl' class='form-control' placeholder='Platform Image Url'>");
+            platformsIndex++;
+        });
     </script>
 
     @*<script>

@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Data;
+    using InfinityCinema.Data.Models;
 
     public class GenreService : IGenreService
     {
@@ -15,7 +16,7 @@
             this.dbContext = dbContext;
         }
 
-        public Task<string> CreateAsync(GenreFormModel genreFormModel)
+        public Task<Genre> CreateAsync(GenreFormModel genreFormModel)
         {
             throw new System.NotImplementedException();
         }
@@ -29,5 +30,9 @@
                     Name = g.Name,
                 })
                 .ToList();
+
+        public bool IsGenresExists(ICollection<int> ids)
+            => ids.Any(id => this.dbContext.Genres
+                .Any(g => g.Id == id));
     }
 }

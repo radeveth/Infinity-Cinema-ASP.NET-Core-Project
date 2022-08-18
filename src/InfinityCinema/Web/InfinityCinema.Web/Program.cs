@@ -8,6 +8,7 @@
     using InfinityCinema.Data.Models;
     using InfinityCinema.Data.Repositories;
     using InfinityCinema.Data.Seeding;
+    using InfinityCinema.Services.Data.DirectorsService;
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.MoviesService;
     using InfinityCinema.Services.Data.SettingsService;
@@ -69,6 +70,7 @@
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IGenreService, GenreService>();
+            services.AddTransient<IDirectorService, DirectorService>();
             services.AddTransient<IMovieService, MovieService>();
         }
 

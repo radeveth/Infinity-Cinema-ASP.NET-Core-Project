@@ -2,8 +2,10 @@
 {
     using System.Threading.Tasks;
 
+    using InfinityCinema.Data.Models;
+
     public interface IImageService
     {
-        Task<string> CreateAsync(ImageFormModel imageFormModel);
+        Task<Image> CreateAsync(ImageFormModel imageFormModel);
     }
 }

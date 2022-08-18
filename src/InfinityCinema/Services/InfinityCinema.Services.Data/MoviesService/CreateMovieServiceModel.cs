@@ -13,9 +13,7 @@
 
         public IEnumerable<ImageFormModel> Images { get; set; }
 
-        public ActorFormModel Actors { get; set; }
-
-        public IEnumerable<GenreFormModel> Genres { get; set; }
+        public IEnumerable<ActorFormModel> Actors { get; set; }
 
         public IEnumerable<PlatformFormModel> Platforms { get; set; }
     }

@@ -17,5 +17,10 @@
         public int MovieId { get; set; }
 
         public Movie Movie { get; set; }
+
+        [ForeignKey(nameof(ApplicationUser))]
+        public string UserId { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
     }
 }

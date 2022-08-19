@@ -13,7 +13,6 @@
 
             public const int TrailerPathMaxLength = 2048;
 
-            public const int DurationAsStringMinLength = 5;
             public const int DurationAsStringMaxLength = 50;
         }
 

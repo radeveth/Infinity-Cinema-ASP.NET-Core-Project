@@ -50,8 +50,9 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             movieBuilder
-                .HasMany(m => m.MovieCountries)
-                .WithOne(m => m.Movie)
+                .HasOne(m => m.Country)
+                .WithMany(c => c.Movies)
+                .HasForeignKey(m => m.CountryId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

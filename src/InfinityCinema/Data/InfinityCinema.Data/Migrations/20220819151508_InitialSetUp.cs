@@ -78,24 +78,6 @@ namespace InfinityCinema.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Countries",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
-                    Abbreviation = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Countries", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Directors",
                 columns: table => new
                 {
@@ -293,6 +275,30 @@ namespace InfinityCinema.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Countries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    Abbreviation = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Countries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Countries_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Movies",
                 columns: table => new
                 {
@@ -303,8 +309,10 @@ namespace InfinityCinema.Data.Migrations
                     Resolution = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     TrailerPath = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
-                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Duration = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DirectorId = table.Column<int>(type: "int", nullable: false),
+                    CountryId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -313,6 +321,17 @@ namespace InfinityCinema.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Movies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Movies_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Movies_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Movies_Directors_DirectorId",
                         column: x => x.DirectorId,
@@ -379,6 +398,7 @@ namespace InfinityCinema.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: false),
                     MovieId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -388,33 +408,12 @@ namespace InfinityCinema.Data.Migrations
                 {
                     table.PrimaryKey("PK_MovieComments", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_MovieComments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_MovieComments_Movies_MovieId",
-                        column: x => x.MovieId,
-                        principalTable: "Movies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MovieCountries",
-                columns: table => new
-                {
-                    MovieId = table.Column<int>(type: "int", nullable: false),
-                    CountryId = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MovieCountries", x => new { x.MovieId, x.CountryId });
-                    table.ForeignKey(
-                        name: "FK_MovieCountries_Countries_CountryId",
-                        column: x => x.CountryId,
-                        principalTable: "Countries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_MovieCountries_Movies_MovieId",
                         column: x => x.MovieId,
                         principalTable: "Movies",
                         principalColumn: "Id",
@@ -578,6 +577,11 @@ namespace InfinityCinema.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Countries_ApplicationUserId",
+                table: "Countries",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Countries_IsDeleted",
                 table: "Countries",
                 column: "IsDeleted");
@@ -628,14 +632,9 @@ namespace InfinityCinema.Data.Migrations
                 column: "MovieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MovieCountries_CountryId",
-                table: "MovieCountries",
-                column: "CountryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MovieCountries_IsDeleted",
-                table: "MovieCountries",
-                column: "IsDeleted");
+                name: "IX_MovieComments_UserId",
+                table: "MovieComments",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MovieGenres_GenreId",
@@ -668,6 +667,11 @@ namespace InfinityCinema.Data.Migrations
                 column: "PlatformId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Movies_CountryId",
+                table: "Movies",
+                column: "CountryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Movies_DirectorId",
                 table: "Movies",
                 column: "DirectorId");
@@ -676,6 +680,11 @@ namespace InfinityCinema.Data.Migrations
                 name: "IX_Movies_IsDeleted",
                 table: "Movies",
                 column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Movies_UserId",
+                table: "Movies",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Platforms_IsDeleted",
@@ -725,9 +734,6 @@ namespace InfinityCinema.Data.Migrations
                 name: "MovieComments");
 
             migrationBuilder.DropTable(
-                name: "MovieCountries");
-
-            migrationBuilder.DropTable(
                 name: "MovieGenres");
 
             migrationBuilder.DropTable(
@@ -746,13 +752,7 @@ namespace InfinityCinema.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Actors");
-
-            migrationBuilder.DropTable(
-                name: "Countries");
 
             migrationBuilder.DropTable(
                 name: "Genres");
@@ -767,7 +767,13 @@ namespace InfinityCinema.Data.Migrations
                 name: "Movies");
 
             migrationBuilder.DropTable(
+                name: "Countries");
+
+            migrationBuilder.DropTable(
                 name: "Directors");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

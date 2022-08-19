@@ -43,8 +43,6 @@
 
         public DbSet<MovieComment> MovieComments { get; set; }
 
-        public DbSet<MovieCountry> MovieCountries { get; set; }
-
         public DbSet<MovieGenre> MovieGenres { get; set; }
 
         public DbSet<MovieLanguage> MovieLanguages { get; set; }
@@ -80,13 +78,13 @@
         {
             builder.ApplyConfiguration(new ActorConfiguration());
             builder.ApplyConfiguration(new ApplicationUserConfiguration());
+            builder.ApplyConfiguration(new CountryConfiguration());
             builder.ApplyConfiguration(new DirectorConfiguration());
             builder.ApplyConfiguration(new GenreConfiguration());
             builder.ApplyConfiguration(new LanguageConfiguration());
             builder.ApplyConfiguration(new MovieActorConfiguration());
             builder.ApplyConfiguration(new MovieCommentConfiguration());
             builder.ApplyConfiguration(new MovieConfiguration());
-            builder.ApplyConfiguration(new MovieCountryConfiguration());
             builder.ApplyConfiguration(new MovieGenreConfiguration());
             builder.ApplyConfiguration(new MovieLanguageConfiguration());
             builder.ApplyConfiguration(new MoviePlatformConfiguration());

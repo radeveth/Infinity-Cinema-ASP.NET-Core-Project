@@ -8,9 +8,13 @@
     using InfinityCinema.Data.Models;
     using InfinityCinema.Data.Repositories;
     using InfinityCinema.Data.Seeding;
+    using InfinityCinema.Services.Data.ActorsService;
+    using InfinityCinema.Services.Data.CountriesService;
     using InfinityCinema.Services.Data.DirectorsService;
     using InfinityCinema.Services.Data.GenresService;
+    using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.MoviesService;
+    using InfinityCinema.Services.Data.PlatformsService;
     using InfinityCinema.Services.Data.SettingsService;
     using InfinityCinema.Services.Mapping;
     using InfinityCinema.Services.Messaging;
@@ -71,7 +75,12 @@
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IGenreService, GenreService>();
             services.AddTransient<IDirectorService, DirectorService>();
+            services.AddTransient<IImageService, ImageService>();
+            services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IMovieService, MovieService>();
+            services.AddTransient<IActorService, ActorService>();
+            services.AddTransient<IPlatformService, PlatformService>();
+
         }
 
         private static void Configure(WebApplication app)

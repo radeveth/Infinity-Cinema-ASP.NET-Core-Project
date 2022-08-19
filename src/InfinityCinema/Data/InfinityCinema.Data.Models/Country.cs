@@ -11,7 +11,7 @@
     {
         public Country()
         {
-            this.MovieCountries = new HashSet<MovieCountry>();
+            this.Movies = new HashSet<Movie>();
         }
 
         [Required]
@@ -22,6 +22,6 @@
         [MaxLength(AbbreviationMaxLength)]
         public string Abbreviation { get; set; }
 
-        public virtual ICollection<MovieCountry> MovieCountries { get; set; }
+        public virtual ICollection<Movie> Movies { get; set; }
     }
 }

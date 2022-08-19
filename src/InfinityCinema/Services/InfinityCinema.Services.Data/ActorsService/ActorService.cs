@@ -3,11 +3,30 @@
     using System;
     using System.Threading.Tasks;
 
+    using InfinityCinema.Data;
+    using InfinityCinema.Data.Models;
+
     public class ActorService : IActorService
     {
-        public Task<string> CreateAsync(ActorFormModel actorFprmModel)
+        private readonly InfinityCinemaDbContext dbContext;
+
+        public ActorService(InfinityCinemaDbContext dbContext)
         {
-            throw new NotImplementedException();
+            this.dbContext = dbContext;
+        }
+
+        public async Task<Actor> CreateAsync(ActorFormModel actorFormModel)
+        {
+            Actor actor = new Actor()
+            {
+                FirstName = actorFormModel.FirstName,
+                LastName = actorFormModel.LastName,
+            };
+
+            await this.dbContext.Actors.AddAsync(actor);
+            await this.dbContext.SaveChangesAsync();
+
+            return actor;
         }
     }
 }

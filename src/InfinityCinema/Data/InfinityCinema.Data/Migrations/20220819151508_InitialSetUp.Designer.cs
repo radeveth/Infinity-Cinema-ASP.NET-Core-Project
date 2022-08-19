@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfinityCinema.Data.Migrations
 {
     [DbContext(typeof(InfinityCinemaDbContext))]
-    [Migration("20220817143442_InitialSetUp")]
+    [Migration("20220819151508_InitialSetUp")]
     partial class InitialSetUp
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -202,6 +202,9 @@ namespace InfinityCinema.Data.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
@@ -220,6 +223,8 @@ namespace InfinityCinema.Data.Migrations
                         .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("IsDeleted");
 
@@ -381,6 +386,9 @@ namespace InfinityCinema.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
@@ -398,8 +406,10 @@ namespace InfinityCinema.Data.Migrations
                     b.Property<int>("DirectorId")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan>("Duration")
-                        .HasColumnType("time");
+                    b.Property<string>("Duration")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -419,11 +429,18 @@ namespace InfinityCinema.Data.Migrations
                         .HasMaxLength(2048)
                         .HasColumnType("nvarchar(2048)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("DirectorId");
 
                     b.HasIndex("IsDeleted");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Movies");
                 });
@@ -479,36 +496,18 @@ namespace InfinityCinema.Data.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IsDeleted");
 
                     b.HasIndex("MovieId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("MovieComments");
-                });
-
-            modelBuilder.Entity("InfinityCinema.Data.Models.MovieCountry", b =>
-                {
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CountryId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.HasKey("MovieId", "CountryId");
-
-                    b.HasIndex("CountryId");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.ToTable("MovieCountries");
                 });
 
             modelBuilder.Entity("InfinityCinema.Data.Models.MovieGenre", b =>
@@ -796,6 +795,13 @@ namespace InfinityCinema.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("InfinityCinema.Data.Models.Country", b =>
+                {
+                    b.HasOne("InfinityCinema.Data.Models.ApplicationUser", null)
+                        .WithMany("MoviesCreated")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
             modelBuilder.Entity("InfinityCinema.Data.Models.Image", b =>
                 {
                     b.HasOne("InfinityCinema.Data.Models.Movie", "Movie")
@@ -809,13 +815,27 @@ namespace InfinityCinema.Data.Migrations
 
             modelBuilder.Entity("InfinityCinema.Data.Models.Movie", b =>
                 {
+                    b.HasOne("InfinityCinema.Data.Models.Country", "Country")
+                        .WithMany("Movies")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("InfinityCinema.Data.Models.Director", "Director")
                         .WithMany("Movies")
                         .HasForeignKey("DirectorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("InfinityCinema.Data.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Country");
+
                     b.Navigation("Director");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("InfinityCinema.Data.Models.MovieActor", b =>
@@ -845,26 +865,13 @@ namespace InfinityCinema.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Movie");
-                });
-
-            modelBuilder.Entity("InfinityCinema.Data.Models.MovieCountry", b =>
-                {
-                    b.HasOne("InfinityCinema.Data.Models.Country", "Country")
-                        .WithMany("MovieCountries")
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("InfinityCinema.Data.Models.Movie", "Movie")
-                        .WithMany("MovieCountries")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Country");
+                    b.HasOne("InfinityCinema.Data.Models.ApplicationUser", "User")
+                        .WithMany("CommentsCreated")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Movie");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("InfinityCinema.Data.Models.MovieGenre", b =>
@@ -995,14 +1002,18 @@ namespace InfinityCinema.Data.Migrations
                 {
                     b.Navigation("Claims");
 
+                    b.Navigation("CommentsCreated");
+
                     b.Navigation("Logins");
+
+                    b.Navigation("MoviesCreated");
 
                     b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("InfinityCinema.Data.Models.Country", b =>
                 {
-                    b.Navigation("MovieCountries");
+                    b.Navigation("Movies");
                 });
 
             modelBuilder.Entity("InfinityCinema.Data.Models.Director", b =>
@@ -1027,8 +1038,6 @@ namespace InfinityCinema.Data.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("MovieActors");
-
-                    b.Navigation("MovieCountries");
 
                     b.Navigation("MovieGenres");
 

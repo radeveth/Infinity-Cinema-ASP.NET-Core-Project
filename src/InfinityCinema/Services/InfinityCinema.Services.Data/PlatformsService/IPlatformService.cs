@@ -2,8 +2,10 @@
 {
     using System.Threading.Tasks;
 
+    using InfinityCinema.Data.Models;
+
     public interface IPlatformService
     {
-        Task<string> CreateAsync(PlatformFormModel platformFormModel);
+        Task<Platform> CreateAsync(PlatformFormModel platformFormModel);
     }
 }

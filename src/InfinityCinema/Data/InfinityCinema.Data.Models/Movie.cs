@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     using InfinityCinema.Data.Common.Models;
     using InfinityCinema.Data.Models.Enums;
@@ -18,7 +19,6 @@
             this.MovieActors = new HashSet<MovieActor>();
             this.MoviePlatforms = new HashSet<MoviePlatform>();
             this.MovieLanguages = new HashSet<MovieLanguage>();
-            this.MovieCountries = new HashSet<MovieCountry>();
             this.StarRatings = new HashSet<StarRating>();
             this.Comments = new HashSet<MovieComment>();
         }
@@ -41,12 +41,23 @@
         public string TrailerPath { get; set; }
 
         [Required]
-        public TimeSpan Duration { get; set; }
+        [MaxLength(DurationAsStringMaxLength)]
+        public string Duration { get; set; }
 
         [Required]
         public virtual int DirectorId { get; set; }
 
         public virtual Director Director { get; set; }
+
+        [ForeignKey(nameof(Country))]
+        public int CountryId { get; set; }
+
+        public virtual Country Country { get; set; }
+
+        [ForeignKey(nameof(ApplicationUser))]
+        public string UserId { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
 
         public virtual ICollection<Image> Images { get; set; }
 
@@ -55,8 +66,6 @@
         public virtual ICollection<MovieActor> MovieActors { get; set; }
 
         public virtual ICollection<MoviePlatform> MoviePlatforms { get; set; }
-
-        public virtual ICollection<MovieCountry> MovieCountries { get; set; }
 
         public virtual ICollection<MovieLanguage> MovieLanguages { get; set; }
 

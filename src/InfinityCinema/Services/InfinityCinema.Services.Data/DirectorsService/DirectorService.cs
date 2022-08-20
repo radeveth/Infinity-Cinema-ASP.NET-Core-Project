@@ -19,10 +19,13 @@
 
         public async Task<int> GetDirectorIdAsync(DirectorFormModel directorFormModel)
         {
+            string[] directorNames = directorFormModel.FullName
+                .Split(" ", StringSplitOptions.RemoveEmptyEntries).ToArray();
+            string givenFirstName = directorNames[0];
+            string givenLastName = directorNames[1];
+
             Director director = this.dbContext.Directors
-                    .FirstOrDefault(d => $"{d.FirstName}{d.LastName}"
-                        .Replace(" ", string.Empty).ToLower() == directorFormModel.FullName
-                            .Replace(" ", string.Empty).ToLower());
+                    .FirstOrDefault(d => d.FirstName == givenFirstName && d.LastName == givenLastName);
 
             if (director == null)
             {

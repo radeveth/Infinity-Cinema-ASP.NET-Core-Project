@@ -7,5 +7,7 @@
     public interface IPlatformService
     {
         Task<Platform> CreateAsync(PlatformFormModel platformFormModel);
+
+        Platform GetPlatformByName(string platfrom);
     }
 }

@@ -13,6 +13,7 @@
     using InfinityCinema.Services.Data.CountriesService;
     using InfinityCinema.Services.Data.DirectorsService;
     using InfinityCinema.Services.Data.ImagesService;
+    using InfinityCinema.Services.Data.LanguagesService;
     using InfinityCinema.Services.Data.PlatformsService;
     using Microsoft.AspNetCore.Identity;
 
@@ -25,16 +26,17 @@
         private readonly ICountryService countryService;
         private readonly IActorService actorService;
         private readonly IPlatformService platformService;
+        private readonly ILanguageService languageService;
 
         private readonly UserManager<ApplicationUser> userManager;
 
-        public MovieService
-            (InfinityCinemaDbContext dbContext,
+        public MovieService(InfinityCinemaDbContext dbContext,
             IDirectorService directorService,
             IImageService imageService,
             ICountryService countryService,
             UserManager<ApplicationUser> userManager,
-            IPlatformService platformService)
+            IPlatformService platformService,
+            ILanguageService languageService)
         {
             this.dbContext = dbContext;
             this.directorService = directorService;
@@ -42,16 +44,19 @@
             this.countryService = countryService;
             this.userManager = userManager;
             this.platformService = platformService;
+            this.languageService = languageService;
         }
 
         public async Task<string> CreateMovieAsync(CreateMovieServiceModel createMovieModel, ClaimsPrincipal user)
         {
+            MovieFormModel movieFormModel = createMovieModel.OverallMovieInformation;
+
             // Get Director Id
-            DirectorFormModel directorFormModel = createMovieModel.OverallMovieInformation.Director;
+            DirectorFormModel directorFormModel = movieFormModel.Director;
             int directorId = await this.directorService.GetDirectorIdAsync(directorFormModel);
 
             // Get Country Id
-            string countryName = createMovieModel.OverallMovieInformation.Country;
+            string countryName = movieFormModel.Country;
             if (!this.countryService.CheckIfCountryExist(countryName))
             {
                 await this.countryService.CreateAsync(countryName);
@@ -63,9 +68,27 @@
             string userId = this.GetUserId(user);
 
             // Create Movie
-            MovieFormModel movieFormModel = createMovieModel.OverallMovieInformation;
             Movie movie = await this.CreateAsync(movieFormModel, directorId, userId);
             int movieId = movie.Id;
+
+            // Create Language
+            string[] languagesName = movieFormModel.Language
+                .Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                .ToArray();
+            ICollection<int> languagesIds = new List<int>();
+            foreach (string languageName in languagesName)
+            {
+                Language language = this.languageService.GetLanguageByName(languageName);
+
+                if (language == null)
+                {
+                    language = await this.languageService.CreateAsync(languageName);
+                }
+
+                languagesIds.Add(language.Id);
+            }
+
+            await this.MatchLanguagesWithMovie(movieId, languagesIds);
 
             // Create image for particular movie
             IEnumerable<ImageFormModel> images = createMovieModel.Images;
@@ -84,44 +107,36 @@
             ICollection<int> actorsIds = new List<int>();
             foreach (ActorFormModel actorFormModel in actors)
             {
-                Actor actor = await this.actorService.CreateAsync(actorFormModel);
+                Actor actor = this.actorService.GetActorByNames(actorFormModel.FirstName, actorFormModel.LastName);
+
+                if (actor == null)
+                {
+                    actor = await this.actorService.CreateAsync(actorFormModel);
+                }
+
                 actorsIds.Add(actor.Id);
             }
 
-            // Match actors with particular movie !!!!!!!!!!!!!!!!!!!!!! TODO: Method like MovieGenres !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            foreach (int actorId in actorsIds)
-            {
-                await this.dbContext.MovieActors.AddAsync(new MovieActor() { MovieId = movieId, ActorId = actorId});
-            }
+            await this.MatchActorsWithMovie(movieId, actorsIds);
 
             // Create Platforms for particular movie
             IEnumerable<PlatformFormModel> platforms = createMovieModel.Platforms;
             ICollection<int> platformsIds = new List<int>();
             foreach (PlatformFormModel platformFormModel in platforms)
             {
-                Platform platform = await this.platformService.CreateAsync(platformFormModel);
+                Platform platform = this.platformService.GetPlatformByName(platformFormModel.Name);
+
+                if (platform == null)
+                {
+                    platform = await this.platformService.CreateAsync(platformFormModel);
+                }
+
                 platformsIds.Add(platform.Id);
             }
 
-            // Match platforms with particular movie !!!!!!!!!!!!!!!!!!!!!! TODO: Method like MovieGenres !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            foreach (int platformId in platformsIds)
-            {
-                await this.dbContext.MoviePlatform.AddAsync(new MoviePlatform() { MovieId = movieId, PlatformId = platformId });
-            }
+            await this.MatchPlatformsWithMovie(movieId, platformsIds);
 
-            return null;
-        }
-
-        private async Task MatchGenresWithMovie(int movieId, IEnumerable<int> genresIds)
-        {
-            ICollection<MovieGenre> movieGenres = new HashSet<MovieGenre>();
-
-            foreach (int genreId in genresIds)
-            {
-                movieGenres.Add(new MovieGenre() { MovieId = movieId, GenreId = genreId });
-            }
-
-            await this.dbContext.MovieGenres.AddRangeAsync(movieGenres);
+            return "Successfully created movie";
         }
 
         public async Task<Movie> CreateAsync(MovieFormModel movieFormModel, int directorId, string userId)
@@ -142,6 +157,58 @@
             await this.dbContext.SaveChangesAsync();
 
             return movie;
+        }
+
+        private async Task MatchLanguagesWithMovie(int movieId, IEnumerable<int> languagesIds)
+        {
+            ICollection<MovieLanguage> movieLanguages = new HashSet<MovieLanguage>();
+
+            foreach (int languageId in languagesIds)
+            {
+                movieLanguages.Add(new MovieLanguage() { MovieId = movieId, LanguageId = languageId });
+            }
+
+            await this.dbContext.MovieLanguages.AddRangeAsync(movieLanguages);
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        private async Task MatchGenresWithMovie(int movieId, IEnumerable<int> genresIds)
+        {
+            ICollection<MovieGenre> movieGenres = new HashSet<MovieGenre>();
+
+            foreach (int genreId in genresIds)
+            {
+                movieGenres.Add(new MovieGenre() { MovieId = movieId, GenreId = genreId });
+            }
+
+            await this.dbContext.MovieGenres.AddRangeAsync(movieGenres);
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        private async Task MatchActorsWithMovie(int movieId, ICollection<int> actorsIds)
+        {
+            ICollection<MovieActor> movieActors = new HashSet<MovieActor>();
+
+            foreach (int actorId in actorsIds)
+            {
+                movieActors.Add(new MovieActor() { MovieId = movieId, ActorId = actorId });
+            }
+
+            await this.dbContext.MovieActors.AddRangeAsync(movieActors);
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        private async Task MatchPlatformsWithMovie(int movieId, ICollection<int> platformsIds)
+        {
+            ICollection<MoviePlatform> moviePlatforms = new HashSet<MoviePlatform>();
+
+            foreach (int platformId in platformsIds)
+            {
+                moviePlatforms.Add(new MoviePlatform() { MovieId = movieId, PlatformId = platformId });
+            }
+
+            await this.dbContext.AddRangeAsync(moviePlatforms);
+            await this.dbContext.SaveChangesAsync();
         }
 
         private string GetUserId(ClaimsPrincipal user)

@@ -41,7 +41,6 @@
         public class LanguageValidation
         {
             public const int NameMaxLength = 150;
-            public const int AbbreviationMaxLength = 10;
         }
 
         public class PlatformValidation

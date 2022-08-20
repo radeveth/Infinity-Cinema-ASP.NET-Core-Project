@@ -18,10 +18,6 @@
         [MaxLength(NameMaxLength)]
         public string Name { get; set; }
 
-        [Required]
-        [MaxLength(AbbreviationMaxLength)]
-        public string Abbreviation { get; set; }
-
         public virtual ICollection<MovieLanguage> MovieLanguages { get; set; }
     }
 }

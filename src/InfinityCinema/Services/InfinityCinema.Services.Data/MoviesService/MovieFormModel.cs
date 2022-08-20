@@ -62,7 +62,6 @@
         public string Language { get; set; }
 
         [Required]
-        [CountryExistAttrubute(nameof(Country))]
         [StringLength(CountryValidation.NameMaxLength, MinimumLength = CountryValidation.NameMinLength, ErrorMessage = CountryNameLengthErrorMessage)]
         public string Country { get; set; }
     }

@@ -3,7 +3,9 @@
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.MoviesService;
     using Microsoft.AspNetCore.Mvc;
+
     using System;
+    using System.Threading.Tasks;
 
     public class MoviesController : BaseController
     {
@@ -22,7 +24,7 @@
         }
 
         [HttpPost]
-        public IActionResult Create(CreateMovieServiceModel movieModel)
+        public async Task<IActionResult> CreateAsync(CreateMovieServiceModel movieModel)
         {
             var isGenreExist = this.genreService.IsGenresExists(movieModel.OverallMovieInformation.GenresId);
 
@@ -37,10 +39,16 @@
                     { OverallMovieInformation = CreateInitializateOfinitialization(new MovieFormModel(), this.genreService) });
             }
 
-            // string result = this.movieService.CreateMovie(movieModel);
-
-            // return this.Json(result);
-            return null;
+            string message = await this.movieService.CreateMovieAsync(movieModel, this.User);
+            if (message != null)
+            {
+                return this.RedirectToAction(nameof(Index), "Home");
+            }
+            else
+            {
+                return this.View(new CreateMovieServiceModel()
+                    { OverallMovieInformation = CreateInitializateOfinitialization(new MovieFormModel(), this.genreService) });
+            }
         }
 
         private static MovieFormModel CreateInitializateOfinitialization(MovieFormModel movieFormModel, IGenreService genreService)

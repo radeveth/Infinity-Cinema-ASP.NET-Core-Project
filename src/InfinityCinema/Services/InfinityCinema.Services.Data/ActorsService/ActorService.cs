@@ -1,6 +1,7 @@
 ﻿namespace InfinityCinema.Services.Data.ActorsService
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using InfinityCinema.Data;
@@ -28,5 +29,9 @@
 
             return actor;
         }
+
+        public Actor GetActorByNames(string firstName, string lastName)
+            => this.dbContext.Actors
+                .FirstOrDefault(a => $"{a.FirstName}{a.LastName}".ToLower() == $"{firstName}{lastName}".ToLower());
     }
 }

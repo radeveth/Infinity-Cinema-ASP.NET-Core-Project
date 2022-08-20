@@ -1,7 +1,8 @@
 ﻿namespace InfinityCinema.Services.Data.PlatformsService
 {
-    using System;
+    using System.Linq;
     using System.Threading.Tasks;
+
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
 
@@ -28,5 +29,8 @@
 
             return platform;
         }
+
+        public Platform GetPlatformByName(string platfrom)
+            => this.dbContext.Platforms.FirstOrDefault(p => p.Name.ToLower() == platfrom.ToLower());
     }
 }

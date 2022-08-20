@@ -13,6 +13,7 @@
     using InfinityCinema.Services.Data.DirectorsService;
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.ImagesService;
+    using InfinityCinema.Services.Data.LanguagesService;
     using InfinityCinema.Services.Data.MoviesService;
     using InfinityCinema.Services.Data.PlatformsService;
     using InfinityCinema.Services.Data.SettingsService;
@@ -76,11 +77,11 @@
             services.AddTransient<IGenreService, GenreService>();
             services.AddTransient<IDirectorService, DirectorService>();
             services.AddTransient<IImageService, ImageService>();
+            services.AddTransient<ILanguageService, LanguageService>();
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IMovieService, MovieService>();
             services.AddTransient<IActorService, ActorService>();
             services.AddTransient<IPlatformService, PlatformService>();
-
         }
 
         private static void Configure(WebApplication app)

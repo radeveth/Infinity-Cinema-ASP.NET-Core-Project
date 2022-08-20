@@ -196,12 +196,8 @@ namespace InfinityCinema.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Abbreviation")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -221,8 +217,6 @@ namespace InfinityCinema.Data.Migrations
                         .HasColumnType("nvarchar(60)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("IsDeleted");
 
@@ -788,13 +782,6 @@ namespace InfinityCinema.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("InfinityCinema.Data.Models.Country", b =>
-                {
-                    b.HasOne("InfinityCinema.Data.Models.ApplicationUser", null)
-                        .WithMany("MoviesCreated")
-                        .HasForeignKey("ApplicationUserId");
-                });
-
             modelBuilder.Entity("InfinityCinema.Data.Models.Image", b =>
                 {
                     b.HasOne("InfinityCinema.Data.Models.Movie", "Movie")
@@ -821,8 +808,9 @@ namespace InfinityCinema.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("InfinityCinema.Data.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .WithMany("MoviesCreated")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Country");
 
@@ -860,7 +848,8 @@ namespace InfinityCinema.Data.Migrations
 
                     b.HasOne("InfinityCinema.Data.Models.ApplicationUser", "User")
                         .WithMany("CommentsCreated")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Movie");
 

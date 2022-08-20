@@ -10,6 +10,7 @@
 
     public class CountryService : ICountryService
     {
+        private const string TxtFilePath = @"C:\Users\User\Documents\GitHub\Infinity-Cinema-ASP.NET-Core-Project\src\InfinityCinema\Services\InfinityCinema.Services.Data\CountriesService\Abbreviation-Country.txt";
         private readonly InfinityCinemaDbContext dbContext;
 
         public CountryService(InfinityCinemaDbContext dbContext)
@@ -34,32 +35,31 @@
 
         public string GenerateCountryAbbreviation(string countryName)
         {
-            string abbreviation = string.Empty;
+            countryName = countryName.Replace(" ", string.Empty).ToLower();
 
-            string file = File.ReadAllText(@"C:\Users\User\Documents\GitHub\Infinity-Cinema-ASP.NET-Core-Project\src\InfinityCinema\Services\InfinityCinema.Services.Data\CountriesService\Abbreviation-Country.txt");
+            string file = File.ReadAllText(TxtFilePath);
 
-            string[] countries = file
+            string[] countriesAbbreviation = file
                 .Split("|", StringSplitOptions.RemoveEmptyEntries)
                 .ToArray();
 
-            string targetCountry = null;
-            foreach (string country in countries)
+            string targetCountryAbbreviation = string.Empty;
+            foreach (var country in countriesAbbreviation)
             {
-                if (country.ToLower().Contains(countryName.ToLower()))
+                string[] countryAbbreviationParts = country
+                    .Split("-", StringSplitOptions.RemoveEmptyEntries)
+                    .ToArray();
+                string currCountryAbbreviation = countryAbbreviationParts[0];
+                string currCountryName = countryAbbreviationParts[1].Replace(" ", string.Empty).ToLower();
+
+                if (currCountryName == countryName)
                 {
-                    targetCountry = country;
+                    targetCountryAbbreviation = currCountryAbbreviation;
+                    break;
                 }
             }
 
-            int index = targetCountry.IndexOf(":");
-            if (index == -1)
-            {
-                return " ";
-            }
-
-            abbreviation = targetCountry.Substring(0, index);
-
-            return abbreviation;
+            return targetCountryAbbreviation;
         }
 
         public Country GetCountryByName(string countryName)

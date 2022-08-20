@@ -54,6 +54,12 @@
                 .WithMany(c => c.Movies)
                 .HasForeignKey(m => m.CountryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            movieBuilder
+                .HasOne(m => m.User)
+                .WithMany(u => u.MoviesCreated)
+                .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

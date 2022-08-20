@@ -13,6 +13,12 @@
                 .WithMany(m => m.Comments)
                 .HasForeignKey(m => m.MovieId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            movieCommentBuilder
+                .HasOne(m => m.User)
+                .WithMany(u => u.CommentsCreated)
+                .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -25,4 +25,10 @@
     <ProjectReference Include="..\InfinityCinema.Services.Mapping\InfinityCinema.Services.Mapping.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="CountriesService\Abbreviation-Country.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

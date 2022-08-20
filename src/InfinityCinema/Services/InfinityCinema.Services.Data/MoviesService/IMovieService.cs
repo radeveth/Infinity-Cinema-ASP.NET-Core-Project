@@ -9,6 +9,6 @@
     {
         Task<string> CreateMovieAsync(CreateMovieServiceModel movieModel, ClaimsPrincipal user);
 
-        Task<Movie> CreateAsync(MovieFormModel movieFormModel, int dealerId, string userId);
+        Task<Movie> CreateAsync(MovieFormModel movieFormModel, int dealerId, int countryId, string userId);
     }
 }

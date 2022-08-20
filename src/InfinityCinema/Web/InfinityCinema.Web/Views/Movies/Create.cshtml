@@ -6,6 +6,9 @@
 
 <div class="image-fliud" style="background-image: url(https://images.pexels.com/photos/3945321/pexels-photo-3945321.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);">
     <div>
+        <div class="float-end">
+            <a class="btn btn-danger float-end" style="width:50% height:3px" asp-area="" asp-controller="Home" asp-action="Index">x</a>
+        </div>
         <br />
         <h2 class="heading-margin text-center" style="">@ViewBag.Title</h2>
 
@@ -77,11 +80,11 @@
                                 <span asp-validation-for="OverallMovieInformation.Director.FullName" class="small text-danger"></span>
                             </div>
 
-                            @*<input class="btn btn-primary rounded-pill float-end mt-4 mb-4" type="submit" value="Next Step" id="next-step-btn" />*@
+                            <input class="btn btn-primary rounded-pill text-center mt-4 mb-4 d-grid gap-2 col-3 mx-auto" type="submit" value="Next Step" id="next-step-btn" />
                         </div>
 
                         <!--Image, Actor, Pltform Form Model-->
-                        <div id="image-actor-platform-form-model">
+                        <div id="image-actor-platform-form-model" class="d-none">
                             <div class="form-group form-margin" id="images-form-model">
                                 <label asp-for="Images"></label>
                                 <input class="btn btn-primary rounded-pill" type="submit" value="Add Image" id="add-image-btn" />
@@ -97,11 +100,11 @@
                                 <input class="btn btn-primary rounded-pill" type="submit" value="Add Platform" id="add-platform-btn">
                             </div>
 
-                            <input class="btn btn-primary rounded-pill float-start mt-4 mb-4 d-none" type="submit" value="Previous Step" id="previous-step-btn" />
+                            @*<input class="btn btn-primary rounded-pill float-start mt-4 mb-4" type="submit" value="Previous Step" id="previous-step-btn" />*@
                         </div>
 
 
-                        <input class="btn btn-primary mt-4 float-end mb-4" type="submit" value="Create" id="create-movie-btn" />
+                        <input class="btn btn-primary mt-4 text-center mb-4 d-none rounded-pill d-grid gap-2 col-3 mx-auto" type="submit" value="Create" id="create-movie-btn" />
                     </div>
                 </form>
             </div>
@@ -118,7 +121,7 @@
 
         // Buttons Elements
         let nextStepMovieButtonElement = document.getElementById('next-step-btn');
-        let prviousStepMovieButtonElement = document.getElementById('previous-step-btn');
+        // let previousStepMovieButtonElement = document.getElementById('previous-step-btn');
         let createMovieButtonElement = document.getElementById('create-movie-btn');
 
         nextStepMovieButtonElement.addEventListener('click', (e) => {
@@ -130,14 +133,14 @@
             createMovieButtonElement.classList.remove('d-none');
         });
 
-        prviousStepMovieButtonElement.addEventListener('clcik', (e) => {
-            e.preventDefault();
+        //previousStepMovieButtonElement.addEventListener('clcik', (e) => {
+        //    e.preventDefault();
 
-            createMovieButtonElement.classList.add('d-none');
+        //    createMovieButtonElement.classList.add('d-none');
 
-            movieFormModelElement.classList.remove('d-none');
-            imageActorPlatformFormModelElement.classList.add('d-none');
-        });
+        //    movieFormModelElement.classList.remove('d-none');
+        //    imageActorPlatformFormModelElement.classList.add('d-none');
+        //});
 
     </script>
 
@@ -160,8 +163,7 @@
         addActorButtonElement.addEventListener('click', (e) => {
             e.preventDefault();
 
-            $('#actors-form-model').append("First Name: <input name='Actors[" + actorsIndex + "].FirstName' class='form-control' placeholder='Actor First Name'>");
-            $('#actors-form-model').append("Last Name: <input name='Actors[" + actorsIndex + "].LastName' class='form-control' placeholder='Actor Last Name'>");
+            $('#actors-form-model').append("First Name: <input name='Actors[" + actorsIndex + "].FullName' class='form-control' placeholder='Actor Full Name'>");
             actorsIndex++;
         });
 

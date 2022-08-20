@@ -1,7 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.MoviesService
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
@@ -31,10 +30,11 @@
         private readonly UserManager<ApplicationUser> userManager;
 
         public MovieService(InfinityCinemaDbContext dbContext,
+            UserManager<ApplicationUser> userManager,
             IDirectorService directorService,
             IImageService imageService,
             ICountryService countryService,
-            UserManager<ApplicationUser> userManager,
+            IActorService actorService,
             IPlatformService platformService,
             ILanguageService languageService)
         {
@@ -42,6 +42,7 @@
             this.directorService = directorService;
             this.imageService = imageService;
             this.countryService = countryService;
+            this.actorService = actorService;
             this.userManager = userManager;
             this.platformService = platformService;
             this.languageService = languageService;
@@ -68,12 +69,12 @@
             string userId = this.GetUserId(user);
 
             // Create Movie
-            Movie movie = await this.CreateAsync(movieFormModel, directorId, userId);
+            Movie movie = await this.CreateAsync(movieFormModel, directorId, countryId, userId);
             int movieId = movie.Id;
 
             // Create Language
             string[] languagesName = movieFormModel.Language
-                .Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                .Split(", ", StringSplitOptions.RemoveEmptyEntries)
                 .ToArray();
             ICollection<int> languagesIds = new List<int>();
             foreach (string languageName in languagesName)
@@ -105,9 +106,10 @@
             // Create actors for particular movie
             IEnumerable<ActorFormModel> actors = createMovieModel.Actors;
             ICollection<int> actorsIds = new List<int>();
+            Actor actor;
             foreach (ActorFormModel actorFormModel in actors)
             {
-                Actor actor = this.actorService.GetActorByNames(actorFormModel.FirstName, actorFormModel.LastName);
+                actor = this.actorService.GetActorByNames(actorFormModel.FullName);
 
                 if (actor == null)
                 {
@@ -122,9 +124,10 @@
             // Create Platforms for particular movie
             IEnumerable<PlatformFormModel> platforms = createMovieModel.Platforms;
             ICollection<int> platformsIds = new List<int>();
+            Platform platform;
             foreach (PlatformFormModel platformFormModel in platforms)
             {
-                Platform platform = this.platformService.GetPlatformByName(platformFormModel.Name);
+                platform = this.platformService.GetPlatformByName(platformFormModel.Name);
 
                 if (platform == null)
                 {
@@ -139,7 +142,7 @@
             return "Successfully created movie";
         }
 
-        public async Task<Movie> CreateAsync(MovieFormModel movieFormModel, int directorId, string userId)
+        public async Task<Movie> CreateAsync(MovieFormModel movieFormModel, int directorId, int countryId, string userId)
         {
             Movie movie = new Movie()
             {
@@ -150,6 +153,7 @@
                 TrailerPath = movieFormModel.TrailerPath,
                 Duration = movieFormModel.Duration,
                 DirectorId = directorId,
+                CountryId = countryId,
                 UserId = userId,
             };
 

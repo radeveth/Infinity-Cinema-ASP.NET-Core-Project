@@ -7,52 +7,38 @@
 
     public class CountryExistAttrubute : ValidationAttribute
     {
-        private string countryName;
+        private const string TxtFilePath = @"C:\Users\User\Documents\GitHub\Infinity-Cinema-ASP.NET-Core-Project\src\InfinityCinema\Services\InfinityCinema.Services.Data\CountriesService\Abbreviation-Country.txt";
 
-        public CountryExistAttrubute(string countryName)
+        public override bool IsValid(object value)
         {
-            this.countryName = countryName;
-        }
+            value = value.ToString().Replace(" ", string.Empty).ToLower();
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            string file = File.ReadAllText(@"C:\Users\User\Documents\GitHub\Infinity-Cinema-ASP.NET-Core-Project\src\InfinityCinema\Services\InfinityCinema.Services.Data\CountriesService\Abbreviation-Country.txt");
+            string file = File.ReadAllText(TxtFilePath);
 
-            string[] countries = file
+            string[] countriesAbbreviation = file
                 .Split("|", StringSplitOptions.RemoveEmptyEntries)
                 .ToArray();
 
-            string targetCountry = null;
-            foreach (string country in countries)
+            bool isCountryExist = false;
+            foreach (var country in countriesAbbreviation)
             {
-                try
-                {
-                    // Get only whole country name
-                    int startIndex = country.IndexOf("\"") + 1;
-                    int length = country.LastIndexOf("\"") - startIndex;
+                string[] countryAbbreviationParts = country
+                    .Split("-", StringSplitOptions.RemoveEmptyEntries)
+                    .ToArray();
+                string currCountryName = countryAbbreviationParts[1].Replace(" ", string.Empty).ToLower();
 
-                    string currentCountryName = country.Substring(startIndex, length).ToLower().Trim();
-
-                    // Check if the country exist
-                    if (currentCountryName == this.countryName)
-                    {
-                        // If country exist get the particular country and break the loop
-                        targetCountry = country;
-                        return ValidationResult.Success;
-                    }
-                }
-                catch (Exception)
+                if (currCountryName == value)
                 {
-                    return new ValidationResult(this.ErrorMessage = "Invalid country name");
+                    isCountryExist = true;
+                    return true;
                 }
             }
 
-            if (string.IsNullOrEmpty(targetCountry))
+            if (isCountryExist)
             {
-                return new ValidationResult(this.ErrorMessage = "Invalid country name");
+                return true;
             }
-
-            return ValidationResult.Success;
+            return false;
         }
     }
 }

@@ -28,6 +28,16 @@
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            appUser
+                .HasMany(e => e.MoviesCreated)
+                .WithOne(e => e.User)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            appUser
+                .HasMany(e => e.CommentsCreated)
+                .WithOne(e => e.User)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

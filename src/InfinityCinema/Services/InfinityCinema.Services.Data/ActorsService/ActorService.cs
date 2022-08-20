@@ -18,10 +18,15 @@
 
         public async Task<Actor> CreateAsync(ActorFormModel actorFormModel)
         {
+            string[] actorNameParts = actorFormModel.FullName
+                .Split(" ", StringSplitOptions.RemoveEmptyEntries).ToArray();
+            string firstName = actorNameParts[0];
+            string lastName = actorNameParts[1];
+
             Actor actor = new Actor()
             {
-                FirstName = actorFormModel.FirstName,
-                LastName = actorFormModel.LastName,
+                FirstName = firstName,
+                LastName = lastName,
             };
 
             await this.dbContext.Actors.AddAsync(actor);
@@ -30,8 +35,17 @@
             return actor;
         }
 
-        public Actor GetActorByNames(string firstName, string lastName)
-            => this.dbContext.Actors
-                .FirstOrDefault(a => $"{a.FirstName}{a.LastName}".ToLower() == $"{firstName}{lastName}".ToLower());
+        public Actor GetActorByNames(string fullName)
+        {
+            string[] actorNameParts = fullName
+                .Split(" ", StringSplitOptions.RemoveEmptyEntries).ToArray();
+            string firstName = actorNameParts[0].ToLower();
+            string lastName = actorNameParts[1].ToLower();
+
+            return this.dbContext
+                .Actors
+                .AsQueryable()
+                .FirstOrDefault(a => a.FirstName.ToLower() == firstName && a.LastName.ToLower() == lastName);
+        }
     }
 }

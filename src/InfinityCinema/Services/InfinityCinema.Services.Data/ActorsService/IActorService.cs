@@ -8,6 +8,6 @@
     {
         Task<Actor> CreateAsync(ActorFormModel actorFormModel);
 
-        Actor GetActorByNames(string firstName, string lastName);
+        Actor GetActorByNames(string fullName);
     }
 }

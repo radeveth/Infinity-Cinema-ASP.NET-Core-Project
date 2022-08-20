@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations;
 
     using InfinityCinema.Data.Models.Enums;
+    using InfinityCinema.Services.Data.CountriesService;
     using InfinityCinema.Services.Data.DirectorsService;
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.ValidationAttributes;
@@ -18,8 +19,8 @@
         private const string TrailerPathMaxLengthErrorMessage = "The Trailer Path cannot be more than {1} symbols.";
         private const string DurationRegularExpressionPattern = @"([0-9]+d )*([1-9]+h )*([1-9]+m)";
         private const string DurationRegularExpressionPatternErrorMessage = "Invalid duration pattern";
-        private const string LanguageMaxLengthErrorMessage = "The Language field must be smaller than {1}";
         private const string CountryNameLengthErrorMessage = "The Country Name field should be between {2} and {1} characters.";
+        private const string LanguageMaxLengthErrorMessage = "The Language field must be smaller than {1}";
         private DateTime dateOfReleased = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
 
         [Required]
@@ -63,6 +64,7 @@
 
         [Required]
         [StringLength(CountryValidation.NameMaxLength, MinimumLength = CountryValidation.NameMinLength, ErrorMessage = CountryNameLengthErrorMessage)]
+        // [CountryExistAttrubute(ErrorMessage = "The given country does not exist!")]
         public string Country { get; set; }
     }
 }

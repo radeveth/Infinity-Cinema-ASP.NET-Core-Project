@@ -20,7 +20,7 @@ namespace InfinityCinema.Data.Models
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
 
-            this.MoviesCreated = new HashSet<Country>();
+            this.MoviesCreated = new HashSet<Movie>();
             this.CommentsCreated = new HashSet<MovieComment>();
         }
 
@@ -47,7 +47,7 @@ namespace InfinityCinema.Data.Models
 
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
 
-        public virtual ICollection<Country> MoviesCreated { get; set; }
+        public virtual ICollection<Movie> MoviesCreated { get; set; }
 
         public virtual ICollection<MovieComment> CommentsCreated { get; set; }
     }

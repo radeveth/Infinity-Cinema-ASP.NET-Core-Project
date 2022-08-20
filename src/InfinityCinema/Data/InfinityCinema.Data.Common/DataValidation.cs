@@ -23,6 +23,9 @@
 
             public const int LastNameMinLength = 2;
             public const int LastNameMaxLength = 60;
+
+            public const int FullNameMinLength = FirstNameMinLength + LastNameMinLength;
+            public const int FullNameMaxLength = FirstNameMaxLength + LastNameMaxLength;
         }
 
         public class CommentValidation

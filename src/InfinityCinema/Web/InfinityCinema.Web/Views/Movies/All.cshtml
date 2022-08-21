@@ -1,0 +1,100 @@
+﻿@model AllMoviesQueryModel
+
+@{
+    ViewData["Title"] = "All";
+}
+
+
+<div>
+    <div class="container mt-1">
+
+        <form method="get">
+            <div class="row">
+                <div class="offset-1 col-md-5 mt-3">
+                    <div class="form-group">
+                        <label asp-for="Sorting" class="form-label"></label>
+                        <select asp-for="Sorting" class="form-control">
+                            <option selected disabled>Order by...</option>
+                            <option value="0">Rating</option>
+                            <option value="1">Year (Newest)</option>
+                            <option value="2">Year (Oldest)</option>
+                            <option value="3">Name (Alphabetically)</option>
+                            <option value="4">Duration</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-5 mt-3">
+                    <div class="form-group">
+                        <label asp-for="SearchName" class="form-label"></label>
+                        <input asp-for="SearchName" type="search" class="form-control" placeholder="Search by name" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <span class="badge badge-primary offset-3 col-6 fw-bold">Serach by Top Genres</span>
+                <div class="row mt-3">
+                    <div class="row">
+                        <ul class="nav nav-tabs d-flex flex-column flex-md-row text-center">
+                            <li class="nav-item offset-3 col-1 active" id="all-genres" style="cursor: pointer;">
+                                <a class="nav-link">All</a>
+                            </li>
+                            <li class="nav-item col-1" id="action-genres" style="cursor: pointer;">
+                                <a class="nav-link">Action</a>
+                            </li>
+                            <li class="nav-item col-1" id="drama-genres" style="cursor: pointer;">
+                                <a class="nav-link" data-toggle="tab">Drama</a>
+                            </li>
+                            <li class="nav-item col-1" id="comedy-genres" style="cursor: pointer;">
+                                <a class="nav-link">Comedy</a>
+                            </li>
+                            <li class="nav-item col-1" id="thriller-genres" style="cursor: pointer;">
+                                <a class="nav-link">Thriller</a>
+                            </li>
+                            <li class="nav-item col-1" id="fantasy-genres" style="cursor: pointer;">
+                                <a class="nav-link">Fantasy</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="row mt-5">
+            @for (var i = 0; i < 10; i++)
+            {
+                <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+                    <div class="component">
+                        <div class="card">
+                            <div class="card-header">
+                                <img class="card-img" src="https://media.npr.org/assets/img/2014/08/14/the-expendables-3---final-one-sheet_custom-441d5ac7a0c7373da8171fcd39051c6f7634ca00-s1100-c50.jpg" alt="dog">
+                            </div>
+                            <div class="card-body">
+                                <span class="badge badge-warning">Vacation</span>
+                                <h4 class="card-title mt-2">Woof! How to find dog-friendly beaches in Spain</h4>
+                                <p class="card-text">Considering Spain's abundant coastline, beaches that do allow you to take your pooch to feel sand... </p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="#a" class="btn btn-outline-primary">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let allGenresButtonElement = document.getElementById('all-genres');
+        let actionGenresButtonElement = document.getElementById('action-genres');
+        let dramaGenresButtonElement = document.getElementById('drama-genres');
+        let comedyGenresButtonElement = document.getElementById('comedy-genres');
+        let thrillerGenresButtonElement = document.getElementById('thriller-genres');
+        let fantasyGenresButtonElement = document.getElementById('fantasy-genres');
+
+        allGenresButtonElement.addEventListener('click', (e) => {
+        })
+    </script>
+}

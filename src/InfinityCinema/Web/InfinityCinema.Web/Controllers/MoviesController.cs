@@ -1,11 +1,11 @@
 ﻿namespace InfinityCinema.Web.Controllers
 {
+    using System;
+    using System.Threading.Tasks;
+
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.MoviesService;
     using Microsoft.AspNetCore.Mvc;
-
-    using System;
-    using System.Threading.Tasks;
 
     public class MoviesController : BaseController
     {
@@ -49,6 +49,11 @@
                 return this.View(new CreateMovieServiceModel()
                     { OverallMovieInformation = CreateInitializateOfinitialization(new MovieFormModel(), this.genreService) });
             }
+        }
+
+        public IActionResult All([FromQuery] AllMoviesQueryModel moviesQueryModel)
+        {
+            return this.View();
         }
 
         private static MovieFormModel CreateInitializateOfinitialization(MovieFormModel movieFormModel, IGenreService genreService)

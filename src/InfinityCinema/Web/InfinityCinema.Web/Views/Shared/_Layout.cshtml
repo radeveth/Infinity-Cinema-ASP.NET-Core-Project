@@ -1,22 +1,24 @@
 ﻿@using InfinityCinema.Common
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@(this.ViewData["Title"].ToString() == String.Empty ? String.Empty : $"{this.ViewData["Title"]} - ") Infinity Cinema</title>
+    <title>@(String.IsNullOrEmpty(this.ViewData["Title"].ToString()) ? String.Empty : $"{this.ViewData["Title"]} - ") Infinity Cinema</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/virtual-select.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/lazy.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body>
-    <!--Header (Navbar)-->
-    <nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark">
+<body style="background-color: aliceblue;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a asp-controller="Home" asp-action="Index" class="navbar-brand mb-0 h1">
-                <img class="d-inline-block align-top" src="https://cdn-icons-png.flaticon.com/512/4987/4987504.png" width=30 height=30></img>
-            </a>
-            <button type="button"
+            <img class="navbar-brand d-flex align-items-center" src="https://cdn-icons-png.flaticon.com/512/4987/4987504.png" width=50 height=50 />
+            @*<button type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarNav"
                     class="navbar-toggler"
@@ -24,46 +26,34 @@
                     aria-explained="false"
                     aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon" style="border:0px"></span>
+            </button>*@
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown-1" aria-controls="navbarNavDropdown-1"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+            <div class="collapse navbar-collapse text-center" id="navbarNavDropdown-1">
+                <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
-                        <a asp-controller="Movies" asp-action="Create" class="nav-link">
-                            <!--<a href="#" class="nav-link active">-->
-                            Create Movie
+                        <a class="nav-link" asp-controller="Movies" asp-action="All">
+                            All
+                            <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                   @* <li class="nav-item active dropdown">
-                        <a class="nav-link dropdown-toggle"
-                           id="navbarDropdown"
-                           role="button"
-                           data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            Programs
-                        </a>
-                        <ul class="dropdown-menu"
-                            aria-labelladby="navbarDropdown">
-                            <li>
-                                <a asp-controller="Movies" asp-action="Create" class="dropdown-item"> Create </a>
-                            </li>
-                        </ul>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Genres" asp-action="All">Genres</a>
                     </li>
-                    <li class="nav-item active">
-                        <a asp-controller="" asp-action="" class="nav-link">
-                            Calorie Calculator
-                        </a>
-                    </li>*@
                 </ul>
             </div>
-            <form class=" d-flex form-inline my-2 my-lg-0">
-                <input type="search" class="form-control me-2" placeholder="Search" aria-label="Search">
-                <button type="submit" class="btn btn-primary">Search</button>
+            <form class="d-flex form-inline my-2 my-lg-0">
+                <input type="search" class="form-control me-2" placeholder="Search Movie" aria-label="Search">
+                <button type="submit" class="btn btn-primary"><img src="https://cdn-icons-png.flaticon.com/512/251/251116.png" width=20 height=20 /></button>
             </form>
+            <div> &nbsp&nbsp&nbsp&nbsp&nbsp </div>
+            <div class="text-light">
+                <partial name="_LoginPartial" />
+            </div>
         </div>
-        <partial name="_LoginPartial" />
     </nav>
-    <!--Header (Navbar)-->
-    <div class="mb-5"></div>
 
     <div>
         <main>
@@ -82,6 +72,8 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
+    <script src="./lib/popper/popper.min.js"></script>
+    <script src="./js/lazy.js"></script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>
     <script src="~/js/virtual-select.min.js" asp-append-version="true"></script>
 

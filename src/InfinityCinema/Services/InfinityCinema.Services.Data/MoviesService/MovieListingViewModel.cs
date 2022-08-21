@@ -4,6 +4,11 @@
 
     public class MovieListingViewModel
     {
+        public MovieListingViewModel()
+        {
+            this.Genres = new List<string>();
+        }
+
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -12,7 +17,7 @@
 
         public string ImageUrl { get; set; }
 
-        public int StarRating { get; set; }
+        public double StarRating { get; set; }
 
         public string Duration { get; set; }
 

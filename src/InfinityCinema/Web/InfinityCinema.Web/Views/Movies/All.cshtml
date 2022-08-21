@@ -2,8 +2,15 @@
 
 @{
     ViewData["Title"] = "All";
+
+    bool isHaveMovies = Model.Movies.Any();
+    int totalPages = (int)Math.Ceiling((double)Model.TotalMovies / AllMoviesQueryModel.MoviesPerPage);
 }
 
+@*@if (!isHaveMovies)
+{
+    <div class="text-center mb-5"><h1>There are no mvoes by given criteria!</h1></div>
+}*@
 
 <div>
     <div class="container mt-1">
@@ -61,26 +68,51 @@
         </form>
 
         <div class="row mt-5">
-            @for (var i = 0; i < 10; i++)
-            {
+            @foreach (var movie in Model.Movies)
+           {
                 <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4">
                     <div class="component">
                         <div class="card">
                             <div class="card-header">
-                                <img class="card-img" src="https://media.npr.org/assets/img/2014/08/14/the-expendables-3---final-one-sheet_custom-441d5ac7a0c7373da8171fcd39051c6f7634ca00-s1100-c50.jpg" alt="dog">
+                                <img class="card-img" src="@movie.ImageUrl">
                             </div>
                             <div class="card-body">
-                                <span class="badge badge-warning">Vacation</span>
-                                <h4 class="card-title mt-2">Woof! How to find dog-friendly beaches in Spain</h4>
-                                <p class="card-text">Considering Spain's abundant coastline, beaches that do allow you to take your pooch to feel sand... </p>
+                                <span class="badge badge-warning">@movie.StarRating</span>
+                                <h4 class="card-title mt-2">@movie.Name</h4>
+                                @foreach (var genre in movie.Genres)
+                                {
+                                    <p class="card-text">@genre</p>
+                                }
                             </div>
+                            <span class="badge badge-warning">@movie.Duration</span>
                             <div class="card-footer">
-                                <a href="#a" class="btn btn-outline-primary">Read More</a>
+                                <input type="submit" value="Read More" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-primary" />
                             </div>
                         </div>
                     </div>
                 </div>
             }
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <a asp-controller="Cars" asp-action="All"
+                   asp-route-currentPage="@((Model.CurrentPage - 1) < 1 ? Model.CurrentPage = 1 : Model.CurrentPage - 1)"
+                   asp-route-sorting="@Model.Sorting"
+                   asp-route-serachName="@Model.SearchName"
+                   class="btn btn-primary @(Model.CurrentPage == 1 ? "disabled" : String.Empty)">
+                    <<<
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a asp-controller="Cars" asp-action="All"
+                   asp-route-currentPage="@((Model.CurrentPage + 1) > totalPages ? Model.CurrentPage = totalPages : Model.CurrentPage + 1)"
+                   asp-route-sorting="@Model.Sorting"
+                   asp-route-searcgName="@Model.SearchName"
+                   class="btn btn-primary float-end @(Model.CurrentPage == totalPages ? "disabled" : String.Empty)">
+                    >>>
+                </a>
+            </div>
         </div>
     </div>
 </div>

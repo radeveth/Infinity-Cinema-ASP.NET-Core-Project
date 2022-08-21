@@ -10,5 +10,7 @@
         Task<string> CreateMovieAsync(CreateMovieServiceModel movieModel, ClaimsPrincipal user);
 
         Task<Movie> CreateAsync(MovieFormModel movieFormModel, int dealerId, int countryId, string userId);
+
+        MoviesQueryServiceModel All(AllMoviesQueryModel moviesQueryModel);
     }
 }

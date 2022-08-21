@@ -13,6 +13,7 @@
     using InfinityCinema.Services.Data.DirectorsService;
     using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.LanguagesService;
+    using InfinityCinema.Services.Data.MoviesService.Enums;
     using InfinityCinema.Services.Data.PlatformsService;
     using Microsoft.AspNetCore.Identity;
 
@@ -163,7 +164,55 @@
             return movie;
         }
 
+        public MoviesQueryServiceModel All(AllMoviesQueryModel moviesQueryModel)
+        {
+            IQueryable<Movie> moviesQuery = this.dbContext.Movies.AsQueryable();
 
+            // Default sorting is by year
+            //moviesQuery = moviesQueryModel.Sorting switch
+            //{
+            //    MovieSorting.Rating => moviesQuery.OrderByDescending(m => m.StarRatings),
+            //    MovieSorting.YearNewest => moviesQuery.OrderByDescending(m => m.DateOfReleased.Year),
+            //    MovieSorting.YearOldest => moviesQuery.OrderBy(m => m.DateOfReleased.Year),
+            //    MovieSorting.NameAlphabetically => moviesQuery.OrderBy(m => m.Name),
+            //    MovieSorting.DurationSmallest => moviesQuery.OrderBy(m => m.Duration),
+            //    MovieSorting.DurationLargest => moviesQuery.OrderByDescending(m => m.Duration),
+            //    _ => moviesQuery.OrderByDescending(m => m.DateOfReleased.Year),
+            //};
+
+            string searchMovieName = moviesQueryModel.SearchName;
+
+            if (!string.IsNullOrEmpty(searchMovieName))
+            {
+                moviesQuery = moviesQuery.Where(m => m.Name.Contains(searchMovieName));
+            }
+
+            int currentPage = moviesQueryModel.CurrentPage;
+            int moviesPerPage = AllMoviesQueryModel.MoviesPerPage;
+
+            IQueryable<MovieListingViewModel> movies = moviesQuery
+                .Skip((currentPage - 1) * moviesPerPage)
+                .Take(moviesPerPage)
+                .Select(m => new MovieListingViewModel()
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    ImageUrl = m.Images.First().Url,
+                    StarRating = m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count,
+                    Duration = m.Duration,
+                    Genres = (List<string>)m.MovieGenres.Where(g => g.MovieId == m.Id).Select(g => g.Genre.Name),
+                });
+
+            int totalCras = moviesQuery.Count();
+
+            return new MoviesQueryServiceModel()
+            {
+                TotalMovies = totalCras,
+                CurrentPage = currentPage,
+                MoviesPerPage = moviesPerPage,
+                Movies = movies,
+            };
+        }
 
         private async Task MatchLanguagesWithMovie(int movieId, IEnumerable<int> languagesIds)
         {

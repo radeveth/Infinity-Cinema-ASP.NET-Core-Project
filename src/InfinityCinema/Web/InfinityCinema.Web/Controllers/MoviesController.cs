@@ -53,7 +53,9 @@
 
         public IActionResult All([FromQuery] AllMoviesQueryModel moviesQueryModel)
         {
-            return this.View();
+            MoviesQueryServiceModel movies = this.movieService.All(moviesQueryModel);
+
+            return this.View(movies);
         }
 
         private static MovieFormModel CreateInitializateOfinitialization(MovieFormModel movieFormModel, IGenreService genreService)

@@ -6,6 +6,7 @@
         YearNewest = 1,
         YearOldest = 2,
         NameAlphabetically = 3,
-        Duration = 4,
+        DurationSmallest = 4,
+        DurationLargest = 5,
     }
 }

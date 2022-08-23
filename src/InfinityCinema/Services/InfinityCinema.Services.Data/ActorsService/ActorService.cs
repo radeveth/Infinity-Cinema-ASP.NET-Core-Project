@@ -6,6 +6,7 @@
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.ActorsService.Models;
 
     public class ActorService : IActorService
     {

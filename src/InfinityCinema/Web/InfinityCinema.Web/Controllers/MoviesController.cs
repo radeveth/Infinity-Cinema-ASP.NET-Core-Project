@@ -1,10 +1,12 @@
 ﻿namespace InfinityCinema.Web.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.MoviesService;
+    using InfinityCinema.Services.Data.MoviesService.Models;
     using Microsoft.AspNetCore.Mvc;
 
     public class MoviesController : BaseController
@@ -24,7 +26,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(CreateMovieServiceModel movieModel)
+        public async Task<IActionResult> CreateAsync([FromQuery] CreateMovieServiceModel movieModel)
         {
             var isGenreExist = this.genreService.IsGenresExists(movieModel.OverallMovieInformation.GenresId);
 
@@ -51,11 +53,21 @@
             }
         }
 
-        public IActionResult All([FromQuery] AllMoviesQueryModel moviesQueryModel)
+        public IActionResult All(AllMoviesQueryModel moviesQueryModel)
         {
-            MoviesQueryServiceModel movies = this.movieService.All(moviesQueryModel);
+            AllMoviesQueryModel queryResult = this.movieService
+                .All(moviesQueryModel.SearchName, moviesQueryModel.Sorting, moviesQueryModel.CurrentPage, AllMoviesQueryModel.MoviesPerPage);
 
-            return this.View(movies);
+            moviesQueryModel.TotalMovies = queryResult.TotalMovies;
+            moviesQueryModel.Movies = queryResult.Movies;
+            moviesQueryModel.CurrentPage = queryResult.CurrentPage;
+
+            return this.View(moviesQueryModel);
+        }
+
+        public IActionResult Details()
+        {
+            return this.View();
         }
 
         private static MovieFormModel CreateInitializateOfinitialization(MovieFormModel movieFormModel, IGenreService genreService)

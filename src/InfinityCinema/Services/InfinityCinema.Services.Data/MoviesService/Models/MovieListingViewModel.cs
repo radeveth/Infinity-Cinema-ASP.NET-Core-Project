@@ -1,4 +1,4 @@
-﻿namespace InfinityCinema.Services.Data.MoviesService
+﻿namespace InfinityCinema.Services.Data.MoviesService.Models
 {
     using System.Collections.Generic;
 
@@ -6,14 +6,14 @@
     {
         public MovieListingViewModel()
         {
-            this.Genres = new List<string>();
+            Genres = new List<string>();
         }
 
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public List<string> Genres { get; set; }
+        public IEnumerable<string> Genres { get; set; }
 
         public string ImageUrl { get; set; }
 

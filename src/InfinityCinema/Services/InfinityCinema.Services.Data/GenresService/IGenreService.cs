@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.GenresService.Models;
 
     public interface IGenreService
     {
@@ -12,5 +13,7 @@
         IEnumerable<GenreFormModel> GetMovieGenres();
 
         bool IsGenresExists(ICollection<int> ids);
+
+        int GetGenreIdByGivenName(string genreName);
     }
 }

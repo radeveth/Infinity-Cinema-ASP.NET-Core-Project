@@ -4,6 +4,8 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.MoviesService.Enums;
+    using InfinityCinema.Services.Data.MoviesService.Models;
 
     public interface IMovieService
     {
@@ -11,6 +13,8 @@
 
         Task<Movie> CreateAsync(MovieFormModel movieFormModel, int dealerId, int countryId, string userId);
 
-        MoviesQueryServiceModel All(AllMoviesQueryModel moviesQueryModel);
+        AllMoviesQueryModel All(string searchName, MovieSorting sorting, int currentPage, int moviesPerPage);
+
+
     }
 }

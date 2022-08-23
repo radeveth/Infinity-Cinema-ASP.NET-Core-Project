@@ -5,6 +5,7 @@
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.PlatformsService.Models;
 
     public class PlatformService : IPlatformService
     {

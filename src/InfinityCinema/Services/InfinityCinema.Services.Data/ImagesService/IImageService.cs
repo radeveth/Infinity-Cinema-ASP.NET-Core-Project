@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.ImagesService.Models;
 
     public interface IImageService
     {

@@ -1,4 +1,4 @@
-﻿namespace InfinityCinema.Services.Data.MoviesService
+﻿namespace InfinityCinema.Services.Data.MoviesService.Models
 {
     using System;
     using System.Collections.Generic;
@@ -49,8 +49,8 @@
         [YearMaxValue(1888, DateOfReleasedMaxValueErrorMessage)] // In 1888 is released first movie
         public DateTime DateOfReleased
         {
-            get => this.dateOfReleased;
-            set => this.dateOfReleased = value;
+            get => dateOfReleased;
+            set => dateOfReleased = value;
         }
 
         public Resolution Resolution { get; set; }

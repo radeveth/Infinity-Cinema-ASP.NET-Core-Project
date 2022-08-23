@@ -6,6 +6,7 @@
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.GenresService.Models;
 
     public class GenreService : IGenreService
     {
@@ -16,9 +17,18 @@
             this.dbContext = dbContext;
         }
 
-        public Task<Genre> CreateAsync(GenreFormModel genreFormModel)
+        public async Task<Genre> CreateAsync(GenreFormModel genreFormModel)
         {
-            throw new System.NotImplementedException();
+            Genre genre = new Genre()
+            {
+                Name = genreFormModel.Name,
+                ImageUrl = genreFormModel.ImaqgeUrl,
+            };
+
+            await this.dbContext.Genres.AddAsync(genre);
+            await this.dbContext.SaveChangesAsync();
+
+            return genre;
         }
 
         public IEnumerable<GenreFormModel> GetMovieGenres()
@@ -34,5 +44,14 @@
         public bool IsGenresExists(ICollection<int> ids)
             => ids.Any(id => this.dbContext.Genres
                 .Any(g => g.Id == id));
+
+        public int GetGenreIdByGivenName(string genreName)
+        {
+            genreName = genreName.ToLower();
+            Genre genre = this.dbContext.Genres.FirstOrDefault(g => g.Name.ToLower() == genreName);
+
+            return genre.Id;
+        }
+
     }
 }

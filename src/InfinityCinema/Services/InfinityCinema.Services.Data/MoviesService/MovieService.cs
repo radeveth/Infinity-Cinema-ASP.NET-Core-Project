@@ -11,9 +11,11 @@
     using InfinityCinema.Services.Data.ActorsService;
     using InfinityCinema.Services.Data.CountriesService;
     using InfinityCinema.Services.Data.DirectorsService;
+    using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.LanguagesService;
     using InfinityCinema.Services.Data.MoviesService.Enums;
+    using InfinityCinema.Services.Data.MoviesService.Models;
     using InfinityCinema.Services.Data.PlatformsService;
     using Microsoft.AspNetCore.Identity;
 
@@ -27,6 +29,7 @@
         private readonly IActorService actorService;
         private readonly IPlatformService platformService;
         private readonly ILanguageService languageService;
+        private readonly IGenreService genreService;
 
         private readonly UserManager<ApplicationUser> userManager;
 
@@ -37,7 +40,8 @@
             ICountryService countryService,
             IActorService actorService,
             IPlatformService platformService,
-            ILanguageService languageService)
+            ILanguageService languageService,
+            IGenreService genreService)
         {
             this.dbContext = dbContext;
             this.directorService = directorService;
@@ -47,6 +51,7 @@
             this.userManager = userManager;
             this.platformService = platformService;
             this.languageService = languageService;
+            this.genreService = genreService;
         }
 
         public async Task<string> CreateMovieAsync(CreateMovieServiceModel createMovieModel, ClaimsPrincipal user)
@@ -164,31 +169,27 @@
             return movie;
         }
 
-        public MoviesQueryServiceModel All(AllMoviesQueryModel moviesQueryModel)
+        public AllMoviesQueryModel All
+            (string searchName = null, MovieSorting sorting = MovieSorting.Rating, int currentPage = 1, int moviesPerPage = AllMoviesQueryModel.MoviesPerPage)
         {
             IQueryable<Movie> moviesQuery = this.dbContext.Movies.AsQueryable();
 
-            // Default sorting is by year
-            //moviesQuery = moviesQueryModel.Sorting switch
-            //{
-            //    MovieSorting.Rating => moviesQuery.OrderByDescending(m => m.StarRatings),
-            //    MovieSorting.YearNewest => moviesQuery.OrderByDescending(m => m.DateOfReleased.Year),
-            //    MovieSorting.YearOldest => moviesQuery.OrderBy(m => m.DateOfReleased.Year),
-            //    MovieSorting.NameAlphabetically => moviesQuery.OrderBy(m => m.Name),
-            //    MovieSorting.DurationSmallest => moviesQuery.OrderBy(m => m.Duration),
-            //    MovieSorting.DurationLargest => moviesQuery.OrderByDescending(m => m.Duration),
-            //    _ => moviesQuery.OrderByDescending(m => m.DateOfReleased.Year),
-            //};
-
-            string searchMovieName = moviesQueryModel.SearchName;
-
-            if (!string.IsNullOrEmpty(searchMovieName))
+            if (!string.IsNullOrEmpty(searchName))
             {
-                moviesQuery = moviesQuery.Where(m => m.Name.Contains(searchMovieName));
+                moviesQuery = moviesQuery.Where(m => m.Name.ToLower().Contains(searchName));
             }
 
-            int currentPage = moviesQueryModel.CurrentPage;
-            int moviesPerPage = AllMoviesQueryModel.MoviesPerPage;
+            // Default sorting is by rating
+            moviesQuery = sorting switch
+            {
+                MovieSorting.Rating => moviesQuery.OrderByDescending(m => m.StarRatings.Count != 0 ? m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count : 0),
+                MovieSorting.YearNewest => moviesQuery.OrderByDescending(m => m.DateOfReleased),
+                MovieSorting.YearOldest => moviesQuery.OrderBy(m => m.DateOfReleased),
+                MovieSorting.NameAlphabetically => moviesQuery.OrderBy(m => m.Name),
+                MovieSorting.DurationSmallest => moviesQuery.OrderBy(m => m.Duration),
+                MovieSorting.DurationLargest => moviesQuery.OrderByDescending(m => m.Duration),
+                _ => moviesQuery.OrderByDescending(m => m.DateOfReleased),
+            };
 
             IQueryable<MovieListingViewModel> movies = moviesQuery
                 .Skip((currentPage - 1) * moviesPerPage)
@@ -198,19 +199,16 @@
                     Id = m.Id,
                     Name = m.Name,
                     ImageUrl = m.Images.First().Url,
-                    StarRating = m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count,
+                    StarRating = m.StarRatings.Count != 0 ? m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count : -1,
                     Duration = m.Duration,
-                    Genres = (List<string>)m.MovieGenres.Where(g => g.MovieId == m.Id).Select(g => g.Genre.Name),
+                    Genres = m.MovieGenres.Select(m => m.Genre.Name),
                 });
 
-            int totalCras = moviesQuery.Count();
-
-            return new MoviesQueryServiceModel()
+            return new AllMoviesQueryModel()
             {
-                TotalMovies = totalCras,
-                CurrentPage = currentPage,
-                MoviesPerPage = moviesPerPage,
                 Movies = movies,
+                TotalMovies = moviesQuery.Count(),
+                CurrentPage = currentPage,
             };
         }
 

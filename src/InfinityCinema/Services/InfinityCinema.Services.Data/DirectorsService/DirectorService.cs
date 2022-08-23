@@ -7,6 +7,7 @@
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.DirectorsService.Models;
 
     public class DirectorService : IDirectorService
     {

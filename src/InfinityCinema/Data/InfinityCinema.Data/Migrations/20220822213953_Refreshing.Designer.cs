@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfinityCinema.Data.Migrations
 {
     [DbContext(typeof(InfinityCinemaDbContext))]
-    [Migration("20220820210918_InitialSetUp")]
-    partial class InitialSetUp
+    [Migration("20220822213953_Refreshing")]
+    partial class Refreshing
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -389,8 +389,8 @@ namespace InfinityCinema.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DirectorId")
                         .HasColumnType("int");

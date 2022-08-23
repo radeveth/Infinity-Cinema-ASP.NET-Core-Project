@@ -9,7 +9,7 @@
             public const int NameMinLength = 2;
             public const int NameMaxLength = 200;
 
-            public const int DescriptionMaxLength = 1000;
+            public const int DescriptionMaxLength = 5000;
 
             public const int TrailerPathMaxLength = 2048;
 

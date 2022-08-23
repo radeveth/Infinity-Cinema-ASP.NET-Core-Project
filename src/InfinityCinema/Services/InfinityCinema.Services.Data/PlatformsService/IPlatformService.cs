@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.PlatformsService.Models;
 
     public interface IPlatformService
     {

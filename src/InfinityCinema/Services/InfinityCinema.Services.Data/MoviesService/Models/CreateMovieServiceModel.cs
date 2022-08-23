@@ -1,11 +1,10 @@
-﻿namespace InfinityCinema.Services.Data.MoviesService
+﻿namespace InfinityCinema.Services.Data.MoviesService.Models
 {
     using System.Collections.Generic;
-
-    using InfinityCinema.Services.Data.ActorsService;
+    using InfinityCinema.Services.Data.ActorsService.Models;
     using InfinityCinema.Services.Data.GenresService;
-    using InfinityCinema.Services.Data.ImagesService;
-    using InfinityCinema.Services.Data.PlatformsService;
+    using InfinityCinema.Services.Data.ImagesService.Models;
+    using InfinityCinema.Services.Data.PlatformsService.Models;
 
     public class CreateMovieServiceModel
     {

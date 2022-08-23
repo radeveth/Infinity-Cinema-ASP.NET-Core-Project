@@ -5,6 +5,7 @@
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.ImagesService.Models;
 
     public class ImageService : IImageService
     {

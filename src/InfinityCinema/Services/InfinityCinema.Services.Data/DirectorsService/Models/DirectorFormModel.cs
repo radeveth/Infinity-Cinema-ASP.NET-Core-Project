@@ -1,4 +1,4 @@
-﻿namespace InfinityCinema.Services.Data.DirectorsService
+﻿namespace InfinityCinema.Services.Data.DirectorsService.Models
 {
     using System.ComponentModel.DataAnnotations;
 

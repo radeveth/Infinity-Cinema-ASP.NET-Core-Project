@@ -1,4 +1,4 @@
-﻿namespace InfinityCinema.Services.Data.CountriesService
+﻿namespace InfinityCinema.Services.Data.CountriesService.Models
 {
     using System.ComponentModel.DataAnnotations;
 

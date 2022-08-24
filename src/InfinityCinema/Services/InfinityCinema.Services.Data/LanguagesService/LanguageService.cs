@@ -28,6 +28,17 @@
             return language;
         }
 
+        public void DeleteLanguagesForParticularMovie(int movieId)
+        {
+            IQueryable<MovieLanguage> movieLanguages = this.dbContext.MovieLanguages.Where(m => m.MovieId == movieId);
+
+            if (movieLanguages.Any())
+            {
+                this.dbContext.MovieLanguages.RemoveRange(movieLanguages);
+                this.dbContext.SaveChanges();
+            }
+        }
+
         public bool IsLanguageExist(string languageName)
             => this.dbContext.Languages.Any(l => l.Name.ToLower() == languageName.ToLower());
 

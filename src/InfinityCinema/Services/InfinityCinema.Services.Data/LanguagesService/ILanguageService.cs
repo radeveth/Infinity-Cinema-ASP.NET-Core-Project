@@ -11,5 +11,7 @@
         bool IsLanguageExist(string languageName);
 
         Language GetLanguageByName(string languageName);
+
+        void DeleteLanguagesForParticularMovie(int movieId);
     }
 }

@@ -279,6 +279,7 @@
 
             int countryId = this.countryService.GetCountryIdByGivenName(countryName);
 
+            // Chnage overall movie data
             movie.Name = newMovieData.Name;
             movie.DateOfReleased = newMovieData.DateOfReleased;
             movie.Resolution = newMovieData.Resolution;
@@ -288,7 +289,80 @@
             movie.DirectorId = directorId;
             movie.CountryId = countryId;
 
-            string[] langages = newMovieData.Language
+            bool isLanguagesIsChanged = false;
+
+            // Delete old movie languages
+            this.languageService.DeleteLanguagesForParticularMovie(movieId);
+
+            // Add new Languages
+            string[] languagesName = newMovieData.Language
+                .Split(", ", StringSplitOptions.RemoveEmptyEntries)
+                .ToArray();
+            ICollection<int> languagesIds = new List<int>();
+            foreach (string languageName in languagesName)
+            {
+                Language language = this.languageService.GetLanguageByName(languageName);
+
+                if (language == null)
+                {
+                    language = await this.languageService.CreateAsync(languageName);
+                }
+
+                languagesIds.Add(language.Id);
+            }
+
+            await this.MatchLanguagesWithMovie(movieId, languagesIds);
+
+            // Delete old movie images
+
+
+            // Create new images for particular movie
+            //IEnumerable<ImageFormModel> images = newMovieData.Images;
+            //foreach (ImageFormModel image in images)
+            //{
+            //    image.MovieId = movieId;
+            //    await this.imageService.CreateAsync(image);
+            //}
+
+            // Match genres with particular movie
+            //IEnumerable<int> genresIds = createMovieModel.OverallMovieInformation.GenresId;
+            //await this.MatchGenresWithMovie(movieId, genresIds);
+
+            //// Create actors for particular movie
+            //IEnumerable<ActorFormModel> actors = createMovieModel.Actors;
+            //ICollection<int> actorsIds = new List<int>();
+            //Actor actor;
+            //foreach (ActorFormModel actorFormModel in actors)
+            //{
+            //    actor = this.actorService.GetActorByNames(actorFormModel.FullName);
+
+            //    if (actor == null)
+            //    {
+            //        actor = await this.actorService.CreateAsync(actorFormModel);
+            //    }
+
+            //    actorsIds.Add(actor.Id);
+            //}
+
+            //await this.MatchActorsWithMovie(movieId, actorsIds);
+
+            //// Create Platforms for particular movie
+            //IEnumerable<PlatformFormModel> platforms = createMovieModel.Platforms;
+            //ICollection<int> platformsIds = new List<int>();
+            //Platform platform;
+            //foreach (PlatformFormModel platformFormModel in platforms)
+            //{
+            //    platform = this.platformService.GetPlatformByName(platformFormModel.Name);
+
+            //    if (platform == null)
+            //    {
+            //        platform = await this.platformService.CreateAsync(platformFormModel);
+            //    }
+
+            //    platformsIds.Add(platform.Id);
+            //}
+
+            //await this.MatchPlatformsWithMovie(movieId, platformsIds);
 
             throw new NotImplementedException();
         }

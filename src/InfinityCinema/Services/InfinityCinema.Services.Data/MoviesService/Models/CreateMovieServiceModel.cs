@@ -1,6 +1,7 @@
 ﻿namespace InfinityCinema.Services.Data.MoviesService.Models
 {
     using System.Collections.Generic;
+
     using InfinityCinema.Services.Data.ActorsService.Models;
     using InfinityCinema.Services.Data.ImagesService.Models;
     using InfinityCinema.Services.Data.PlatformsService.Models;

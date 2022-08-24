@@ -5,7 +5,10 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using InfinityCinema.Services.Data.ActorsService;
+    using InfinityCinema.Services.Data.ActorsService.Models;
     using InfinityCinema.Services.Data.GenresService;
+    using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.MoviesService;
     using InfinityCinema.Services.Data.MoviesService.Models;
     using Microsoft.AspNetCore.Mvc;
@@ -14,16 +17,20 @@
     {
         private readonly IMovieService movieService;
         private readonly IGenreService genreService;
+        private readonly IActorService actorService;
+        private readonly IImageService imagesService;
 
-        public MoviesController(IMovieService movieService, IGenreService genreService)
+        public MoviesController(IMovieService movieService, IGenreService genreService, IActorService actorService, IImageService imagesService)
         {
             this.movieService = movieService;
             this.genreService = genreService;
+            this.actorService = actorService;
+            this.imagesService = imagesService;
         }
 
         public IActionResult Create()
         {
-            return this.View(new CreateMovieServiceModel() { OverallMovieInformation = CreateInitializateOfinitialization(new MovieFormModel(), this.genreService) });
+            return this.View(new CreateMovieServiceModel() { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
         }
 
         [HttpPost]
@@ -39,7 +46,7 @@
             if (!this.ModelState.IsValid)
             {
                 return this.View(new CreateMovieServiceModel()
-                    { OverallMovieInformation = CreateInitializateOfinitialization(new MovieFormModel(), this.genreService) });
+                    { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
             }
 
             string message = await this.movieService.CreateMovieAsync(movieModel, this.User);
@@ -50,7 +57,7 @@
             else
             {
                 return this.View(new CreateMovieServiceModel()
-                    { OverallMovieInformation = CreateInitializateOfinitialization(new MovieFormModel(), this.genreService) });
+                    { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
             }
         }
 
@@ -76,10 +83,19 @@
 
         public IActionResult Edit(int id)
         {
-            return this.View(new CreateMovieServiceModel() { OverallMovieInformation = CreateInitializateOfinitialization(new MovieFormModel(), this.genreService) });
+            IEnumerable<ActorViewModel> existingActors = this.actorService.GetActorsForGivenMovie(id);
+            IEnumerable<string> existingImages = this.imagesService.GetImagesForGivenMovie(id);
+
+            return this.View(new EditMovieServiceModel() { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
         }
 
-        private static MovieFormModel CreateInitializateOfinitialization(MovieFormModel movieFormModel, IGenreService genreService)
+        [HttpPost]
+        public IActionResult Edit([FromQuery] EditMovieServiceModel)
+        {
+            return this.View(new EditMovieServiceModel() { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
+        }
+
+        private static MovieFormModel CreateInitializationOfMovieGenres(MovieFormModel movieFormModel, IGenreService genreService)
             => new MovieFormModel()
                 {
                     Genres = genreService.GetMovieGenres(),

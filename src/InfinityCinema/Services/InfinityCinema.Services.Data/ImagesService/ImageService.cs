@@ -1,5 +1,7 @@
 ﻿namespace InfinityCinema.Services.Data.ImagesService
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using InfinityCinema.Data;
@@ -28,5 +30,8 @@
 
             return image;
         }
+
+        public IEnumerable<string> GetImagesForGivenMovie(int movieId)
+            => this.dbConext.Images.Where(i => i.MovieId == movieId).Select(i => i.Url);
     }
 }

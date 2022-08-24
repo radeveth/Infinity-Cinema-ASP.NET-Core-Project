@@ -1,0 +1,79 @@
+﻿@model CreateMovieServiceModel
+
+@{
+    ViewData["Title"] = "Edit Movie";
+}
+
+<div class="image-fliud" style="background-image: url(https://images.pexels.com/photos/3945321/pexels-photo-3945321.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);">
+    <div>
+        <div class="float-end">
+            <a class="btn btn-danger float-end" style="width:50% height:3px" asp-area="" asp-controller="Home" asp-action="Index">x</a>
+        </div>
+        <br />
+        <h2 class="heading-margin text-center" style="">@ViewBag.Title</h2>
+
+        <div class="row">
+            <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+                <form method="post" class="fw-bold">
+                    <div id="form-container">
+                        <div id="overall-movie-form-information-container">
+                            <partial name="_OverallMovieFormPartial" model="@Model.OverallMovieInformation" />
+                            <div class="mb-4"></div>
+                            <div class="row">
+                                <input id="images-btn" type="submit" value="Edit Images" class="btn btn-primary offset-2 col-2" />
+                                <input id="actors-btn" type="submit" value="Edit Actors" class="btn btn-primary offset-1 col-2" />
+                                <input id="platforms-btn" type="submit" value="Edit Platforms" class="btn btn-primary offset-1 col-2" />
+                            </div>
+                        </div>
+
+                        <div id="images-container" class="d-none">
+                            <partial name="_EditImagesPartial.cshtml" model="@Model.Images" />
+                        </div>
+                        <div id="actors-container" class="d-none">
+                            <partial name="_EditActorsPartial" model="@Model.Actors" />
+                        </div>
+                        <div id="platforms-container" class="d-none">
+                            <partial name="_EditPlatformsPartial" model="@Model.Platforms" />
+                        </div>
+
+                        <input class="offset-6 col-3 btn btn-primary rounded-pill text-center mt-5 mb-4 d-grid gap-2 col-3 mx-auto" type="submit" value="Edit" id="edit-btn" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let imagesButtonElement = document.getElementById('images-btn');
+        let actorsButtonElement = document.getElementById('actors-btn');
+        let platformsButtonElement = document.getElementById('platforms-btn');
+
+        let overallMovieFormContainerElement = document.getElementById('overall-movie-form-information-container');
+        let imagesContainerElement = document.getElementById('images-container');
+        let actorsContainerElement = document.getElementById('actors-container');
+        let platfromsContainerElement = document.getElementById('platforms-container');
+
+        imagesButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            overallMovieFormContainerElement.classList.add('d-none');
+            imagesContainerElement.classList.remove('d-none');
+        });
+
+        actorsButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            overallMovieFormContainerElement.classList.add('d-none');
+            actorsContainerElement.classList.remove('d-none');
+        });
+
+        platformsButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            overallMovieFormContainerElement.classList.add('d-none');
+            platfromsContainerElement.classList.remove('d-none');
+        });
+    </script>
+}

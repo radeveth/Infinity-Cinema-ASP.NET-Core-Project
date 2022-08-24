@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.PlatformsService
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -29,6 +30,20 @@
             await this.dbContext.SaveChangesAsync();
 
             return platform;
+        }
+
+        public IEnumerable<PlatformViewModel> GetPlatformsForGivenMovie(int movieId)
+        {
+            IQueryable<Platform> platfromsForTargetMovie = this.dbContext.MoviePlatform.Where(m => m.MovieId == movieId).Select(p => p.Platform);
+
+            IEnumerable<PlatformViewModel> platforms = platfromsForTargetMovie.Select(p => new PlatformViewModel()
+            {
+                Name = p.Name,
+                Icon = p.IconUrl,
+                PathUrl = p.PathUrl,
+            });
+
+            return platforms;
         }
 
         public Platform GetPlatformByName(string platfrom)

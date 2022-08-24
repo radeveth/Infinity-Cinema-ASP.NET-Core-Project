@@ -37,26 +37,39 @@
                 <span class="badge badge-primary offset-3 col-6 fw-bold">Serach by Top Genres</span>
                 <div class="row mt-3">
                     <div class="row">
-                        <ul class="nav nav-tabs d-flex flex-column flex-md-row text-center">
-                            <li class="nav-item offset-3 col-1 active" id="all-genres" style="cursor: pointer;">
-                                <a class="nav-link">All</a>
-                            </li>
-                            <li class="nav-item col-1" id="action-genres" style="cursor: pointer;">
-                                <a class="nav-link">Action</a>
-                            </li>
-                            <li class="nav-item col-1" id="drama-genres" style="cursor: pointer;">
-                                <a class="nav-link" data-toggle="tab">Drama</a>
-                            </li>
-                            <li class="nav-item col-1" id="comedy-genres" style="cursor: pointer;">
-                                <a class="nav-link">Comedy</a>
-                            </li>
-                            <li class="nav-item col-1" id="thriller-genres" style="cursor: pointer;">
-                                <a class="nav-link">Thriller</a>
-                            </li>
-                            <li class="nav-item col-1" id="fantasy-genres" style="cursor: pointer;">
-                                <a class="nav-link">Fantasy</a>
-                            </li>
-                        </ul>
+                        <center>
+                            <ul class="nav nav-tabs d-flex flex-column flex-md-row text-center">
+                                <li class="nav-item offset-3 col-1" id="all-genres" style="cursor: pointer;">
+                                    <center>
+                                        <input type="submit" asp-for="SearchGenre" class="nav-link" value="All" />
+                                    </center>
+                                </li>
+                                <li class="nav-item col-1" id="action-genres" style="cursor: pointer;">
+                                    <center>
+                                        <input type="submit" asp-for="SearchGenre" class="nav-link" value="Action" />
+                                    </center>
+                                <li class="nav-item col-1" id="drama-genres" style="cursor: pointer;">
+                                    <center>
+                                        <input type="submit" asp-for="SearchGenre" class="nav-link" value="Drama" />
+                                    </center>
+                                </li>
+                                <li class="nav-item col-1" id="comedy-genres" style="cursor: pointer;">
+                                    <center>
+                                        <input type="submit" asp-for="SearchGenre" class="nav-link" value="Comedy" />
+                                    </center>
+                                </li>
+                                <li class="nav-item col-1" id="thriller-genres" style="cursor: pointer;">
+                                    <center>
+                                        <input type="submit" asp-for="SearchGenre" class="nav-link" value="Thriller" />
+                                    </center>
+                                </li>
+                                <li class="nav-item col-1" id="fantasy-genres" style="cursor: pointer;">
+                                    <center>
+                                        <input type="submit" asp-for="SearchGenre" class="nav-link" value="Fantasy" />
+                                    </center>
+                                </li>
+                            </ul>
+                        </center>
                     </div>
                 </div>
             </div>
@@ -64,48 +77,55 @@
 
         @if (!isHaveMovies)
         {
-            <div class="mb-5"></div>
-            <div class="text-center"><h1>There are no mvoes by given criteria!</h1></div>
-            <div class="mb-5"></div>
+            <div class="row mb-3 mt-5">
+                <div class="text-center offset-3 col-6"><h1>There are no mvoes by given criteria!</h1></div>
+            </div>
             <img class="rounded mx-auto d-block" width:100px height:100px src="https://www.cambridge.org/elt/blog/wp-content/uploads/2019/07/Sad-Face-Emoji-480x480.png.webp" />
         }
         else
         {
-        <div class="row mt-5">
-            @foreach (var movie in Model.Movies)
-            {
-                <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4">
-                    <div class="component">
-                        <div class="card">
-                            <div class="card-header">
-                                <img class="card-img" src="@movie.ImageUrl">
-                            </div>
-                            <div class="card-body">
-                                <span class="badge badge-warning">@(movie.StarRating == -1 ? "No rating" : movie.StarRating)</span>
-                                <h4 class="card-title mt-2">@movie.Name</h4>
-                                @foreach (var genre in movie.Genres)
-                                {
-                                    <span class="card-text">@genre</span>
-                                }
-                            </div>
-                            <span class="badge badge-warning">@movie.Duration</span>
-                            <div class="card-footer">
-                                <input type="submit" value="Read More" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-primary" />
+            <div class="row mt-5">
+                @foreach (var movie in Model.Movies)
+                {
+                    <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+                        <div class="component">
+                            <div class="card">
+                                <div class="card-header">
+                                    <img class="card-img" src="@movie.ImageUrl">
+                                </div>
+                                <div class="card-body">
+                                    <span class="badge badge-warning">@(movie.StarRating == -1 ? "No rating" : movie.StarRating)</span>
+                                    <h4 class="card-title mt-2">@movie.Name</h4>
+                                    @foreach (var genre in movie.Genres)
+                                    {
+                                        <span class="card-text">@genre</span>
+                                    }
+                                </div>
+                                <span class="badge badge-warning">@movie.Duration</span>
+                                <div class="card-footer">
+                                    <form method="get">
+                                        <div class="float-start">
+                                            <button asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-primary">Details</button>
+                                        </div>
+                                        <div class="float-end">
+                                            <button asp-controller="Movies" asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-outline-primary">Edit</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            }
-        </div>
+                }
+            </div>
 
-        <div class="row" style="margin-bottom:20px">
-            <div class="col-md-6">
-                <input asp-controller="Movies" asp-action="All" asp-route-currentPage="@((Model.CurrentPage - 1) < 1 ? Model.CurrentPage = 1 : Model.CurrentPage - 1)" type="submit" class="btn btn-primary rounded-pill float-start" value="Previous" />
+            <div class="row" style="margin-bottom:20px">
+                <div class="col-md-6">
+                    <input asp-controller="Movies" asp-action="All" asp-route-currentPage="@((Model.CurrentPage - 1) < 1 ? Model.CurrentPage = 1 : Model.CurrentPage - 1)" type="submit" class="btn btn-primary rounded-pill float-start" value="Previous" />
+                </div>
+                <div class="col-md-6">
+                    <input asp-controller="Movies" asp-action="All" asp-route-currentPage="@((Model.CurrentPage + 1) > totalPages ? Model.CurrentPage = totalPages : Model.CurrentPage + 1)" type="submit" class="btn btn-primary rounded-pill float-end" value="Next" />
+                </div>
             </div>
-            <div class="col-md-6">
-                <input asp-controller="Movies" asp-action="All" asp-route-currentPage="@((Model.CurrentPage + 1) > totalPages ? Model.CurrentPage = totalPages : Model.CurrentPage + 1)" type="submit" class="btn btn-primary rounded-pill float-end" value="Next" />
-            </div>
-        </div>
         }
     </div>
 </div>

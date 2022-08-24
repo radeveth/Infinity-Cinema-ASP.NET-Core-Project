@@ -15,5 +15,7 @@
         int GetCountryIdByGivenName(string givenName);
 
         string GenerateCountryAbbreviation(string countryName);
+
+        string GetCountryNameById(int id);
     }
 }

@@ -1,7 +1,5 @@
 ﻿namespace InfinityCinema.Data.Common
 {
-    using System;
-
     public class DataValidation
     {
         public class MovieValidation
@@ -23,6 +21,8 @@
 
             public const int LastNameMinLength = 2;
             public const int LastNameMaxLength = 60;
+
+            public const int ImageUrlMaxLength = 2048;
 
             public const int FullNameMinLength = FirstNameMinLength + LastNameMinLength;
             public const int FullNameMaxLength = FirstNameMaxLength + LastNameMaxLength;

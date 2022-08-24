@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using InfinityCinema.Services.Data.GenresService;
@@ -26,11 +27,11 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromQuery] CreateMovieServiceModel movieModel)
+        public async Task<IActionResult> CreateAsync(CreateMovieServiceModel movieModel)
         {
-            var isGenreExist = this.genreService.IsGenresExists(movieModel.OverallMovieInformation.GenresId);
+            IEnumerable<int> genresIds = movieModel.OverallMovieInformation.Genres.Select(g => g.Id);
 
-            if (!isGenreExist)
+            if (!this.genreService.IsGenresExists(genresIds))
             {
                 this.ModelState.AddModelError(string.Empty, "One of given genre does not exist");
             }
@@ -53,21 +54,29 @@
             }
         }
 
-        public IActionResult All(AllMoviesQueryModel moviesQueryModel)
+        public IActionResult All([FromQuery] AllMoviesQueryModel moviesQueryModel)
         {
             AllMoviesQueryModel queryResult = this.movieService
-                .All(moviesQueryModel.SearchName, moviesQueryModel.Sorting, moviesQueryModel.CurrentPage, AllMoviesQueryModel.MoviesPerPage);
+                .All(moviesQueryModel.SearchName, moviesQueryModel.Sorting, moviesQueryModel.CurrentPage, AllMoviesQueryModel.MoviesPerPage, moviesQueryModel.SearchGenre);
 
             moviesQueryModel.TotalMovies = queryResult.TotalMovies;
             moviesQueryModel.Movies = queryResult.Movies;
             moviesQueryModel.CurrentPage = queryResult.CurrentPage;
+            moviesQueryModel.SearchGenre = queryResult.SearchGenre;
 
             return this.View(moviesQueryModel);
         }
 
-        public IActionResult Details()
+        public IActionResult Details(int id)
         {
-            return this.View();
+            MovieDetailsViewModel movie = this.movieService.Details(id);
+
+            return this.View(movie);
+        }
+
+        public IActionResult Edit(int id)
+        {
+            return this.View(new CreateMovieServiceModel() { OverallMovieInformation = CreateInitializateOfinitialization(new MovieFormModel(), this.genreService) });
         }
 
         private static MovieFormModel CreateInitializateOfinitialization(MovieFormModel movieFormModel, IGenreService genreService)

@@ -10,5 +10,7 @@
         Task<Director> CreateAsync(DirectorFormModel directorFormModel);
 
         Task<int> GetDirectorIdAsync(DirectorFormModel directorFormModel);
+
+        string GetDirectorFullNameById(int id);
     }
 }

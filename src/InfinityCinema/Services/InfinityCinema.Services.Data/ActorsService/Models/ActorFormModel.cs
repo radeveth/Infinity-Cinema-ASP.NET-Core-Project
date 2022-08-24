@@ -12,5 +12,9 @@
         [Display(Name = "Full Name")]
         [StringLength(FirstNameMaxLength, MinimumLength = FirstNameMinLength, ErrorMessage = FullNameLengthErrorMessage)]
         public string FullName { get; set; }
+
+        [Url]
+        [StringLength(ImageUrlMaxLength)]
+        public string ImageUrl { get; set; }
     }
 }

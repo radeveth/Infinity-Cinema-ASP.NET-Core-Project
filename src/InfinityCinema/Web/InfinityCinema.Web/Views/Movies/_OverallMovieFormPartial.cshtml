@@ -1,0 +1,64 @@
+﻿@model MovieFormModel
+
+<div id="movie-form-model">
+    <div class="form-group form-margin">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" placeholder="Movie Name">
+        <span asp-validation-for="Name" class="small text-danger"></span>
+    </div>
+    <div class="form-group form-margin">
+        <label asp-for="GenresId"></label>
+        <select asp-for="GenresId" class="form-control multiple" data-search="false" data-silent-initial-value-set="true">
+            @foreach (var genre in Model.Genres)
+            {
+                <option value="@genre.Id">@genre.Name</option>
+            }
+        </select>
+        <span asp-validation-for="GenresId" class="small text-danger"></span>
+    </div>
+    <div class="form-group form-margin">
+        <label asp-for="DateOfReleased"></label>
+        <input asp-for="DateOfReleased" class="form-control" placeholder="@DateTime.UtcNow.Year">
+        <span asp-validation-for="DateOfReleased" class="small text-danger"></span>
+    </div>
+    <div class="form-margin"></div>
+    <div class="form-group">
+        <label asp-for="Resolution" class="form-label"></label>
+        <select asp-for="Resolution" class="form-control">
+            <option value="0">Unknown</option>
+            <option value="1" selected>HD</option>
+            <option value="2">SD</option>
+            <option value="3">4K</option>
+        </select>
+    </div>
+    <div class="form-group form-margin">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" rows="4" class="form-control" placeholder=""></textarea>
+        <span asp-validation-for="Description" class="small text-danger"></span>
+    </div>
+    <div class="form-group form-margin">
+        <label asp-for="TrailerPath"></label>
+        <input asp-for="TrailerPath" class="form-control" placeholder="Film Trailer path">
+        <span asp-validation-for="TrailerPath" class="small text-danger"></span>
+    </div>
+    <div class="form-group form-margin">
+        <label asp-for="Duration"></label>
+        <input asp-for="Duration" class="form-control" placeholder="35m, 2h 35m, 1d 2h 35m, etc...">
+        <span asp-validation-for="Duration" class="small text-danger"></span>
+    </div>
+    <div class="form-group form-margin mb-1">
+        <label asp-for="Language"></label>
+        <input asp-for="Language" class="form-control" placeholder="English, Spanish, etc...">
+        <span asp-validation-for="Language" class="small text-danger"></span>
+    </div>
+    <div class="form-group form-margin mb-1">
+        <label asp-for="Country"></label>
+        <input asp-for="Country" class="form-control" placeholder="USA, Bulgaria, etc...">
+        <span asp-validation-for="Country" class="small text-danger"></span>
+    </div>
+    <div class="form-group form-margin mb-1">
+        <label asp-for="Director.FullName"></label>
+        <input asp-for="Director.FullName" class="form-control" placeholder="Director Full Name">
+        <span asp-validation-for="Director.FullName" class="small text-danger"></span>
+    </div>
+</div>

@@ -1,6 +1,7 @@
 ﻿namespace InfinityCinema.Services.Data.ActorsService
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -47,6 +48,19 @@
                 .Actors
                 .AsQueryable()
                 .FirstOrDefault(a => a.FirstName.ToLower() == firstName && a.LastName.ToLower() == lastName);
+        }
+
+        public IEnumerable<ActorViewModel> GetActorsForGivenMovie(int movieId)
+        {
+            IQueryable<Actor> actorsFromTargetMovie = this.dbContext.MovieActors.Where(a => a.MovieId == movieId).Select(m => m.Actor);
+
+            IEnumerable<ActorViewModel> actors = actorsFromTargetMovie.Select(a => new ActorViewModel()
+            {
+                FullName = a.FirstName + " " + a.LastName,
+                ImageUrl = a.ImageUrl,
+            });
+
+            return actors;
         }
     }
 }

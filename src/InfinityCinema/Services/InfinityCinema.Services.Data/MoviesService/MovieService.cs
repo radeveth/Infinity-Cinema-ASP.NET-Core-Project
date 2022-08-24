@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -9,16 +10,19 @@
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.ActorsService;
+    using InfinityCinema.Services.Data.ActorsService.Models;
     using InfinityCinema.Services.Data.CountriesService;
     using InfinityCinema.Services.Data.DirectorsService;
+    using InfinityCinema.Services.Data.DirectorsService.Models;
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.ImagesService;
+    using InfinityCinema.Services.Data.ImagesService.Models;
     using InfinityCinema.Services.Data.LanguagesService;
     using InfinityCinema.Services.Data.MoviesService.Enums;
     using InfinityCinema.Services.Data.MoviesService.Models;
     using InfinityCinema.Services.Data.PlatformsService;
+    using InfinityCinema.Services.Data.PlatformsService.Models;
     using Microsoft.AspNetCore.Identity;
-
 
     public class MovieService : IMovieService
     {
@@ -170,9 +174,23 @@
         }
 
         public AllMoviesQueryModel All
-            (string searchName = null, MovieSorting sorting = MovieSorting.Rating, int currentPage = 1, int moviesPerPage = AllMoviesQueryModel.MoviesPerPage)
+            (string searchName = null,
+            MovieSorting sorting = MovieSorting.Rating,
+            int currentPage = 1,
+            int moviesPerPage = AllMoviesQueryModel.MoviesPerPage,
+            string searchGenre = "all")
         {
             IQueryable<Movie> moviesQuery = this.dbContext.Movies.AsQueryable();
+
+            if (searchGenre.ToLower() != "all")
+            {
+                IQueryable<Movie> moviesByTargetGenre = this.dbContext
+                    .MovieGenres
+                    .Where(m => m.Genre.Name.ToLower() == searchGenre.ToLower() && m.Movie.MovieGenres.Count == 1)
+                    .Select(m => m.Movie);
+
+                moviesQuery = moviesByTargetGenre;
+            }
 
             if (!string.IsNullOrEmpty(searchName))
             {
@@ -183,8 +201,8 @@
             moviesQuery = sorting switch
             {
                 MovieSorting.Rating => moviesQuery.OrderByDescending(m => m.StarRatings.Count != 0 ? m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count : 0),
-                MovieSorting.YearNewest => moviesQuery.OrderByDescending(m => m.DateOfReleased),
-                MovieSorting.YearOldest => moviesQuery.OrderBy(m => m.DateOfReleased),
+                MovieSorting.YearNewest => moviesQuery.OrderBy(m => m.DateOfReleased),
+                MovieSorting.YearOldest => moviesQuery.OrderByDescending(m => m.DateOfReleased),
                 MovieSorting.NameAlphabetically => moviesQuery.OrderBy(m => m.Name),
                 MovieSorting.DurationSmallest => moviesQuery.OrderBy(m => m.Duration),
                 MovieSorting.DurationLargest => moviesQuery.OrderByDescending(m => m.Duration),
@@ -210,6 +228,69 @@
                 TotalMovies = moviesQuery.Count(),
                 CurrentPage = currentPage,
             };
+        }
+
+        public MovieDetailsViewModel Details(int id)
+        {
+            Movie movie = this.dbContext.Movies.Find(id);
+
+            IEnumerable<string> images = movie.Images.Select(i => i.Url);
+            IEnumerable<ActorViewModel> actors = this.actorService.GetActorsForGivenMovie(id);
+            string directorFullName = this.directorService.GetDirectorFullNameById(movie.DirectorId);
+            IEnumerable<PlatformViewModel> platforms = this.platformService.GetPlatformsForGivenMovie(id);
+            IEnumerable<string> languages = movie.MovieLanguages.Select(m => m.Language.Name);
+            string country = this.countryService.GetCountryNameById(movie.CountryId);
+
+            return new MovieDetailsViewModel()
+            {
+                Name = movie.Name,
+                Trailer = movie.TrailerPath,
+                Description = movie.Description,
+                Images = images,
+                Actors = actors,
+                Director = directorFullName,
+                Platforms = platforms,
+                Languages = languages,
+                Countruy = country,
+            };
+        }
+
+        public async Task<bool> Edit(EditMovieServiceModel movieModel, int movieId)
+        {
+            Movie movie = this.dbContext.Movies.Find(movieId);
+
+            if (movie == null)
+            {
+                return false;
+            }
+
+            MovieFormModel newMovieData = movieModel.OverallMovieInformation;
+
+            // Get Director Id
+            DirectorFormModel directorFormModel = newMovieData.Director;
+            int directorId = await this.directorService.GetDirectorIdAsync(directorFormModel);
+
+            // Get Country Id
+            string countryName = newMovieData.Country;
+            if (!this.countryService.CheckIfCountryExist(countryName))
+            {
+                await this.countryService.CreateAsync(countryName);
+            }
+
+            int countryId = this.countryService.GetCountryIdByGivenName(countryName);
+
+            movie.Name = newMovieData.Name;
+            movie.DateOfReleased = newMovieData.DateOfReleased;
+            movie.Resolution = newMovieData.Resolution;
+            movie.Description = newMovieData.Description;
+            movie.TrailerPath = newMovieData.TrailerPath;
+            movie.Duration = newMovieData.Duration;
+            movie.DirectorId = directorId;
+            movie.CountryId = countryId;
+
+            string[] langages = newMovieData.Language
+
+            throw new NotImplementedException();
         }
 
         private async Task MatchLanguagesWithMovie(int movieId, IEnumerable<int> languagesIds)

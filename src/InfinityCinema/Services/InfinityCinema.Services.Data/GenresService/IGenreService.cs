@@ -12,7 +12,7 @@
 
         IEnumerable<GenreFormModel> GetMovieGenres();
 
-        bool IsGenresExists(ICollection<int> ids);
+        bool IsGenresExists(IEnumerable<int> ids);
 
         int GetGenreIdByGivenName(string genreName);
     }

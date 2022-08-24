@@ -76,5 +76,12 @@
 
         public bool CheckIfCountryExist(string countryName)
             => this.dbContext.Countries.Any(c => c.Name.Replace(" ", string.Empty).ToLower() == countryName.Replace(" ", string.Empty).ToLower());
+
+        public string GetCountryNameById(int id)
+        {
+            Country country = this.dbContext.Countries.Find(id);
+
+            return country.Name;
+        }
     }
 }

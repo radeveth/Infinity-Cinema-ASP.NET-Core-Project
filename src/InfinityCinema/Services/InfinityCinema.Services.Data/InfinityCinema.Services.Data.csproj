@@ -26,9 +26,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="CountriesService\Abbreviation-Country.txt">
+    <None Update="CountriesService\Files\Abbreviation-Country.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="LanguagesService\Models\" />
+    <Folder Include="SettingsService\Models\" />
   </ItemGroup>
 
 </Project>

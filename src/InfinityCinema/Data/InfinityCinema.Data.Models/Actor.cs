@@ -22,6 +22,9 @@
         [MaxLength(LastNameMaxLength)]
         public string LastName { get; set; }
 
+        [MaxLength(ImageUrlMaxLength)]
+        public string ImageUrl { get; set; }
+
         public virtual ICollection<MovieActor> MovieActors { get; set; }
     }
 }

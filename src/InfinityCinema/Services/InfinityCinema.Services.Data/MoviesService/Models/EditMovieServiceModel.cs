@@ -1,18 +1,17 @@
 ﻿namespace InfinityCinema.Services.Data.MoviesService.Models
 {
-    using System.Collections.Generic;
     using InfinityCinema.Services.Data.ActorsService.Models;
     using InfinityCinema.Services.Data.ImagesService.Models;
     using InfinityCinema.Services.Data.PlatformsService.Models;
 
-    public class CreateMovieServiceModel
+    public class EditMovieServiceModel
     {
         public MovieFormModel OverallMovieInformation { get; set; }
 
-        public IEnumerable<ImageFormModel> Images { get; set; }
+        public EditActorsFormModel Actors { get; set; }
 
-        public IEnumerable<ActorFormModel> Actors { get; set; }
+        public EditImagesFormModel Images { get; set; }
 
-        public IEnumerable<PlatformFormModel> Platforms { get; set; }
+        public EditPlatformsFormModel Platforms { get; set; }
     }
 }

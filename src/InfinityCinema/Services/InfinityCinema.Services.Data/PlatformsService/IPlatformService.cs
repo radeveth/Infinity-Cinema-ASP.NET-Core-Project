@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.PlatformsService
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using InfinityCinema.Data.Models;
@@ -10,5 +11,7 @@
         Task<Platform> CreateAsync(PlatformFormModel platformFormModel);
 
         Platform GetPlatformByName(string platfrom);
+
+        IEnumerable<PlatformViewModel> GetPlatformsForGivenMovie(int movieId);
     }
 }

@@ -19,6 +19,9 @@
         [Display(Name = "")]
         public string SearchName { get; set; }
 
+        [Display(Name = "")]
+        public string SearchGenre { get; set; } = "all";
+
         public IEnumerable<MovieListingViewModel> Movies { get; set; }
     }
 }

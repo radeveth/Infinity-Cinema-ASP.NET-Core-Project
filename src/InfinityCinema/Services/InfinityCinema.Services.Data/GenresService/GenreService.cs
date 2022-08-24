@@ -41,9 +41,21 @@
                 })
                 .ToList();
 
-        public bool IsGenresExists(ICollection<int> ids)
-            => ids.Any(id => this.dbContext.Genres
-                .Any(g => g.Id == id));
+        public bool IsGenresExists(IEnumerable<int> ids)
+        {
+            bool isAllGenresExist = true;
+
+            foreach (var genreId in ids)
+            {
+                if (!this.dbContext.Genres.Any(g => g.Id == genreId))
+                {
+                    isAllGenresExist = false;
+                    return isAllGenresExist;
+                }
+            }
+
+            return isAllGenresExist;
+        }
 
         public int GetGenreIdByGivenName(string genreName)
         {

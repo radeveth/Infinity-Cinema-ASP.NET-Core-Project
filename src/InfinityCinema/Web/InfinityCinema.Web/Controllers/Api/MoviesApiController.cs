@@ -14,12 +14,10 @@
             this.movieService = movieService;
         }
 
-        // [Route("{action}")]
-        //public ActionResult<MoviesQueryServiceModel> All(AllMoviesQueryModel moviesQueryModel)
+        //[Route("{action}")]
+        //public ActionResult<AllMoviesQueryModel> All(string genre)
         //{
-        //    MoviesQueryServiceModel movies = this.movieService.All(moviesQueryModel);
 
-        //    return this.Json(movies);
         //}
     }
 }

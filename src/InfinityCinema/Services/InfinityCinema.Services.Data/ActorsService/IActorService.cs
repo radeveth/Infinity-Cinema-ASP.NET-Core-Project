@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.ActorsService
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using InfinityCinema.Data.Models;
@@ -10,5 +11,7 @@
         Task<Actor> CreateAsync(ActorFormModel actorFormModel);
 
         Actor GetActorByNames(string fullName);
+
+        IEnumerable<ActorViewModel> GetActorsForGivenMovie(int movieId);
     }
 }

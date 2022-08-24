@@ -1,6 +1,5 @@
 ﻿namespace InfinityCinema.Services.Data.ImagesService
 {
-    using System;
     using System.Threading.Tasks;
 
     using InfinityCinema.Data;

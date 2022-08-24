@@ -1,0 +1,41 @@
+﻿@model MovieDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container mt-4">
+    <cemter>
+        <div class="mb-5">
+            <h1 class="text-center fw-bold">@Model.Name</h1>
+        </div>
+    </cemter>
+
+    <center>
+        <div class="embed-responsive embed-responsive-16by9">
+            <iframe width="800" height="450"
+                    src="@Model.Trailer"
+                    title="@(Model.Name + " - " + "Trailer")"
+                    frameborder="0"
+                    allow="accelerometer;
+                autoplay;
+                clipboard-write;
+                encrypted-media;
+                gyroscope;
+                picture-in-picture"
+                    allowfullscreen></iframe>
+        </div>
+    </center>
+
+    @foreach (var actor in Model.Actors)
+    {
+        <p>@actor.FullName</p>
+    }
+</div>
+
+
+@section Scripts {
+    <script>
+        console.log(@Model.Trailer);
+    </script>
+}

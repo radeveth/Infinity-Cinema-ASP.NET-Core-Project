@@ -5,9 +5,8 @@
     using System.ComponentModel.DataAnnotations;
 
     using InfinityCinema.Data.Models.Enums;
-    using InfinityCinema.Services.Data.CountriesService;
-    using InfinityCinema.Services.Data.DirectorsService;
-    using InfinityCinema.Services.Data.GenresService;
+    using InfinityCinema.Services.Data.DirectorsService.Models;
+    using InfinityCinema.Services.Data.GenresService.Models;
     using InfinityCinema.Services.Data.ValidationAttributes;
 
     using static InfinityCinema.Data.Common.DataValidation;
@@ -31,7 +30,7 @@
         [Display(Name = "Genre")]
         public int[] GenresId { get; set; }
 
-        public IEnumerable<GenreFormModel> Genres { get; set; }
+        public IEnumerable<GenreFormModel> Genres { get; set; } = new HashSet<GenreFormModel>();
 
         [Required]
         [MaxLength(MovieValidation.DescriptionMaxLength)]
@@ -39,8 +38,7 @@
 
         public DirectorFormModel Director { get; set; }
 
-        [Url]
-        [Display(Name = "Trailer Path")]
+        [Display(Name = "Trailer Embed Path")]
         [StringLength(MovieValidation.TrailerPathMaxLength, ErrorMessage = TrailerPathMaxLengthErrorMessage)]
         public string TrailerPath { get; set; }
 
@@ -49,8 +47,8 @@
         [YearMaxValue(1888, DateOfReleasedMaxValueErrorMessage)] // In 1888 is released first movie
         public DateTime DateOfReleased
         {
-            get => dateOfReleased;
-            set => dateOfReleased = value;
+            get => this.dateOfReleased;
+            set => this.dateOfReleased = value;
         }
 
         public Resolution Resolution { get; set; }

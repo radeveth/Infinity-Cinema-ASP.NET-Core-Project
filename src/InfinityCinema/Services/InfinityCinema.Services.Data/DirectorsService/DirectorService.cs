@@ -1,7 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.DirectorsService
 {
     using System;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -56,6 +55,13 @@
             await this.dbContext.SaveChangesAsync();
 
             return director;
+        }
+
+        public string GetDirectorFullNameById(int id)
+        {
+            Director director = this.dbContext.Directors.Find(id);
+
+            return $"{director.FirstName} {director.LastName}";
         }
     }
 }

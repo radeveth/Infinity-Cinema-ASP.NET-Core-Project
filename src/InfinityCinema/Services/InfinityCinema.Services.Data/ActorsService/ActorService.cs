@@ -37,6 +37,14 @@
             return actor;
         }
 
+        public async Task DeleteActorsForParticularMovie(int movieId)
+        {
+            IQueryable<MovieActor> movieActors = this.dbContext.MovieActors.Where(m => m.MovieId == movieId);
+
+            this.dbContext.MovieActors.RemoveRange(movieActors);
+            await this.dbContext.SaveChangesAsync();
+        }
+
         public Actor GetActorByNames(string fullName)
         {
             string[] actorNameParts = fullName

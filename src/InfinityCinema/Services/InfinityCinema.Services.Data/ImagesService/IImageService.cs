@@ -11,5 +11,7 @@
         Task<Image> CreateAsync(ImageFormModel imageFormModel);
 
         IEnumerable<string> GetImagesForGivenMovie(int movieId);
+
+        Task DeleteImagesForParticularMovie(int movieId);
     }
 }

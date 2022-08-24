@@ -234,24 +234,42 @@
         {
             Movie movie = this.dbContext.Movies.Find(id);
 
-            IEnumerable<string> images = movie.Images.Select(i => i.Url);
+            IEnumerable<string> images = this.imageService.GetImagesForGivenMovie(id);
             IEnumerable<ActorViewModel> actors = this.actorService.GetActorsForGivenMovie(id);
             string directorFullName = this.directorService.GetDirectorFullNameById(movie.DirectorId);
             IEnumerable<PlatformViewModel> platforms = this.platformService.GetPlatformsForGivenMovie(id);
-            IEnumerable<string> languages = movie.MovieLanguages.Select(m => m.Language.Name);
+            IEnumerable<string> languages = this.languageService.GetLanguagesForParticularMovie(id);
+
             string country = this.countryService.GetCountryNameById(movie.CountryId);
+
+            IQueryable<MovieListingViewModel> upNextMovies = this.dbContext.Movies
+                .Where(m => m.Id != movie.Id)
+                .Take(10)
+                .Select(m => new MovieListingViewModel()
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    ImageUrl = m.Images.First().Url,
+                    StarRating = m.StarRatings.Count != 0 ? m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count : -1,
+                    Duration = m.Duration,
+                    Genres = m.MovieGenres.Select(m => m.Genre.Name),
+                });
 
             return new MovieDetailsViewModel()
             {
                 Name = movie.Name,
                 Trailer = movie.TrailerPath,
                 Description = movie.Description,
+                Duration = movie.Duration,
+                Resolution = movie.Resolution,
+                DateOfReleased = movie.DateOfReleased,
                 Images = images,
                 Actors = actors,
                 Director = directorFullName,
                 Platforms = platforms,
                 Languages = languages,
                 Countruy = country,
+                UpNextMovies = upNextMovies,
             };
         }
 
@@ -289,80 +307,20 @@
             movie.DirectorId = directorId;
             movie.CountryId = countryId;
 
-            bool isLanguagesIsChanged = false;
-
             // Delete old movie languages
-            this.languageService.DeleteLanguagesForParticularMovie(movieId);
+            await this.languageService.DeleteLanguagesForParticularMovie(movieId);
 
-            // Add new Languages
-            string[] languagesName = newMovieData.Language
-                .Split(", ", StringSplitOptions.RemoveEmptyEntries)
-                .ToArray();
-            ICollection<int> languagesIds = new List<int>();
-            foreach (string languageName in languagesName)
-            {
-                Language language = this.languageService.GetLanguageByName(languageName);
+            // Delete old movie genres
+            await this.genreService.DeleteGenresForParticularMovie(movieId);
 
-                if (language == null)
-                {
-                    language = await this.languageService.CreateAsync(languageName);
-                }
-
-                languagesIds.Add(language.Id);
-            }
-
-            await this.MatchLanguagesWithMovie(movieId, languagesIds);
+            // Delete old movie actors
+            await this.actorService.DeleteActorsForParticularMovie(movieId);
 
             // Delete old movie images
+            await this.imageService.DeleteImagesForParticularMovie(movieId);
 
-
-            // Create new images for particular movie
-            //IEnumerable<ImageFormModel> images = newMovieData.Images;
-            //foreach (ImageFormModel image in images)
-            //{
-            //    image.MovieId = movieId;
-            //    await this.imageService.CreateAsync(image);
-            //}
-
-            // Match genres with particular movie
-            //IEnumerable<int> genresIds = createMovieModel.OverallMovieInformation.GenresId;
-            //await this.MatchGenresWithMovie(movieId, genresIds);
-
-            //// Create actors for particular movie
-            //IEnumerable<ActorFormModel> actors = createMovieModel.Actors;
-            //ICollection<int> actorsIds = new List<int>();
-            //Actor actor;
-            //foreach (ActorFormModel actorFormModel in actors)
-            //{
-            //    actor = this.actorService.GetActorByNames(actorFormModel.FullName);
-
-            //    if (actor == null)
-            //    {
-            //        actor = await this.actorService.CreateAsync(actorFormModel);
-            //    }
-
-            //    actorsIds.Add(actor.Id);
-            //}
-
-            //await this.MatchActorsWithMovie(movieId, actorsIds);
-
-            //// Create Platforms for particular movie
-            //IEnumerable<PlatformFormModel> platforms = createMovieModel.Platforms;
-            //ICollection<int> platformsIds = new List<int>();
-            //Platform platform;
-            //foreach (PlatformFormModel platformFormModel in platforms)
-            //{
-            //    platform = this.platformService.GetPlatformByName(platformFormModel.Name);
-
-            //    if (platform == null)
-            //    {
-            //        platform = await this.platformService.CreateAsync(platformFormModel);
-            //    }
-
-            //    platformsIds.Add(platform.Id);
-            //}
-
-            //await this.MatchPlatformsWithMovie(movieId, platformsIds);
+            // Delete old movie platforms
+            await this.platformService.DeletePlatformsForParticulatMovie(movieId);
 
             throw new NotImplementedException();
         }
@@ -422,6 +380,16 @@
         private string GetUserId(ClaimsPrincipal user)
         {
             return this.userManager.GetUserId(user);
+        }
+
+        public async Task<MovieFormModel> GetMovieById(int id)
+        {
+            Movie movie = await this.dbContext.Movies.FindAsync();
+
+            return new MovieFormModel()
+            {
+                Name = movie.Name,
+            };
         }
     }
 }

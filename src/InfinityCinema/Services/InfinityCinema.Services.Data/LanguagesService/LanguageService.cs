@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.LanguagesService
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -28,14 +29,14 @@
             return language;
         }
 
-        public void DeleteLanguagesForParticularMovie(int movieId)
+        public async Task DeleteLanguagesForParticularMovie(int movieId)
         {
             IQueryable<MovieLanguage> movieLanguages = this.dbContext.MovieLanguages.Where(m => m.MovieId == movieId);
 
             if (movieLanguages.Any())
             {
                 this.dbContext.MovieLanguages.RemoveRange(movieLanguages);
-                this.dbContext.SaveChanges();
+                await this.dbContext.SaveChangesAsync();
             }
         }
 
@@ -44,5 +45,8 @@
 
         public Language GetLanguageByName(string languageName)
             => this.dbContext.Languages.FirstOrDefault(l => l.Name.ToLower() == languageName.ToLower());
+
+        public IEnumerable<string> GetLanguagesForParticularMovie(int movieId)
+            => this.dbContext.MovieLanguages.Where(m => m.MovieId == movieId).Select(i => i.Language.Name);
     }
 }

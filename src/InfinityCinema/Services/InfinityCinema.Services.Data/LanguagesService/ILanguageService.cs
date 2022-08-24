@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.LanguagesService
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using InfinityCinema.Data.Models;
@@ -12,6 +13,8 @@
 
         Language GetLanguageByName(string languageName);
 
-        void DeleteLanguagesForParticularMovie(int movieId);
+        Task DeleteLanguagesForParticularMovie(int movieId);
+
+        IEnumerable<string> GetLanguagesForParticularMovie(int movieId);
     }
 }

@@ -3,14 +3,19 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
 
     using InfinityCinema.Services.Data.ActorsService;
     using InfinityCinema.Services.Data.ActorsService.Models;
+    using InfinityCinema.Services.Data.DirectorsService.Models;
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.ImagesService;
+    using InfinityCinema.Services.Data.ImagesService.Models;
     using InfinityCinema.Services.Data.MoviesService;
     using InfinityCinema.Services.Data.MoviesService.Models;
+    using InfinityCinema.Services.Data.PlatformsService;
+    using InfinityCinema.Services.Data.PlatformsService.Models;
     using Microsoft.AspNetCore.Mvc;
 
     public class MoviesController : BaseController
@@ -19,13 +24,15 @@
         private readonly IGenreService genreService;
         private readonly IActorService actorService;
         private readonly IImageService imagesService;
+        private readonly IPlatformService platformService;
 
-        public MoviesController(IMovieService movieService, IGenreService genreService, IActorService actorService, IImageService imagesService)
+        public MoviesController(IMovieService movieService, IGenreService genreService, IActorService actorService, IImageService imagesService, IPlatformService platformService)
         {
             this.movieService = movieService;
             this.genreService = genreService;
             this.actorService = actorService;
             this.imagesService = imagesService;
+            this.platformService = platformService;
         }
 
         public IActionResult Create()
@@ -83,14 +90,36 @@
 
         public IActionResult Edit(int id)
         {
-            IEnumerable<ActorViewModel> existingActors = this.actorService.GetActorsForGivenMovie(id);
-            IEnumerable<string> existingImages = this.imagesService.GetImagesForGivenMovie(id);
+            MovieDetailsViewModel movieDetailsModel = this.movieService.Details(id);
+            //IEnumerable<ActorViewModel> existingActors = this.actorService.GetActorsForGivenMovie(id);
+            //IEnumerable<string> existingImages = this.imagesService.GetImagesForGivenMovie(id);
+            //IEnumerable<PlatformViewModel> existingPlatfroms = this.platformService.GetPlatformsForGivenMovie(id);
 
-            return this.View(new EditMovieServiceModel() { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
+            MovieFormModel overallMovieInformation = new MovieFormModel()
+            {
+                Name = movieDetailsModel.Name,
+                Description = movieDetailsModel.Description,
+                TrailerPath = movieDetailsModel.Trailer,
+                Duration = movieDetailsModel.Duration,
+                Director = new DirectorFormModel() { FullName = movieDetailsModel.Director },
+                Language = string.Join(", ", movieDetailsModel.Languages),
+                Country = movieDetailsModel.Countruy,
+                Resolution = movieDetailsModel.Resolution,
+                DateOfReleased = movieDetailsModel.DateOfReleased,
+                Genres = this.genreService.GetMovieGenres(),
+            };
+
+            return this.View(new EditMovieServiceModel()
+            {
+                OverallMovieInformation = overallMovieInformation,
+                Actors = new EditActorsFormModel() { ExistingActors = movieDetailsModel.Actors },
+                Images = new EditImagesFormModel() { ExistingImages = movieDetailsModel.Images },
+                Platforms = new EditPlatformsFormModel() { ExistingPlatforms = movieDetailsModel.Platforms },
+            });
         }
 
         [HttpPost]
-        public IActionResult Edit([FromQuery] EditMovieServiceModel)
+        public IActionResult Edit([FromQuery] EditMovieServiceModel movieModel)
         {
             return this.View(new EditMovieServiceModel() { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
         }

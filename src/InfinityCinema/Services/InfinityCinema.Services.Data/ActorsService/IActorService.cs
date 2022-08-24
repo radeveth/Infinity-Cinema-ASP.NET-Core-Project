@@ -13,5 +13,7 @@
         Actor GetActorByNames(string fullName);
 
         IEnumerable<ActorViewModel> GetActorsForGivenMovie(int movieId);
+
+        Task DeleteActorsForParticularMovie(int movieId);
     }
 }

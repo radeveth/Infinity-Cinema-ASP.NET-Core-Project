@@ -18,5 +18,7 @@
         MovieDetailsViewModel Details(int id);
 
         Task<bool> Edit(EditMovieServiceModel movieModel, int movieId);
+
+        Task<MovieFormModel> GetMovieById(int id);
     }
 }

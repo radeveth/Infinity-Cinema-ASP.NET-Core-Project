@@ -15,5 +15,7 @@
         bool IsGenresExists(IEnumerable<int> ids);
 
         int GetGenreIdByGivenName(string genreName);
+
+        Task DeleteGenresForParticularMovie(int movieId);
     }
 }

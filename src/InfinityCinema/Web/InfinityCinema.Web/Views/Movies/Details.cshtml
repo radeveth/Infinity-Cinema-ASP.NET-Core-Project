@@ -2,6 +2,13 @@
 
 @{
     ViewData["Title"] = Model.Name;
+
+    string[] firstThreeImages = new string[]
+    {
+        Model.Images.Skip(0).First(),
+        Model.Images.Skip(1).First(),
+        Model.Images.Skip(2).First()
+    };
 }
 
 <div class="container mt-4">
@@ -11,31 +18,76 @@
         </div>
     </cemter>
 
-    <center>
-        <div class="embed-responsive embed-responsive-16by9">
-            <iframe width="800" height="450"
-                    src="@Model.Trailer"
-                    title="@(Model.Name + " - " + "Trailer")"
-                    frameborder="0"
-                    allow="accelerometer;
+    <div class="row">
+        <div class="col-8 single-left">
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe width="870" height="490"
+                        src="@Model.Trailer"
+                        title="@(Model.Name + " - " + "Trailer")"
+                        frameborder="0"
+                        allow="accelerometer;
                 autoplay;
                 clipboard-write;
                 encrypted-media;
                 gyroscope;
                 picture-in-picture"
-                    allowfullscreen></iframe>
+                        allowfullscreen></iframe>
+            </div>
+
+            @*<div class="mt-4">
+            <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-inner">
+            <div class="carousel-item active">
+            <img width:300px height:300px src="@Model.Images.Skip(0).First() == " class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+            <img width:300px height:300px src="@Model.Images.Skip(1).First()" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+            <img width:300px height:300px src="@Model.Images.Skip(2).First()" class="d-block w-100" alt="...">
+            </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+            </button>
+            </div>
+            </div>*@
+            @foreach (var item in Model.Images)
+            {
+                <img width:100px height:100px src="@item" class="d-block w-100" alt="...">
+            }
         </div>
-    </center>
 
-    @foreach (var actor in Model.Actors)
-    {
-        <p>@actor.FullName</p>
-    }
+        <div class="col-md-4 single-right">
+            <h4 class="text-center mb-3">Up Next</h4>
+            @foreach (var movie in Model.UpNextMovies)
+            {
+                <center>
+                    <div class="card mb-3" style="width: 18rem;">
+                        <img src="@movie.ImageUrl" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">Card title</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                </center>
+            }
+        </div>
+    </div>
+
+    <div class="row mt-5"></div>
+    <hr>
+    <div class="row mt-3"></div>
+
+    <div>
+        <center>
+            <h3 class="text-center">Comments</h3>
+        </center>
+    </div>
 </div>
-
-
-@section Scripts {
-    <script>
-        console.log(@Model.Trailer);
-    </script>
-}

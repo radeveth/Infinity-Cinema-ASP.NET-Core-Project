@@ -10,11 +10,11 @@
 
     public class ImageService : IImageService
     {
-        private readonly InfinityCinemaDbContext dbConext;
+        private readonly InfinityCinemaDbContext dbContext;
 
         public ImageService(InfinityCinemaDbContext dbConext)
         {
-            this.dbConext = dbConext;
+            this.dbContext = dbConext;
         }
 
         public async Task<Image> CreateAsync(ImageFormModel imageFormModel)
@@ -25,13 +25,21 @@
                 MovieId = imageFormModel.MovieId,
             };
 
-            await this.dbConext.AddAsync(image);
-            await this.dbConext.SaveChangesAsync();
+            await this.dbContext.AddAsync(image);
+            await this.dbContext.SaveChangesAsync();
 
             return image;
         }
 
+        public async Task DeleteImagesForParticularMovie(int movieId)
+        {
+            IQueryable<Image> images = this.dbContext.Images.Where(i => i.MovieId == movieId);
+
+            this.dbContext.RemoveRange(images);
+            await this.dbContext.SaveChangesAsync();
+        }
+
         public IEnumerable<string> GetImagesForGivenMovie(int movieId)
-            => this.dbConext.Images.Where(i => i.MovieId == movieId).Select(i => i.Url);
+            => this.dbContext.Images.Where(i => i.MovieId == movieId).Select(i => i.Url);
     }
 }

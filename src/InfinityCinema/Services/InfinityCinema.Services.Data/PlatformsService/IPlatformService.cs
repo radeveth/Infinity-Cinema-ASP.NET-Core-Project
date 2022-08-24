@@ -13,5 +13,7 @@
         Platform GetPlatformByName(string platfrom);
 
         IEnumerable<PlatformViewModel> GetPlatformsForGivenMovie(int movieId);
+
+        Task DeletePlatformsForParticulatMovie(int movieId);
     }
 }

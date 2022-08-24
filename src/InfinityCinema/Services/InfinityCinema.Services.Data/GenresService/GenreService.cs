@@ -65,5 +65,12 @@
             return genre.Id;
         }
 
+        public async Task DeleteGenresForParticularMovie(int movieId)
+        {
+            IQueryable<MovieGenre> movieGenres = this.dbContext.MovieGenres.Where(m => m.MovieId == movieId);
+
+            this.dbContext.MovieGenres.RemoveRange(movieGenres);
+            await this.dbContext.SaveChangesAsync();
+        }
     }
 }

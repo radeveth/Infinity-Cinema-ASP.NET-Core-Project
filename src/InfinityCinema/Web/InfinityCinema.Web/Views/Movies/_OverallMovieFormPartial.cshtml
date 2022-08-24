@@ -36,6 +36,11 @@
         <textarea asp-for="Description" rows="4" class="form-control" placeholder=""></textarea>
         <span asp-validation-for="Description" class="small text-danger"></span>
     </div>
+    <div class="form-group form-margin mb-1">
+        <label asp-for="Director.FullName"></label>
+        <input asp-for="Director.FullName" class="form-control" placeholder="Director Full Name">
+        <span asp-validation-for="Director.FullName" class="small text-danger"></span>
+    </div>
     <div class="form-group form-margin">
         <label asp-for="TrailerPath"></label>
         <input asp-for="TrailerPath" class="form-control" placeholder="Film Trailer path">
@@ -55,10 +60,5 @@
         <label asp-for="Country"></label>
         <input asp-for="Country" class="form-control" placeholder="USA, Bulgaria, etc...">
         <span asp-validation-for="Country" class="small text-danger"></span>
-    </div>
-    <div class="form-group form-margin mb-1">
-        <label asp-for="Director.FullName"></label>
-        <input asp-for="Director.FullName" class="form-control" placeholder="Director Full Name">
-        <span asp-validation-for="Director.FullName" class="small text-danger"></span>
     </div>
 </div>

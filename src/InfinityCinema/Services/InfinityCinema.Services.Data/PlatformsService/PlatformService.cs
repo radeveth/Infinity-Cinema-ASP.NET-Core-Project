@@ -48,5 +48,13 @@
 
         public Platform GetPlatformByName(string platfrom)
             => this.dbContext.Platforms.FirstOrDefault(p => p.Name.ToLower() == platfrom.ToLower());
+
+        public async Task DeletePlatformsForParticulatMovie(int movieId)
+        {
+            IQueryable<MoviePlatform> moviePlatforms = this.dbContext.MoviePlatform.Where(m => m.MovieId == movieId);
+
+            this.dbContext.MoviePlatform.RemoveRange(moviePlatforms);
+            await this.dbContext.SaveChangesAsync();
+        }
     }
 }

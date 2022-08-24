@@ -1,1 +1,6 @@
-﻿
+﻿@model EditPlatformsFormModel
+
+@foreach (var item in Model.ExistingPlatforms)
+{
+    <p>@item.Name</p>
+}

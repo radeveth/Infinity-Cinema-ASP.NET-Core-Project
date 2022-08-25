@@ -9,6 +9,7 @@
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Data.Models.Enums;
     using InfinityCinema.Services.Data.ActorsService;
     using InfinityCinema.Services.Data.ActorsService.Models;
     using InfinityCinema.Services.Data.CountriesService;
@@ -239,12 +240,13 @@
             string directorFullName = this.directorService.GetDirectorFullNameById(movie.DirectorId);
             IEnumerable<PlatformViewModel> platforms = this.platformService.GetPlatformsForGivenMovie(id);
             IEnumerable<string> languages = this.languageService.GetLanguagesForParticularMovie(id);
+            IEnumerable<string> genres = this.genreService.GetGenresForParticularMovie(id);
 
             string country = this.countryService.GetCountryNameById(movie.CountryId);
 
             IQueryable<MovieListingViewModel> upNextMovies = this.dbContext.Movies
                 .Where(m => m.Id != movie.Id)
-                .Take(10)
+                .Take(8)
                 .Select(m => new MovieListingViewModel()
                 {
                     Id = m.Id,
@@ -259,6 +261,7 @@
             {
                 Name = movie.Name,
                 Trailer = movie.TrailerPath,
+                Genres = genres,
                 Description = movie.Description,
                 Duration = movie.Duration,
                 Resolution = movie.Resolution,

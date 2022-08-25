@@ -11,13 +11,15 @@
     <link rel="stylesheet" href="~/css/virtual-select.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
     <link rel="stylesheet" href="~/css/lazy.css">
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/css/owl.theme.default.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body style="background-color: aliceblue;">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <img class="navbar-brand d-flex align-items-center" src="https://cdn-icons-png.flaticon.com/512/4987/4987504.png" width=50 height=50 />
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img class="navbar-brand d-flex align-items-center" src="https://cdn-icons-png.flaticon.com/512/4987/4987504.png" width=50 height=50 /></a>
             @*<button type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarNav"
@@ -76,6 +78,7 @@
     <script src="./js/lazy.js"></script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>
     <script src="~/js/virtual-select.min.js" asp-append-version="true"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
 
     @await this.RenderSectionAsync("Scripts", required: false)
 </body>

@@ -25,6 +25,10 @@
         [MaxLength(ImageUrlMaxLength)]
         public string ImageUrl { get; set; }
 
+        [Required]
+        [MaxLength(InformationLinkMaxLength)]
+        public string InformationLink { get; set; }
+
         public virtual ICollection<MovieActor> MovieActors { get; set; }
     }
 }

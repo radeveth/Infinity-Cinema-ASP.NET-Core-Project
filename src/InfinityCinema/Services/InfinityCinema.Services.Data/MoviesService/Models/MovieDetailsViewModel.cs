@@ -20,6 +20,8 @@
 
         public string Trailer { get; set; }
 
+        public IEnumerable<string> Genres { get; set; }
+
         public string Description { get; set; }
 
         public string Duration { get; set; }

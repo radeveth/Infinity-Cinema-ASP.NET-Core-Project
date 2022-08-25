@@ -72,5 +72,12 @@
             this.dbContext.MovieGenres.RemoveRange(movieGenres);
             await this.dbContext.SaveChangesAsync();
         }
+
+        public IEnumerable<string> GetGenresForParticularMovie(int movieId)
+        {
+            IQueryable<MovieGenre> movieGenres = this.dbContext.MovieGenres.Where(m => m.MovieId == movieId);
+
+            return movieGenres.Select(m => m.Genre.Name);
+        }
     }
 }

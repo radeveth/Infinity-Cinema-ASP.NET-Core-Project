@@ -34,33 +34,68 @@
                         allowfullscreen></iframe>
             </div>
 
-            @*<div class="mt-4">
-            <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
-            <div class="carousel-inner">
-            <div class="carousel-item active">
-            <img width:300px height:300px src="@Model.Images.Skip(0).First() == " class="d-block w-100" alt="...">
+            <div class="row mt-3 mb-3" style="margin-left:1px">
+                <div class="row">
+                    <center>
+                        @foreach (var genre in Model.Genres)
+                        {
+                            <span class="badge badge-primary col-2" style="margin-left:10px">@genre</span>
+                        }
+                    </center>
+                </div>
             </div>
-            <div class="carousel-item">
-            <img width:300px height:300px src="@Model.Images.Skip(1).First()" class="d-block w-100" alt="...">
+
+            <div class="row mt-1"></div>
+            <hr class="offset-1 col-10">
+            <div class="row mt-1"></div>
+
+            <div class="alert alert-dismissible text-center offset-1 col-10" role="alert">
+                @Model.Description
             </div>
-            <div class="carousel-item">
-            <img width:300px height:300px src="@Model.Images.Skip(2).First()" class="d-block w-100" alt="...">
+
+            <hr class="offset-1 col-10">
+            <div class="row mb-1"></div>
+
+            <center><strong>Director:</strong> @Model.Director</center>
+
+            <hr class="offset-1 col-10">
+            <div class="row mb-1"></div>
+
+            <div class="row">
+                <center class="mb-2" ><span><strong>Where you can find the movie:</strong></span></center>
+                <div class="owl-carousel owl-theme mt-3">
+                        <a href="https://www.w3schools.com/"><div class="item"><img width:30px height:30px class="rounded-pill" src="https://play-lh.googleusercontent.com/TBRwjS_qfJCSj1m7zZB93FnpJM5fSpMA_wUlFDLxWAb45T9RmwBvQd5cWR5viJJOhkI"></div></a>
+                </div>
             </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-            </button>
-            </div>
-            </div>*@
-            @foreach (var item in Model.Images)
-            {
-                <img width:100px height:100px src="@item" class="d-block w-100" alt="...">
-            }
+
+            <div class="row mt-2"></div>
+            <div class="offset-1 col-10"><hr></div>
+            <div class="row mt-5"></div>
+
+            <h3>| Images</h3>
+            <dix class="owl-carousel owl-theme mt-3">
+                @foreach (var image in Model.Images)
+                {
+                    <img class="item img-fluid" style="width:400px height:400px" src="@image" alt="">
+                }
+            </dix>
+
+            <div class="mb-5"></div>
+
+            <h3>| Top Actors</h3>
+            <dix class="owl-carousel owl-theme mt-3">
+                @foreach (var actor in Model.Actors)
+                {
+                    <div class="card" style="width:150px height:150px">
+                        <img class="card-img-top" src="https://upload.wikimedia.org/wikipedia/commons/8/84/Sylvester_Stallone_Cannes_2019.jpg" alt="Card image">
+                        <div class="card-body">
+                            <center>
+                                <h4 class="card-title">@actor.FullName</h4>
+                            </center>
+                        </div>
+                    </div>
+                }
+            </dix>
         </div>
 
         <div class="col-md-4 single-right">
@@ -71,9 +106,9 @@
                     <div class="card mb-3" style="width: 18rem;">
                         <img src="@movie.ImageUrl" class="card-img-top">
                         <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                            <h5 class="card-title">@movie.Name</h5>
+                            <p class="card-text text-center">@string.Join(", ", movie.Genres)</p>
+                            <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-primary rounded-pill">View More</a>
                         </div>
                     </div>
                 </center>
@@ -90,4 +125,32 @@
             <h3 class="text-center">Comments</h3>
         </center>
     </div>
+
+    <br />
+    <br />
+    <br />
+
+    <center class="mb-3"><a asp-controller="Movies" asp-action="All" class="btn btn-primary rounded-pill">Explore More</a></center>
+    <br />
 </div>
+
+@section Scripts {
+    <script>
+        $('.owl-carousel').owlCarousel({
+            loop: true,
+            margin: 10,
+            nav: true,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 3
+                },
+                1000: {
+                    items: 5
+                }
+            }
+        })
+    </script>
+}

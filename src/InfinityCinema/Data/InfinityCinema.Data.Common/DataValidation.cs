@@ -23,6 +23,7 @@
             public const int LastNameMaxLength = 60;
 
             public const int ImageUrlMaxLength = 2048;
+            public const int InformationLinkMaxLength = 2048;
 
             public const int FullNameMinLength = FirstNameMinLength + LastNameMinLength;
             public const int FullNameMaxLength = FirstNameMaxLength + LastNameMaxLength;
@@ -73,6 +74,8 @@
 
             public const int LastNameMinLength = 2;
             public const int LastNameMaxLength = 60;
+
+            public const int InformationUrlMaxLength = 2048;
 
             public const int FullNameMinLength = FirstNameMinLength + LastNameMinLength;
             public const int FullNameMaxLength = FirstNameMaxLength + LastNameMaxLength;

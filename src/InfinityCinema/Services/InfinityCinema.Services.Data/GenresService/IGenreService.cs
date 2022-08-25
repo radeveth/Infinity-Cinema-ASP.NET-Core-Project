@@ -17,5 +17,7 @@
         int GetGenreIdByGivenName(string genreName);
 
         Task DeleteGenresForParticularMovie(int movieId);
+
+        IEnumerable<string> GetGenresForParticularMovie(int movieId);
     }
 }

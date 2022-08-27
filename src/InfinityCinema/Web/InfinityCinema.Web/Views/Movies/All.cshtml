@@ -15,7 +15,7 @@
                 <div class="offset-1 col-md-5 mt-3">
                     <div class="form-group">
                         <label asp-for="Sorting" class="form-label"></label>
-                        <select asp-for="Sorting" class="form-control">
+                        <select asp-for="Sorting" class="form-control border-warning">
                             <option selected disabled>Order by...</option>
                             <option value="0">Rating</option>
                             <option value="1">Year (Newest)</option>
@@ -28,17 +28,17 @@
                 <div class="col-md-5 mt-3">
                     <div class="form-group">
                         <label asp-for="SearchName" class="form-label"></label>
-                        <input asp-for="SearchName" type="search" class="form-control" placeholder="Search by name" />
+                        <input asp-for="SearchName" type="search" class="form-control border-warning" placeholder="Search by name" />
                     </div>
                 </div>
             </div>
 
             <div class="mt-5">
-                <span class="badge badge-primary offset-3 col-6 fw-bold">Serach by Top Genres</span>
+                <span class="badge badge-warning offset-3 col-6 fw-bold">Serach by Top Genres</span>
                 <div class="row mt-3">
                     <div class="row">
                         <center>
-                            <ul class="nav nav-tabs d-flex flex-column flex-md-row text-center">
+                            <ul class="nav nav-tabs d-flex flex-column flex-md-row text-center nav-warning border-warning">
                                 <li class="nav-item offset-3 col-1" id="all-genres" style="cursor: pointer;">
                                     <center>
                                         <input type="submit" asp-for="SearchGenre" class="nav-link" value="All" />
@@ -90,8 +90,8 @@
                     <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4">
                         <div class="component">
                             <div class="card">
-                                <div class="card-header">
-                                    <img class="card-img" src="@movie.ImageUrl">
+                                <div class="card-header" style="width:414px; height:220px">
+                                    <img style="width:100%; height:100%" class="card-img" src="@movie.ImageUrl">
                                 </div>
                                 <div class="card-body">
                                     <span class="badge badge-warning">@(movie.StarRating == -1 ? "No rating" : movie.StarRating)</span>
@@ -105,10 +105,10 @@
                                 <div class="card-footer">
                                     <form method="get">
                                         <div class="float-start">
-                                            <button asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-primary">Details</button>
+                                            <button asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-warning">Details</button>
                                         </div>
                                         <div class="float-end">
-                                            <button asp-controller="Movies" asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-outline-primary">Edit</button>
+                                            <button asp-controller="Movies" asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-outline-warning">Edit</button>
                                         </div>
                                     </form>
                                 </div>
@@ -118,14 +118,16 @@
                 }
             </div>
 
-            <div class="row" style="margin-bottom:20px">
+            <div class="row mt-3">
                 <div class="col-md-6">
-                    <input asp-controller="Movies" asp-action="All" asp-route-currentPage="@((Model.CurrentPage - 1) < 1 ? Model.CurrentPage = 1 : Model.CurrentPage - 1)" type="submit" class="btn btn-primary rounded-pill float-start" value="Previous" />
+                    <input asp-controller="Movies" asp-action="All" asp-route-currentPage="@((Model.CurrentPage - 1) < 1 ? Model.CurrentPage = 1 : Model.CurrentPage - 1)" type="submit" class="btn btn-warning rounded-pill float-start" value="Previous" />
                 </div>
                 <div class="col-md-6">
-                    <input asp-controller="Movies" asp-action="All" asp-route-currentPage="@((Model.CurrentPage + 1) > totalPages ? Model.CurrentPage = totalPages : Model.CurrentPage + 1)" type="submit" class="btn btn-primary rounded-pill float-end" value="Next" />
+                    <input asp-controller="Movies" asp-action="All" asp-route-currentPage="@((Model.CurrentPage + 1) > totalPages ? Model.CurrentPage = totalPages : Model.CurrentPage + 1)" type="submit" class="btn btn-warning rounded-pill float-end" value="Next" />
                 </div>
             </div>
+
+            <br />
         }
     </div>
 </div>

@@ -13,21 +13,22 @@
     <link rel="stylesheet" href="~/css/lazy.css">
     <link rel="stylesheet" href="~/css/owl.carousel.min.css">
     <link rel="stylesheet" href="~/css/owl.theme.default.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body style="background-color: aliceblue;">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-warning">
         <div class="container">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img class="navbar-brand d-flex align-items-center" src="https://cdn-icons-png.flaticon.com/512/4987/4987504.png" width=50 height=50 /></a>
             @*<button type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                    class="navbar-toggler"
-                    aria-controls="navbarNav"
-                    aria-explained="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon" style="border:0px"></span>
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            class="navbar-toggler"
+            aria-controls="navbarNav"
+            aria-explained="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon" style="border:0px"></span>
             </button>*@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown-1" aria-controls="navbarNavDropdown-1"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -46,10 +47,12 @@
                     </li>
                 </ul>
             </div>
-            <form class="d-flex form-inline my-2 my-lg-0">
-                <input type="search" class="form-control me-2" placeholder="Search Movie" aria-label="Search">
-                <button type="submit" class="btn btn-primary"><img src="https://cdn-icons-png.flaticon.com/512/251/251116.png" width=20 height=20 /></button>
-            </form>
+            <div class="row">
+                <form class="d-flex form-inline my-2 my-lg-0">
+                    <input type="search" class="form-control me-2" placeholder="Search Movie" aria-label="Search">
+                    <button asp-controller="Movies" asp-action="All" type="submit" class="btn btn-warning"><center><img style="margin-bottom:3px" src="https://cdn-icons-png.flaticon.com/512/251/251116.png" width=20 height=20 /></center></button>
+                </form>
+            </div>
             <div> &nbsp&nbsp&nbsp&nbsp&nbsp </div>
             <div class="text-light">
                 <partial name="_LoginPartial" />
@@ -64,9 +67,103 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; @DateTime.Now.Year - @GlobalConstants.SystemName - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <hr style="margin-left:80px; margin-right:80px">
+
+    <!-- Footer -->
+    <footer class="text-center text-lg-start text-muted" style="background-color: aliceblue;">
+        <section class="p-4 border-bottom">
+            <center>
+                <span><strong>Connect to Us: </strong></span>
+            </center>
+            <center>
+                <span class="p-2 badge badge-dark text-center col-2 mb-1">
+                    <a href="https://www.instagram.com/" target="_blank" class="me-4 text-reset" style="margin-left:20px">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/radoslav-radev-908a96235/" target="_blank" class="me-4 text-reset">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://github.com/calisthenicsGuy" target="_blank" class="me-4 text-reset">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </span>
+            </center>
+            <center>
+                <div class="w3ls_footer_grid_left1_pos col-2 mt-3">
+                    <span><strong>SUBSCRIBE TO US: </strong></span>
+                    <div class="sendgrid-subscription-widget widget-2305" data-emailerror="Please enter a valid email address" data-nameerror="Please enter your name" data-checkboxerror="Please tick the box to accept our conditions">
+                        <form method="post">
+                            <div class="input-group mb-3">
+                                <input class="form-control" type="text" placeholder="Enter your email" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                <input type="submit" class="sg-submit-btn btn-warning" id="widget-2305" value=" &nbsp Join &nbsp ">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                @*<input type="submit" asp-controller="Informations" asp-action="Email" value="More" class="btn"/>*@
+            </center>
+        </section>
+        <section class="">
+            <div class="container text-center text-md-start mt-5">
+                <div class="row mt-3">
+                    <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            <i class="fas fa-gem me-3"></i>Infinity Cinema
+                        </h6>
+                        <p>
+                        <p>Open source project.</p>
+                        <p>This is a place where you always will feel excellent.</p>
+                        <p>In the world of cinema</p>
+                        </p>
+                    </div>
+                    <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            References
+                        </h6>
+                        <p>
+                            <a asp-controller="Home" asp-action="Index" class="text-reset">Home</a>
+                        </p>
+                        <p>
+                            <a asp-controller="Home" asp-action="Index" class="text-reset">Forum</a>
+                        </p>
+                        <p>
+                            <a asp-controller="Home" asp-action="Imdex" class="text-reset">Site Map</a>
+                        </p>
+                        <p>
+                            <a asp-controller="Home" asp-action="Privacy" class="text-reset">Privacy</a>
+                        </p>
+                    </div>
+                    <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Useful&nbsp links
+                        </h6>
+                        <p>
+                            <a href="https://github.com/calisthenicsGuy/Infinity-Cinema-ASP.NET-Core-Project" target="_blank" class="text-reset">Source code</a>
+                        </p>
+                        <p>
+                            <a href="#" class="text-reset">For me</a>
+                        </p>
+                        <p>
+                            <a href="#" target="_blank" class="text-reset">Sponsor this project</a>
+                        </p>
+                    </div>
+                    <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                        <h6 class="text-uppercase fw-bold mb-4">
+                            Contact
+                        </h6>
+                        @*<p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>*@
+                        <p>
+                            <i class="fas fa-envelope me-3"></i>
+                            @GlobalConstants.EmailAdress
+                        </p>
+                        <p><i class="fas fa-phone me-3"></i>@GlobalConstants.TelephoneNumber</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+            © @DateTime.UtcNow.Year Copyright:
+            <a class="text-reset fw-bold" asp-controller="Home" asp-action="Index">Infinity Cinema</a>
         </div>
     </footer>
 

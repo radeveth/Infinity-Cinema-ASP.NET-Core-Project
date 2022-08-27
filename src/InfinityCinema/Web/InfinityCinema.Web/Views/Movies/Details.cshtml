@@ -7,8 +7,11 @@
     {
         Model.Images.Skip(0).First(),
         Model.Images.Skip(1).First(),
-        Model.Images.Skip(2).First()
+        Model.Images.Skip(2).First(),
     };
+
+    IEnumerable<string> movieGenres = Model.Genres;
+    int neededColumnsForGenres = movieGenres.Count() + 1;
 }
 
 <div class="container mt-4">
@@ -36,11 +39,10 @@
 
             <div class="row mt-3 mb-3" style="margin-left:1px">
                 <div class="row">
-                    <center>
-                        @foreach (var genre in Model.Genres)
-                        {
-                            <span class="badge badge-primary col-2" style="margin-left:10px">@genre</span>
-                        }
+                    <center style="margin-left:4px">
+                        <span class="badge badge-warning col-2 float-start">Resolution: @Model.Resolution</span>
+                        <span class="badge badge-warning col-@neededColumnsForGenres" style="margin-left:15px; margin-right:15px">@string.Join(" | ", movieGenres)</span>
+                        <span class="badge badge-warning col-2 float-end">Date of release: @Model.DateOfReleased.Year</span>
                     </center>
                 </div>
             </div>
@@ -62,11 +64,15 @@
             <div class="row mb-1"></div>
 
             <div class="row">
-                <center class="mb-2" ><span><strong>Where you can find the movie:</strong></span></center>
-                <div class="owl-carousel owl-theme mt-3">
-                        <a href="https://www.w3schools.com/"><div class="item"><img width:30px height:30px class="rounded-pill" src="https://play-lh.googleusercontent.com/TBRwjS_qfJCSj1m7zZB93FnpJM5fSpMA_wUlFDLxWAb45T9RmwBvQd5cWR5viJJOhkI"></div></a>
-                </div>
+                <center class="mb-2"><span><strong>Where you can find the movie:</strong></span></center>
+                <a href="https://www.w3schools.com/"><div class="col"><img class="rounded-pill" src="https://cdn-icons-png.flaticon.com/512/732/732228.png"></div></a>
             </div>
+
+            <i class="material-icons">cloud</i>
+            <i class="material-icons">favorite</i>
+            <i class="material-icons">attachment</i>
+            <i class="material-icons">computer</i>
+            <i class="material-icons">traffic</i>
 
             <div class="row mt-2"></div>
             <div class="offset-1 col-10"><hr></div>
@@ -76,7 +82,7 @@
             <dix class="owl-carousel owl-theme mt-3">
                 @foreach (var image in Model.Images)
                 {
-                    <img class="item img-fluid" style="width:400px height:400px" src="@image" alt="">
+                    <img class="item img-fluid" src="@image" alt="">
                 }
             </dix>
 
@@ -86,7 +92,7 @@
             <dix class="owl-carousel owl-theme mt-3">
                 @foreach (var actor in Model.Actors)
                 {
-                    <div class="card" style="width:150px height:150px">
+                    <div class="card" style="width:150px; height:330px">
                         <img class="card-img-top" src="https://upload.wikimedia.org/wikipedia/commons/8/84/Sylvester_Stallone_Cannes_2019.jpg" alt="Card image">
                         <div class="card-body">
                             <center>
@@ -108,7 +114,7 @@
                         <div class="card-body">
                             <h5 class="card-title">@movie.Name</h5>
                             <p class="card-text text-center">@string.Join(", ", movie.Genres)</p>
-                            <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-primary rounded-pill">View More</a>
+                            <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-warning rounded-pill">View More</a>
                         </div>
                     </div>
                 </center>

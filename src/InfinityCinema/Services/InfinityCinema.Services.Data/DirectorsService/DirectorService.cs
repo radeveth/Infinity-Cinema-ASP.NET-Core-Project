@@ -10,6 +10,8 @@
 
     public class DirectorService : IDirectorService
     {
+        private const string SPLITING_DIRECTOR_FULL_NAME = " ";
+
         private readonly InfinityCinemaDbContext dbContext;
 
         public DirectorService(InfinityCinemaDbContext dbContext)
@@ -17,30 +19,10 @@
             this.dbContext = dbContext;
         }
 
-        public async Task<int> GetDirectorIdAsync(DirectorFormModel directorFormModel)
+        // Create
+        public async Task<DirectorViewModel> CreateAsync(DirectorFormModel directorFormModel)
         {
-            string[] directorNames = directorFormModel.FullName
-                .Split(" ", StringSplitOptions.RemoveEmptyEntries).ToArray();
-            string givenFirstName = directorNames[0];
-            string givenLastName = directorNames[1];
-
-            Director director = this.dbContext.Directors
-                    .FirstOrDefault(d => d.FirstName == givenFirstName && d.LastName == givenLastName);
-
-            if (director == null)
-            {
-                director = await this.CreateAsync(directorFormModel);
-            }
-
-            return director.Id;
-        }
-
-        public async Task<Director> CreateAsync(DirectorFormModel directorFormModel)
-        {
-            var givenDirectorNames = directorFormModel
-                    .FullName
-                    .Split(" ", StringSplitOptions.RemoveEmptyEntries)
-                    .ToArray();
+            string[] givenDirectorNames = this.SplitDirectorFullName(directorFormModel.FullName);
 
             string givenDirectorFirstName = givenDirectorNames[0];
             string givenDirectorLastName = givenDirectorNames[1];
@@ -49,19 +31,49 @@
             {
                 FirstName = givenDirectorFirstName,
                 LastName = givenDirectorLastName,
+                InformationUrl = directorFormModel.InformationUrl,
             };
 
             await this.dbContext.AddAsync(director);
             await this.dbContext.SaveChangesAsync();
 
-            return director;
+            return new DirectorViewModel()
+            {
+                Id = director.Id,
+                FullName = director.FirstName + " " + director.LastName,
+                InformationLink = director.InformationUrl,
+            };
         }
 
+        // Read
         public string GetDirectorFullNameById(int id)
         {
             Director director = this.dbContext.Directors.Find(id);
 
             return $"{director.FirstName} {director.LastName}";
         }
+
+        public int GetDirectorIdByGivenFullName(string fullName)
+        {
+            Director director = this.dbContext
+                .Directors
+                .FirstOrDefault(d => (d.FirstName + d.LastName).ToLower() == fullName);
+
+            if (director == null)
+            {
+                return 0;
+            }
+
+            return director.Id;
+        }
+
+        // Update
+        // Delete
+
+        // Useful methods
+        private string[] SplitDirectorFullName(string fullName)
+            => fullName
+                .Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                .ToArray();
     }
 }

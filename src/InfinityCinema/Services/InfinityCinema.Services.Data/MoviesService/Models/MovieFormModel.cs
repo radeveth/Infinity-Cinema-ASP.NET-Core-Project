@@ -23,11 +23,11 @@
         private DateTime dateOfReleased = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day);
 
         [Required]
-        [Display(Name = "Movie")]
+        [Display(Name = "Name")]
         [StringLength(MovieValidation.NameMaxLength, MinimumLength = MovieValidation.NameMinLength, ErrorMessage = MovieNameErrorMessage)]
         public string Name { get; set; }
 
-        [Display(Name = "Genre")]
+        [Display(Name = "Genres")]
         public int[] GenresId { get; set; }
 
         public IEnumerable<GenreFormModel> Genres { get; set; } = new HashSet<GenreFormModel>();
@@ -39,11 +39,12 @@
         public DirectorFormModel Director { get; set; }
 
         [Display(Name = "Trailer Embed Path")]
+        [Required]
         [StringLength(MovieValidation.TrailerPathMaxLength, ErrorMessage = TrailerPathMaxLengthErrorMessage)]
         public string TrailerPath { get; set; }
 
         [Required]
-        [Display(Name = "Date of Released")]
+        [Display(Name = "Release Date")]
         [YearMaxValue(1888, DateOfReleasedMaxValueErrorMessage)] // In 1888 is released first movie
         public DateTime DateOfReleased
         {
@@ -51,6 +52,7 @@
             set => this.dateOfReleased = value;
         }
 
+        [Required]
         public Resolution Resolution { get; set; }
 
         [Required]
@@ -58,6 +60,7 @@
         public string Duration { get; set; } // Can be with TimeSpan type
 
         [StringLength(LanguageValidation.NameMaxLength, ErrorMessage = LanguageMaxLengthErrorMessage)]
+        [Display(Name = "Languages")]
         public string Language { get; set; }
 
         [Required]

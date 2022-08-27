@@ -26,14 +26,11 @@
                             </div>
                         </div>
 
-                        <div id="images-container" class="d-none">
-                            <partial name="_EditImagesPartial.cshtml" model="@Model.Images" />
+                        <div id="images-form-model" class="d-none">
                         </div>
-                        <div id="actors-container" class="d-none">
-                            <partial name="_EditActorsPartial" model="@Model.Actors" />
+                        <div id="actors-form-model" class="d-none">
                         </div>
-                        <div id="platforms-container" class="d-none">
-                            <partial name="_EditPlatformsPartial" model="@Model.Platforms" />
+                        <div id="platforms-form-model" class="d-none">
                         </div>
 
                         <input class="offset-6 col-3 btn btn-primary rounded-pill text-center mt-5 mb-4 d-grid gap-2 col-3 mx-auto" type="submit" value="Edit" id="edit-btn" />
@@ -45,35 +42,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        let imagesButtonElement = document.getElementById('images-btn');
-        let actorsButtonElement = document.getElementById('actors-btn');
-        let platformsButtonElement = document.getElementById('platforms-btn');
-
-        let overallMovieFormContainerElement = document.getElementById('overall-movie-form-information-container');
-        let imagesContainerElement = document.getElementById('images-container');
-        let actorsContainerElement = document.getElementById('actors-container');
-        let platfromsContainerElement = document.getElementById('platforms-container');
-
-        imagesButtonElement.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            overallMovieFormContainerElement.classList.add('d-none');
-            imagesContainerElement.classList.remove('d-none');
-        });
-
-        actorsButtonElement.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            overallMovieFormContainerElement.classList.add('d-none');
-            actorsContainerElement.classList.remove('d-none');
-        });
-
-        platformsButtonElement.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            overallMovieFormContainerElement.classList.add('d-none');
-            platfromsContainerElement.classList.remove('d-none');
-        });
-    </script>
+    <script src="js/adding-images-actors-platforms.js"></script>
 }

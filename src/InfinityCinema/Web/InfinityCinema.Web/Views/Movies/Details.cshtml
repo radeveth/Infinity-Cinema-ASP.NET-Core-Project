@@ -93,10 +93,10 @@
                 @foreach (var actor in Model.Actors)
                 {
                     <div class="card" style="width:150px; height:330px">
-                        <img class="card-img-top" src="https://upload.wikimedia.org/wikipedia/commons/8/84/Sylvester_Stallone_Cannes_2019.jpg" alt="Card image">
+                        <img class="card-img-top" src="@actor.ImageUrl" alt="Card image">
                         <div class="card-body">
                             <center>
-                                <h4 class="card-title">@actor.FullName</h4>
+                                <a href="@actor." class="card-title">@actor.FullName</a>
                             </center>
                         </div>
                     </div>

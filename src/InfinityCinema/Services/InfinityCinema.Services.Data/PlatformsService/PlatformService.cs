@@ -17,21 +17,29 @@
             this.dbContext = dbContext;
         }
 
-        public async Task<Platform> CreateAsync(PlatformFormModel platformFormModel)
+        // Create
+        public async Task<PlatformViewModel> CreateAsync(PlatformFormModel platformFormModel)
         {
             Platform platform = new Platform()
             {
                 Name = platformFormModel.Name,
-                PathUrl = platformFormModel.PathUrl,
                 IconUrl = platformFormModel.IconUrl,
+                PathUrl = platformFormModel.PathUrl,
             };
 
             await this.dbContext.AddAsync(platform);
             await this.dbContext.SaveChangesAsync();
 
-            return platform;
+            return new PlatformViewModel()
+            {
+                Id = platform.Id,
+                Name = platform.Name,
+                Icon = platform.IconUrl,
+                SiteUrl = platform.PathUrl,
+            };
         }
 
+        // Read
         public IEnumerable<PlatformViewModel> GetPlatformsForGivenMovie(int movieId)
         {
             IQueryable<Platform> platfromsForTargetMovie = this.dbContext.MoviePlatform.Where(m => m.MovieId == movieId).Select(p => p.Platform);
@@ -40,15 +48,28 @@
             {
                 Name = p.Name,
                 Icon = p.IconUrl,
-                PathUrl = p.PathUrl,
+                SiteUrl = p.PathUrl,
             });
 
             return platforms;
         }
 
-        public Platform GetPlatformByName(string platfrom)
-            => this.dbContext.Platforms.FirstOrDefault(p => p.Name.ToLower() == platfrom.ToLower());
+        public PlatformViewModel GetPlatformByName(string platfrom)
+        {
+            Platform platform = this.dbContext.Platforms.FirstOrDefault(p => p.Name.ToLower() == platfrom.ToLower());
 
+            return new PlatformViewModel()
+            {
+                Id = platform.Id,
+                Name = platform.Name,
+                Icon = platform.IconUrl,
+                SiteUrl = platform.PathUrl,
+            };
+        }
+
+        // Update
+
+        // Delete
         public async Task DeletePlatformsForParticulatMovie(int movieId)
         {
             IQueryable<MoviePlatform> moviePlatforms = this.dbContext.MoviePlatform.Where(m => m.MovieId == movieId);

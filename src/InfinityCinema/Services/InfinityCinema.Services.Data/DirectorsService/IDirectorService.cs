@@ -7,10 +7,15 @@
 
     public interface IDirectorService
     {
-        Task<Director> CreateAsync(DirectorFormModel directorFormModel);
+        // Create
+        Task<DirectorViewModel> CreateAsync(DirectorFormModel directorFormModel);
 
-        Task<int> GetDirectorIdAsync(DirectorFormModel directorFormModel);
-
+        // Read
         string GetDirectorFullNameById(int id);
+
+        int GetDirectorIdByGivenFullName(string fullName);
+
+        // Update
+        // Delete
     }
 }

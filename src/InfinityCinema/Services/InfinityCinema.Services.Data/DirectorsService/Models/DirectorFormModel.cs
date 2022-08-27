@@ -10,6 +10,13 @@
 
         [Required]
         [StringLength(FullNameMaxLength, MinimumLength = FullNameMinLength, ErrorMessage = DirectorFullNameLengthErrorMessage)]
+        [Display(Name = "Full Name")]
         public string FullName { get; set; }
+
+        [Url]
+        [Required]
+        [StringLength(InformationUrlMaxLength)]
+        [Display(Name = "Information Link")]
+        public string InformationUrl { get; set; }
     }
 }

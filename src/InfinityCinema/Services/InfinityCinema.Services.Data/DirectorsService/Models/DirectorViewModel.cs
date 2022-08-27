@@ -1,12 +1,10 @@
-﻿namespace InfinityCinema.Services.Data.ActorsService.Models
+﻿namespace InfinityCinema.Services.Data.DirectorsService.Models
 {
-    public class ActorViewModel
+    public class DirectorViewModel
     {
         public int Id { get; set; }
 
         public string FullName { get; set; }
-
-        public string ImageUrl { get; set; }
 
         public string InformationLink { get; set; }
     }

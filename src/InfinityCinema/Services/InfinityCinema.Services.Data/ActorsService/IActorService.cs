@@ -8,12 +8,17 @@
 
     public interface IActorService
     {
-        Task<Actor> CreateAsync(ActorFormModel actorFormModel);
+        // Create
+        Task<ActorViewModel> CreateAsync(ActorFormModel actorFormModel);
 
-        Actor GetActorByNames(string fullName);
+        // Read
+        ActorViewModel GetActorByNames(string fullName);
 
         IEnumerable<ActorViewModel> GetActorsForGivenMovie(int movieId);
 
+        // Update
+
+        // Delete
         Task DeleteActorsForParticularMovie(int movieId);
     }
 }

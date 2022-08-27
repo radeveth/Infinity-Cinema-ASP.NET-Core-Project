@@ -6,6 +6,7 @@
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.LanguagesService.Models;
 
     public class LanguageService : ILanguageService
     {
@@ -16,7 +17,8 @@
             this.dbContext = dbContext;
         }
 
-        public async Task<Language> CreateAsync(string languageName)
+        // Create
+        public async Task<LanguageViewModel> CreateAsync(string languageName)
         {
             Language language = new Language()
             {
@@ -26,9 +28,31 @@
             await this.dbContext.Languages.AddAsync(language);
             await this.dbContext.SaveChangesAsync();
 
-            return language;
+            return new LanguageViewModel()
+            {
+                Id = language.Id,
+                Name = language.Name,
+            };
         }
 
+        // Read
+        public LanguageViewModel GetLanguageByName(string languageName)
+        {
+            Language language = this.dbContext.Languages.FirstOrDefault(l => l.Name.ToLower() == languageName.ToLower());
+
+            return new LanguageViewModel()
+            {
+                Id = language.Id,
+                Name = language.Name,
+            };
+        }
+
+        public IEnumerable<string> GetLanguagesForParticularMovie(int movieId)
+            => this.dbContext.MovieLanguages.Where(m => m.MovieId == movieId).Select(i => i.Language.Name);
+
+        // Update
+
+        // Delete
         public async Task DeleteLanguagesForParticularMovie(int movieId)
         {
             IQueryable<MovieLanguage> movieLanguages = this.dbContext.MovieLanguages.Where(m => m.MovieId == movieId);
@@ -42,11 +66,5 @@
 
         public bool IsLanguageExist(string languageName)
             => this.dbContext.Languages.Any(l => l.Name.ToLower() == languageName.ToLower());
-
-        public Language GetLanguageByName(string languageName)
-            => this.dbContext.Languages.FirstOrDefault(l => l.Name.ToLower() == languageName.ToLower());
-
-        public IEnumerable<string> GetLanguagesForParticularMovie(int movieId)
-            => this.dbContext.MovieLanguages.Where(m => m.MovieId == movieId).Select(i => i.Language.Name);
     }
 }

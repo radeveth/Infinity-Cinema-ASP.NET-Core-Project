@@ -17,7 +17,8 @@
             this.dbContext = dbConext;
         }
 
-        public async Task<Image> CreateAsync(ImageFormModel imageFormModel)
+        // Create
+        public async Task<ImageViewModel> CreateAsync(ImageFormModel imageFormModel)
         {
             Image image = new Image()
             {
@@ -28,9 +29,22 @@
             await this.dbContext.AddAsync(image);
             await this.dbContext.SaveChangesAsync();
 
-            return image;
+            return new ImageViewModel()
+            {
+                Id = image.Id,
+                Url = image.Url,
+            };
         }
 
+        // Read
+        public IEnumerable<string> GetImagesForGivenMovie(int movieId)
+            => this.dbContext
+                .Images
+                .Where(i => i.MovieId == movieId).Select(i => i.Url);
+
+        // Update
+
+        // Delete
         public async Task DeleteImagesForParticularMovie(int movieId)
         {
             IQueryable<Image> images = this.dbContext.Images.Where(i => i.MovieId == movieId);
@@ -38,8 +52,5 @@
             this.dbContext.RemoveRange(images);
             await this.dbContext.SaveChangesAsync();
         }
-
-        public IEnumerable<string> GetImagesForGivenMovie(int movieId)
-            => this.dbContext.Images.Where(i => i.MovieId == movieId).Select(i => i.Url);
     }
 }

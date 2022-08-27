@@ -8,12 +8,17 @@
 
     public interface IPlatformService
     {
-        Task<Platform> CreateAsync(PlatformFormModel platformFormModel);
+        // Create
+        Task<PlatformViewModel> CreateAsync(PlatformFormModel platformFormModel);
 
-        Platform GetPlatformByName(string platfrom);
+        // Read
+        PlatformViewModel GetPlatformByName(string platfrom);
 
         IEnumerable<PlatformViewModel> GetPlatformsForGivenMovie(int movieId);
 
+        // Update
+
+        // Delete
         Task DeletePlatformsForParticulatMovie(int movieId);
     }
 }

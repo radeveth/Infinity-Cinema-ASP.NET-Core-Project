@@ -3,19 +3,25 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.CountriesService.Models;
 
     public interface ICountryService
     {
-        Task<Country> CreateAsync(string countryName);
+        // Create
+        Task<CountryViewModel> CreateAsync(string countryName);
 
-        bool CheckIfCountryExist(string countryName);
+        string GenerateCountryAbbreviation(string countryName);
 
+        // Read
         Country GetCountryByName(string countryName);
 
         int GetCountryIdByGivenName(string givenName);
 
-        string GenerateCountryAbbreviation(string countryName);
-
         string GetCountryNameById(int id);
+
+        // Update
+        // Delete
+
+        bool CheckIfCountryExist(string countryName);
     }
 }

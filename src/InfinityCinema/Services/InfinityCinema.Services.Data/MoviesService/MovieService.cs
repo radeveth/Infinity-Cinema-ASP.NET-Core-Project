@@ -19,6 +19,7 @@
     using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.ImagesService.Models;
     using InfinityCinema.Services.Data.LanguagesService;
+    using InfinityCinema.Services.Data.LanguagesService.Models;
     using InfinityCinema.Services.Data.MoviesService.Enums;
     using InfinityCinema.Services.Data.MoviesService.Models;
     using InfinityCinema.Services.Data.PlatformsService;
@@ -65,7 +66,13 @@
 
             // Get Director Id
             DirectorFormModel directorFormModel = movieFormModel.Director;
-            int directorId = await this.directorService.GetDirectorIdAsync(directorFormModel);
+            int directorId = this.directorService.GetDirectorIdByGivenFullName(directorFormModel.FullName);
+
+            if (directorId == 0)
+            {
+                await this.directorService.CreateAsync(directorFormModel);
+                directorId = this.directorService.GetDirectorIdByGivenFullName(directorFormModel.FullName);
+            }
 
             // Get Country Id
             string countryName = movieFormModel.Country;
@@ -90,7 +97,7 @@
             ICollection<int> languagesIds = new List<int>();
             foreach (string languageName in languagesName)
             {
-                Language language = this.languageService.GetLanguageByName(languageName);
+                LanguageViewModel language = this.languageService.GetLanguageByName(languageName);
 
                 if (language == null)
                 {
@@ -102,7 +109,7 @@
 
             await this.MatchLanguagesWithMovie(movieId, languagesIds);
 
-            // Create image for particular movie
+            // Create images for particular movie
             IEnumerable<ImageFormModel> images = createMovieModel.Images;
             foreach (ImageFormModel image in images)
             {
@@ -117,7 +124,7 @@
             // Create actors for particular movie
             IEnumerable<ActorFormModel> actors = createMovieModel.Actors;
             ICollection<int> actorsIds = new List<int>();
-            Actor actor;
+            ActorViewModel actor;
             foreach (ActorFormModel actorFormModel in actors)
             {
                 actor = this.actorService.GetActorByNames(actorFormModel.FullName);
@@ -135,7 +142,7 @@
             // Create Platforms for particular movie
             IEnumerable<PlatformFormModel> platforms = createMovieModel.Platforms;
             ICollection<int> platformsIds = new List<int>();
-            Platform platform;
+            PlatformViewModel platform;
             foreach (PlatformFormModel platformFormModel in platforms)
             {
                 platform = this.platformService.GetPlatformByName(platformFormModel.Name);
@@ -276,6 +283,16 @@
             };
         }
 
+        public async Task<MovieFormModel> GetMovieById(int id)
+        {
+            Movie movie = await this.dbContext.Movies.FindAsync();
+
+            return new MovieFormModel()
+            {
+                Name = movie.Name,
+            };
+        }
+
         public async Task<bool> Edit(EditMovieServiceModel movieModel, int movieId)
         {
             Movie movie = this.dbContext.Movies.Find(movieId);
@@ -289,7 +306,13 @@
 
             // Get Director Id
             DirectorFormModel directorFormModel = newMovieData.Director;
-            int directorId = await this.directorService.GetDirectorIdAsync(directorFormModel);
+            int directorId = this.directorService.GetDirectorIdByGivenFullName(directorFormModel.FullName);
+
+            if (directorId == 0)
+            {
+                await this.directorService.CreateAsync(directorFormModel);
+                directorId = this.directorService.GetDirectorIdByGivenFullName(directorFormModel.FullName);
+            }
 
             // Get Country Id
             string countryName = newMovieData.Country;
@@ -383,16 +406,6 @@
         private string GetUserId(ClaimsPrincipal user)
         {
             return this.userManager.GetUserId(user);
-        }
-
-        public async Task<MovieFormModel> GetMovieById(int id)
-        {
-            Movie movie = await this.dbContext.Movies.FindAsync();
-
-            return new MovieFormModel()
-            {
-                Name = movie.Name,
-            };
         }
     }
 }

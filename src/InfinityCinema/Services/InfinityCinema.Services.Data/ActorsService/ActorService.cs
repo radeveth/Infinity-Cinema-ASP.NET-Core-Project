@@ -11,6 +11,8 @@
 
     public class ActorService : IActorService
     {
+        private const string SPLITING_ACTOR_FULL_NAME = " ";
+
         private readonly InfinityCinemaDbContext dbContext;
 
         public ActorService(InfinityCinemaDbContext dbContext)
@@ -18,44 +20,58 @@
             this.dbContext = dbContext;
         }
 
-        public async Task<Actor> CreateAsync(ActorFormModel actorFormModel)
+        // Create
+        public async Task<ActorViewModel> CreateAsync(ActorFormModel actorFormModel)
         {
-            string[] actorNameParts = actorFormModel.FullName
-                .Split(" ", StringSplitOptions.RemoveEmptyEntries).ToArray();
+            // Get (split) first and last name of actor
+            string[] actorNameParts = this.SplitActorFullName(actorFormModel.FullName);
             string firstName = actorNameParts[0];
             string lastName = actorNameParts[1];
 
+            // Create actor
             Actor actor = new Actor()
             {
                 FirstName = firstName,
                 LastName = lastName,
+                ImageUrl = actorFormModel.ImageUrl,
+                InformationLink = actorFormModel.InformationLink,
             };
 
+            // Add actor to database
             await this.dbContext.Actors.AddAsync(actor);
             await this.dbContext.SaveChangesAsync();
 
-            return actor;
+            return new ActorViewModel()
+            {
+                Id = actor.Id,
+                FullName = actor.FirstName + " " + actor.LastName,
+                ImageUrl = actor.ImageUrl,
+                InformationLink = actor.InformationLink,
+            };
         }
 
-        public async Task DeleteActorsForParticularMovie(int movieId)
+        // Read
+        public ActorViewModel GetActorByNames(string fullName)
         {
-            IQueryable<MovieActor> movieActors = this.dbContext.MovieActors.Where(m => m.MovieId == movieId);
-
-            this.dbContext.MovieActors.RemoveRange(movieActors);
-            await this.dbContext.SaveChangesAsync();
-        }
-
-        public Actor GetActorByNames(string fullName)
-        {
-            string[] actorNameParts = fullName
-                .Split(" ", StringSplitOptions.RemoveEmptyEntries).ToArray();
+            // Get (split) first and last name of actor
+            string[] actorNameParts = this.SplitActorFullName(fullName);
             string firstName = actorNameParts[0].ToLower();
             string lastName = actorNameParts[1].ToLower();
 
-            return this.dbContext
+            // Find the actor
+            Actor actor = this.dbContext
                 .Actors
                 .AsQueryable()
                 .FirstOrDefault(a => a.FirstName.ToLower() == firstName && a.LastName.ToLower() == lastName);
+
+            // Return the actor view model
+            return new ActorViewModel()
+            {
+                Id = actor.Id,
+                FullName = actor.FirstName + " " + actor.LastName,
+                ImageUrl = actor.ImageUrl,
+                InformationLink = actor.InformationLink,
+            };
         }
 
         public IEnumerable<ActorViewModel> GetActorsForGivenMovie(int movieId)
@@ -70,5 +86,22 @@
 
             return actors;
         }
+
+        // Update
+
+        // Delete
+        public async Task DeleteActorsForParticularMovie(int movieId)
+        {
+            IQueryable<MovieActor> movieActors = this.dbContext.MovieActors.Where(m => m.MovieId == movieId);
+
+            this.dbContext.MovieActors.RemoveRange(movieActors);
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        // Useful private methods
+        private string[] SplitActorFullName(string fullName)
+            => fullName
+                .Split(SPLITING_ACTOR_FULL_NAME, StringSplitOptions.RemoveEmptyEntries)
+                .ToArray();
     }
 }

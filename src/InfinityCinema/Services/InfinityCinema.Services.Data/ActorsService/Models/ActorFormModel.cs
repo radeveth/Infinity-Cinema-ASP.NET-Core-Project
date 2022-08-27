@@ -16,5 +16,9 @@
         [Url]
         [StringLength(ImageUrlMaxLength)]
         public string ImageUrl { get; set; }
+
+        [Url]
+        [StringLength(InformationLinkMaxLength)]
+        public string InformationLink { get; set; }
     }
 }

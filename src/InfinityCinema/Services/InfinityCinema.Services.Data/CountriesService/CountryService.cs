@@ -7,6 +7,7 @@
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.CountriesService.Models;
 
     public class CountryService : ICountryService
     {
@@ -18,19 +19,26 @@
             this.dbContext = dbContext;
         }
 
-        // Add Country to Database
-        public async Task<Country> CreateAsync(string countryName)
+        // Create
+        public async Task<CountryViewModel> CreateAsync(string countryName)
         {
+            // Create country
             Country country = new Country()
             {
                 Name = countryName,
                 Abbreviation = this.GenerateCountryAbbreviation(countryName),
             };
 
+            // Add country to database
             await this.dbContext.Countries.AddAsync(country);
             await this.dbContext.SaveChangesAsync();
 
-            return country;
+            return new CountryViewModel()
+            {
+                Id = country.Id,
+                Name = country.Name,
+                Abbreviation = country.Abbreviation,
+            };
         }
 
         public string GenerateCountryAbbreviation(string countryName)
@@ -62,6 +70,7 @@
             return targetCountryAbbreviation;
         }
 
+        // Read
         public Country GetCountryByName(string countryName)
             => this.dbContext
                 .Countries
@@ -74,14 +83,18 @@
             return country.Id;
         }
 
-        public bool CheckIfCountryExist(string countryName)
-            => this.dbContext.Countries.Any(c => c.Name.Replace(" ", string.Empty).ToLower() == countryName.Replace(" ", string.Empty).ToLower());
-
         public string GetCountryNameById(int id)
         {
             Country country = this.dbContext.Countries.Find(id);
 
             return country.Name;
         }
+
+        // Update
+        // Delete
+
+        public bool CheckIfCountryExist(string countryName)
+            => this.dbContext.Countries.Any(c => c.Name.Replace(" ", string.Empty).ToLower() == countryName.Replace(" ", string.Empty).ToLower());
+
     }
 }

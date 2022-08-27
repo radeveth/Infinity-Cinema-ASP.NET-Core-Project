@@ -4,17 +4,23 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.LanguagesService.Models;
 
     public interface ILanguageService
     {
-        Task<Language> CreateAsync(string languageName);
+        // Create
+        Task<LanguageViewModel> CreateAsync(string languageName);
 
-        bool IsLanguageExist(string languageName);
-
-        Language GetLanguageByName(string languageName);
-
-        Task DeleteLanguagesForParticularMovie(int movieId);
+        // Read
+        LanguageViewModel GetLanguageByName(string languageName);
 
         IEnumerable<string> GetLanguagesForParticularMovie(int movieId);
+
+        // Update
+
+        // Delete
+        Task DeleteLanguagesForParticularMovie(int movieId);
+
+        bool IsLanguageExist(string languageName);
     }
 }

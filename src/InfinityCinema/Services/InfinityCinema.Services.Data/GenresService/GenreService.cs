@@ -17,7 +17,8 @@
             this.dbContext = dbContext;
         }
 
-        public async Task<Genre> CreateAsync(GenreFormModel genreFormModel)
+        // Create
+        public async Task<GenreViewModel> CreateAsync(GenreFormModel genreFormModel)
         {
             Genre genre = new Genre()
             {
@@ -28,7 +29,21 @@
             await this.dbContext.Genres.AddAsync(genre);
             await this.dbContext.SaveChangesAsync();
 
-            return genre;
+            return new GenreViewModel()
+            {
+                Id = genre.Id,
+                Name = genre.Name,
+                ImageUrl = genre.ImageUrl,
+            };
+        }
+
+        // Read
+        public int GetGenreIdByGivenName(string genreName)
+        {
+            genreName = genreName.ToLower();
+            Genre genre = this.dbContext.Genres.FirstOrDefault(g => g.Name.ToLower() == genreName);
+
+            return genre.Id;
         }
 
         public IEnumerable<GenreFormModel> GetMovieGenres()
@@ -40,6 +55,24 @@
                     Name = g.Name,
                 })
                 .ToList();
+
+        public IEnumerable<string> GetGenresForParticularMovie(int movieId)
+        {
+            IQueryable<MovieGenre> movieGenres = this.dbContext.MovieGenres.Where(m => m.MovieId == movieId);
+
+            return movieGenres.Select(m => m.Genre.Name);
+        }
+
+        // Update
+
+        // Delete
+        public async Task DeleteGenresForParticularMovie(int movieId)
+        {
+            IQueryable<MovieGenre> movieGenres = this.dbContext.MovieGenres.Where(m => m.MovieId == movieId);
+
+            this.dbContext.MovieGenres.RemoveRange(movieGenres);
+            await this.dbContext.SaveChangesAsync();
+        }
 
         public bool IsGenresExists(IEnumerable<int> ids)
         {
@@ -55,29 +88,6 @@
             }
 
             return isAllGenresExist;
-        }
-
-        public int GetGenreIdByGivenName(string genreName)
-        {
-            genreName = genreName.ToLower();
-            Genre genre = this.dbContext.Genres.FirstOrDefault(g => g.Name.ToLower() == genreName);
-
-            return genre.Id;
-        }
-
-        public async Task DeleteGenresForParticularMovie(int movieId)
-        {
-            IQueryable<MovieGenre> movieGenres = this.dbContext.MovieGenres.Where(m => m.MovieId == movieId);
-
-            this.dbContext.MovieGenres.RemoveRange(movieGenres);
-            await this.dbContext.SaveChangesAsync();
-        }
-
-        public IEnumerable<string> GetGenresForParticularMovie(int movieId)
-        {
-            IQueryable<MovieGenre> movieGenres = this.dbContext.MovieGenres.Where(m => m.MovieId == movieId);
-
-            return movieGenres.Select(m => m.Genre.Name);
         }
     }
 }

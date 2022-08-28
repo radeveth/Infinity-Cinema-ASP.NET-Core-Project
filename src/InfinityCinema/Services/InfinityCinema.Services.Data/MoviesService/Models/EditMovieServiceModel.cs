@@ -6,14 +6,6 @@
 
     public class EditMovieServiceModel
     {
-        public EditMovieServiceModel()
-        {
-            this.OverallMovieInformation = new MovieFormModel();
-            this.Actors = new EditActorsFormModel();
-            this.Images = new EditImagesFormModel();
-            this.Platforms = new EditPlatformsFormModel();
-        }
-
         public MovieFormModel OverallMovieInformation { get; set; }
 
         public EditActorsFormModel Actors { get; set; }

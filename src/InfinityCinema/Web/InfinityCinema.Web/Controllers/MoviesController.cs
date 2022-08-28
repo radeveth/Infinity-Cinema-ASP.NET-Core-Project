@@ -10,6 +10,7 @@
     using InfinityCinema.Services.Data.ActorsService.Models;
     using InfinityCinema.Services.Data.DirectorsService.Models;
     using InfinityCinema.Services.Data.GenresService;
+    using InfinityCinema.Services.Data.GenresService.Models;
     using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.ImagesService.Models;
     using InfinityCinema.Services.Data.MoviesService;
@@ -35,9 +36,13 @@
             this.platformService = platformService;
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
-            return this.View(new CreateMovieServiceModel() { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
+            return this.View(new CreateMovieServiceModel()
+            {
+                OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService),
+            });
         }
 
         [HttpPost]
@@ -68,19 +73,21 @@
             }
         }
 
+        [HttpGet]
         public IActionResult All([FromQuery] AllMoviesQueryModel moviesQueryModel)
         {
             AllMoviesQueryModel queryResult = this.movieService
                 .All(moviesQueryModel.SearchName, moviesQueryModel.Sorting, moviesQueryModel.CurrentPage, AllMoviesQueryModel.MoviesPerPage, moviesQueryModel.SearchGenre);
 
-            moviesQueryModel.TotalMovies = queryResult.TotalMovies;
             moviesQueryModel.Movies = queryResult.Movies;
+            moviesQueryModel.TotalMovies = queryResult.TotalMovies;
             moviesQueryModel.CurrentPage = queryResult.CurrentPage;
             moviesQueryModel.SearchGenre = queryResult.SearchGenre;
 
             return this.View(moviesQueryModel);
         }
 
+        [HttpGet]
         public IActionResult Details(int id)
         {
             MovieDetailsViewModel movie = this.movieService.Details(id);
@@ -88,34 +95,51 @@
             return this.View(movie);
         }
 
+        [HttpGet]
         public IActionResult Edit(int id)
         {
-            MovieDetailsViewModel movieDetailsModel = this.movieService.Details(id);
-            //IEnumerable<ActorViewModel> existingActors = this.actorService.GetActorsForGivenMovie(id);
-            //IEnumerable<string> existingImages = this.imagesService.GetImagesForGivenMovie(id);
-            //IEnumerable<PlatformViewModel> existingPlatfroms = this.platformService.GetPlatformsForGivenMovie(id);
+            MovieDetailsViewModel targetMovie = this.movieService.Details(id);
 
-            MovieFormModel overallMovieInformation = new MovieFormModel()
+            MovieFormModel movieFormModel = new MovieFormModel()
             {
-                Name = movieDetailsModel.Name,
-                Description = movieDetailsModel.Description,
-                TrailerPath = movieDetailsModel.Trailer,
-                Duration = movieDetailsModel.Duration,
-                Director = new DirectorFormModel() { FullName = movieDetailsModel.Director },
-                Language = string.Join(", ", movieDetailsModel.Languages),
-                Country = movieDetailsModel.Countruy,
-                Resolution = movieDetailsModel.Resolution,
-                DateOfReleased = movieDetailsModel.DateOfReleased,
-                Genres = this.genreService.GetMovieGenres(),
+                Name = targetMovie.Name,
+                Genres = targetMovie.Genres.Select(g => new GenreFormModel()
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    ImageUrl = g.ImageUrl,
+                }),
+                Description = targetMovie.Description,
+                Director = new DirectorFormModel()
+                {
+                    FullName = targetMovie.Director.FullName,
+                    InformationUrl = targetMovie.Director.InformationLink,
+                },
+                TrailerPath = targetMovie.Trailer,
+                DateOfReleased = targetMovie.DateOfReleased,
+                Resolution = targetMovie.Resolution,
+                Duration = targetMovie.Duration,
+                Language = string.Join(", ", targetMovie.Languages),
+                Country = targetMovie.Countruy,
             };
 
-            return this.View(new EditMovieServiceModel()
+            EditMovieServiceModel editMovieServiceModel = new EditMovieServiceModel()
             {
-                OverallMovieInformation = overallMovieInformation,
-                Actors = new EditActorsFormModel() { ExistingActors = movieDetailsModel.Actors },
-                Images = new EditImagesFormModel() { ExistingImages = movieDetailsModel.Images },
-                Platforms = new EditPlatformsFormModel() { ExistingPlatforms = movieDetailsModel.Platforms },
-            });
+                OverallMovieInformation = movieFormModel,
+                Actors = new EditActorsFormModel()
+                {
+                    ExistingActors = targetMovie.Actors,
+                },
+                Images = new EditImagesFormModel()
+                {
+                    ExistingImages = targetMovie.Images,
+                },
+                Platforms = new EditPlatformsFormModel()
+                {
+                    ExistingPlatforms = targetMovie.Platforms,
+                },
+            };
+            return this.View(editMovieServiceModel);
         }
 
         [HttpPost]

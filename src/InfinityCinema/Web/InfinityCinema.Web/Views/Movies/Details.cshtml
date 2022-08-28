@@ -3,15 +3,8 @@
 @{
     ViewData["Title"] = Model.Name;
 
-    string[] firstThreeImages = new string[]
-    {
-        Model.Images.Skip(0).First(),
-        Model.Images.Skip(1).First(),
-        Model.Images.Skip(2).First(),
-    };
-
-    IEnumerable<string> movieGenres = Model.Genres;
-    int neededColumnsForGenres = movieGenres.Count() + 1;
+    IEnumerable<GenreViewModel> genres = Model.Genres;
+    int neededColumnsForGenres = genres.Count() + 1;
 }
 
 <div class="container mt-4">
@@ -41,8 +34,9 @@
                 <div class="row">
                     <center style="margin-left:4px">
                         <span class="badge badge-warning col-2 float-start">Resolution: @Model.Resolution</span>
-                        <span class="badge badge-warning col-@neededColumnsForGenres" style="margin-left:15px; margin-right:15px">@string.Join(" | ", movieGenres)</span>
-                        <span class="badge badge-warning col-2 float-end">Date of release: @Model.DateOfReleased.Year</span>
+                        @*<span class="badge badge-warning col-@neededColumnsForGenres" style="margin-left:15px; margin-right:15px;"><a id="link-href" asp-controller="Genres" asp-action="All" title="Explore all genres" class="text-warning">@string.Join(" | ", genres.Select(g => g.Name))</a></span>*@
+                        <span class="badge badge-warning col-@neededColumnsForGenres" style="margin-left:15px; margin-right:15px;">@string.Join(" | ", genres.Select(g => g.Name))</span>
+                        <span class="badge badge-warning col-2 float-end">Release date: @Model.DateOfReleased.Year</span>
                     </center>
                 </div>
             </div>
@@ -58,25 +52,36 @@
             <hr class="offset-1 col-10">
             <div class="row mb-1"></div>
 
-            <center><strong>Director:</strong> @Model.Director</center>
+            <center><strong>Director:</strong> @Model.Director.FullName</center>
+
+            <hr class="offset-1 col-10">
+            <div class="row mb-1"></div>
+            
+            <center><strong>Country:</strong> @Model.Countruy</center>
 
             <hr class="offset-1 col-10">
             <div class="row mb-1"></div>
 
-            <div class="row">
-                <center class="mb-2"><span><strong>Where you can find the movie:</strong></span></center>
-                <a href="https://www.w3schools.com/"><div class="col"><img class="rounded-pill" src="https://cdn-icons-png.flaticon.com/512/732/732228.png"></div></a>
-            </div>
+            <center><strong>Languages:</strong> @(string.Join(", ", Model.Languages))</center>
 
-            <i class="material-icons">cloud</i>
+            <hr class="offset-1 col-10">
+            <div class="row mb-1"></div>
+
+            @*Platform area*@
+            @*<div class="row">
+            <center class="mb-2"><span><strong>Where you can find the movie:</strong></span></center>
+            <a href="https://www.w3schools.com/"><div class="col"><img class="rounded-pill" src="https://cdn-icons-png.flaticon.com/512/732/732228.png"></div></a>
+            </div>*@
+
+            @*<i class="material-icons">cloud</i>
             <i class="material-icons">favorite</i>
             <i class="material-icons">attachment</i>
             <i class="material-icons">computer</i>
-            <i class="material-icons">traffic</i>
+            <i class="material-icons">traffic</i>*@
 
-            <div class="row mt-2"></div>
+            @*<div class="row mt-2"></div>
             <div class="offset-1 col-10"><hr></div>
-            <div class="row mt-5"></div>
+            <div class="row mt-5"></div>*@
 
             <h3>| Images</h3>
             <dix class="owl-carousel owl-theme mt-3">
@@ -88,7 +93,7 @@
 
             <div class="mb-5"></div>
 
-            <h3>| Top Actors</h3>
+            <h3>| Actors</h3>
             <dix class="owl-carousel owl-theme mt-3">
                 @foreach (var actor in Model.Actors)
                 {
@@ -96,12 +101,21 @@
                         <img class="card-img-top" src="@actor.ImageUrl" alt="Card image">
                         <div class="card-body">
                             <center>
-                                <a href="@actor." class="card-title">@actor.FullName</a>
+                                <a href="@actor.InformationLink" class="card-title">@actor.FullName</a>
                             </center>
                         </div>
                     </div>
                 }
             </dix>
+
+            <div class="row mt-3"></div>
+            <hr class="offset-1 col-10">
+            <div class="row mb-1"></div>
+
+            <div class="row">
+                <button class="offset-2 col-3 btn btn-warning rounded-pill">Add to Favorite <span class="text-danger">❤</span></button>
+                <button class="offset-2 col-3 btn btn-warning rounded-pill">Save to watch later&nbsp&nbsp<i class="fas fa-save"></i></button>
+            </div>
         </div>
 
         <div class="col-md-4 single-right">
@@ -136,7 +150,7 @@
     <br />
     <br />
 
-    <center class="mb-3"><a asp-controller="Movies" asp-action="All" class="btn btn-primary rounded-pill">Explore More</a></center>
+    <center class="mb-3"><a asp-controller="Movies" asp-action="All" class="btn btn-warning rounded-pill">Explore More</a></center>
     <br />
 </div>
 

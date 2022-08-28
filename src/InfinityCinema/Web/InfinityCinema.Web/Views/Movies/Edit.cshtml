@@ -4,7 +4,7 @@
     ViewData["Title"] = "Edit Movie";
 }
 
-<div class="image-fliud" style="background-image: url(https://images.pexels.com/photos/3945321/pexels-photo-3945321.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);">
+<div class="image-fliud">
     <div>
         <div class="float-end">
             <a class="btn btn-danger float-end" style="width:50% height:3px" asp-area="" asp-controller="Home" asp-action="Index">x</a>
@@ -20,20 +20,78 @@
                             <partial name="_OverallMovieFormPartial" model="@Model.OverallMovieInformation" />
                             <div class="mb-4"></div>
                             <div class="row">
-                                <input id="images-btn" type="submit" value="Edit Images" class="btn btn-primary offset-2 col-2" />
-                                <input id="actors-btn" type="submit" value="Edit Actors" class="btn btn-primary offset-1 col-2" />
-                                <input id="platforms-btn" type="submit" value="Edit Platforms" class="btn btn-primary offset-1 col-2" />
+                                <input id="images-btn" type="submit" value="Edit Images" class="btn btn-warning rounded-pill offset-2 col-2" />
+                                <input id="actors-btn" type="submit" value="Edit Actors" class="btn btn-warning rounded-pill offset-1 col-2" />
+                                <input id="platforms-btn" type="submit" value="Edit Platforms" class="btn btn-warning rounded-pill offset-1 col-2" />
                             </div>
+
+                            <input class="offset-6 col-3 btn btn-warning rounded-pill text-center mt-5 mb-4 d-grid gap-2 col-3 mx-auto" type="submit" value="Edit" id="edit-btn" />
+
                         </div>
 
-                        <div id="images-form-model" class="d-none">
-                        </div>
-                        <div id="actors-form-model" class="d-none">
-                        </div>
-                        <div id="platforms-form-model" class="d-none">
+                        <div id="images-form-model-container" class="d-none mt-3">
+                            <h3>| Already existing Images</h3>
+                            <dix class="owl-carousel owl-theme mt-3 mb-4">
+                                @foreach (var image in Model.Images.ExistingImages)
+                                {
+                                    <img class="item img-fluid" src="@image" alt="">
+                                }
+                            </dix>
+
+                            <div class="row form-group form-margin" id="images-form-model">
+                                <input asp-for="Images.NewImages" class="btn btn-warning rounded-pill offset-5 col-2 mt-3" type="submit" value="Add new image" id="add-image-btn" />
+                            </div>
+
+                            <div class="row mt-3"></div>
+                            <hr class="offset-1 col-10">
+
+                            <input class="offset-6 col-3 btn btn-warning rounded-pill text-center mt-5 mb-4 d-grid gap-2 col-3 mx-auto" type="submit" value="Back" id="image-back-btn" />
                         </div>
 
-                        <input class="offset-6 col-3 btn btn-primary rounded-pill text-center mt-5 mb-4 d-grid gap-2 col-3 mx-auto" type="submit" value="Edit" id="edit-btn" />
+                        <div id="actors-form-model-container" class="d-none mt-3">
+                            <h3>| Already existing Actors</h3>
+                            <dix class="owl-carousel owl-theme mt-3">
+                                @foreach (var actor in Model.Actors.ExistingActors)
+                                {
+                                    <div class="card" style="width:150px; height:330px">
+                                        <img class="card-img-top" src="@actor.ImageUrl" alt="Card image">
+                                        <div class="card-body">
+                                            <center>
+                                                <a href="@actor.InformationLink" class="card-title">@actor.FullName</a>
+                                            </center>
+                                        </div>
+                                    </div>
+                                }
+                            </dix>
+
+                            <div class="row form-group form-margin" id="actors-form-model">
+                                <input asp-for="Actors.NewActors" class="btn btn-warning rounded-pill offset-5 col-2 mt-4" type="submit" value="Add Actor" id="add-actor-btn" />
+                            </div>
+
+                            <div class="row mt-3"></div>
+                            <hr class="offset-1 col-10">
+
+                            <input class="offset-6 col-3 btn btn-warning rounded-pill text-center mt-5 mb-4 d-grid gap-2 col-3 mx-auto" type="submit" value="Back" id="actor-back-btn" />
+                        </div>
+
+                        <div id="platforms-form-model-container" class="d-none mt-3">
+                            <h3>| Already existing Platforms</h3>
+                            <div class="row">
+                                @foreach (var platfrom in Model.Platforms.ExistingPlatforms)
+                                {
+                                    <img class="col-2" style="margin-right:10px; width:20px; height:30px;" src="@platfrom.Icon">
+                                }
+                            </div>
+
+                            <div class="row form-group form-margin" id="platforms-form-model">
+                                <input asp-for="Platforms.NewPlatforms" class="btn btn-warning rounded-pill offset-5 col-2 mt-4" type="submit" value="Add Platform" id="add-platform-btn">
+                            </div>
+
+                            <div class="row mt-3"></div>
+                            <hr class="offset-1 col-10">
+
+                            <input class="offset-6 col-3 btn btn-warning rounded-pill text-center mt-5 mb-4 d-grid gap-2 col-3 mx-auto" type="submit" value="Back" id="platform-back-btn" />
+                        </div>
                     </div>
                 </form>
             </div>
@@ -42,5 +100,133 @@
 </div>
 
 @section Scripts {
-    <script src="js/adding-images-actors-platforms.js"></script>
+    <script>
+        // Getting button elements
+        let imagesButtonElement = document.querySelector('#images-btn');
+        let actorsButtonElement = document.querySelector('#actors-btn');
+
+        // Getting form container elements
+        let imagesContainer = document.querySelector('#images-form-model-container');
+        let actorsContainer = document.querySelector('#actors-form-model-container');
+        let platformsContainer = document.querySelector('#platforms-form-model-container');
+        let movieContainer = document.querySelector('#overall-movie-form-information-container');
+
+        imagesButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            movieContainer.classList.add('d-none');
+
+            imagesContainer.classList.remove('d-none');
+        });
+
+        actorsButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            movieContainer.classList.add('d-none');
+
+            actorsContainer.classList.remove('d-none');
+        });
+
+        platformsButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            movieContainer.classList.add('d-none');
+
+            platformsContainer.classList.remove('d-none');
+        });
+
+        // Back buttons
+        let imageBackButtonElement = document.querySelector('#image-back-btn');
+        let actorBackButtonElement = document.querySelector('#actor-back-btn');
+        let platformBackButtonElement = document.querySelector('#platform-back-btn');
+
+        imageBackButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.preventDefault();
+            e.preventDefault();
+            e.preventDefault();
+
+            imagesContainer.classList.add('d-none');
+            movieContainer.classList.remove('d-none');
+        });
+
+        actorBackButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            actorsContainer.classList.add('d-none');
+            movieContainer.classList.remove('d-none');
+        });
+
+        platformBackButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            platformsContainer.classList.add('d-none');
+            movieContainer.classList.remove('d-none');
+        });
+
+        // Edit button
+        let editButtonElement = document.querySelector('#edit-btn');
+
+    </script>
+
+    <script>
+        // Images
+        let addImageButtonElement = document.getElementById('add-image-btn');
+
+        var imagesIndex = 0;
+        addImageButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            $('#images-form-model').append("<p class='font-weight-bold mt-3' style='margin-bottom:3px'>Url: </p> <input name='Images[" + imagesIndex + "].NewImages' class='form-control' placeholder=''>");
+            $('#images-form-model').append("<hr>")
+            imagesIndex++;
+        });
+
+        // Actors
+        let addActorButtonElement = document.getElementById('add-actor-btn');
+
+        var actorsIndex = 0;
+        addActorButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            $('#actors-form-model').append("<p class='font-weight-bold mt-3' style='margin-bottom:3px'>Full Name: </p> <input name='Actors[" + actorsIndex + "].NewActors.FullName' class='form-control' placeholder=''>");
+            $('#actors-form-model').append("<p class='font-weight-bold mt-2' style='margin-bottom:3px'>Image Url: </p> <input name='Actors[" + actorsIndex + "].NewActors.ImageUrl' class='form-control' placeholder=''>");
+            $('#actors-form-model').append("<p class='font-weight-bold mt-2' style='margin-bottom:3px'>Information Link: </p> <input name='Actors[" + actorsIndex + "].NewActors.InformationLink' class='form-control' placeholder=''>");
+            $('#actors-form-model').append("<hr>")
+            actorsIndex++;
+        });
+
+        // Platforms
+        let addPlatformButtonElement = document.getElementById('add-platform-btn');
+
+        var platformsIndex = 0;
+        addPlatformButtonElement.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            $('#platforms-form-model').append("<p class='font-weight-bold mt-3' style='margin-bottom:3px'>Name: </p> <input name='Platforms[" + platformsIndex + "].NewPlatforms.Name' class='form-control' placeholder=''>");
+            $('#platforms-form-model').append("<p class='font-weight-bold mt-2' style='margin-bottom:3px'>Site Path: </p> <input name='Platforms[" + platformsIndex + "].NewPlatforms.PathUrl' class='form-control' placeholder=''>");
+            $('#platforms-form-model').append("<p class='font-weight-bold mt-2' style='margin-bottom:3px'>Icon Url: </p>  <input name='Platforms[" + platformsIndex + "].NewPlatforms.IconUrl' class='form-control' placeholder=''>");
+            $('#platforms-form-model').append("<hr>")
+            platformsIndex++;
+        });
+    </script>
+
+    <script>
+        $('.owl-carousel').owlCarousel({
+            loop: true,
+            margin: 10,
+            nav: true,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 3
+                },
+                1000: {
+                    items: 5
+                }
+            }
+        })
+    </script>
 }

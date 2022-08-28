@@ -15,6 +15,8 @@
 
         int GetDirectorIdByGivenFullName(string fullName);
 
+        DirectorViewModel GetDirectorForParticularMovie(int directorId);
+
         // Update
         // Delete
     }

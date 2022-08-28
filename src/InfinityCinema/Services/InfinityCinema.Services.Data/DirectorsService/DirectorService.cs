@@ -67,6 +67,17 @@
             return director.Id;
         }
 
+        public DirectorViewModel GetDirectorForParticularMovie(int directorId)
+            => this.dbContext
+                .Directors
+                .Select(d => new DirectorViewModel()
+                {
+                    Id = d.Id,
+                    FullName = d.FirstName + " " + d.LastName,
+                    InformationLink = d.InformationUrl,
+                })
+                .FirstOrDefault(d => d.Id == directorId);
+
         // Update
         // Delete
 

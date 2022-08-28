@@ -2,25 +2,24 @@
 {
     using System;
     using System.Collections.Generic;
+
     using InfinityCinema.Data.Models.Enums;
     using InfinityCinema.Services.Data.ActorsService.Models;
+    using InfinityCinema.Services.Data.DirectorsService.Models;
+    using InfinityCinema.Services.Data.GenresService.Models;
+    using InfinityCinema.Services.Data.ImagesService.Models;
+    using InfinityCinema.Services.Data.LanguagesService.Models;
     using InfinityCinema.Services.Data.PlatformsService.Models;
 
     public class MovieDetailsViewModel
     {
-        public MovieDetailsViewModel()
-        {
-            this.Images = new List<string>();
-            this.Actors = new List<ActorViewModel>();
-            this.Platforms = new List<PlatformViewModel>();
-            this.Languages = new List<string>();
-        }
-
         public string Name { get; set; }
 
         public string Trailer { get; set; }
 
-        public IEnumerable<string> Genres { get; set; }
+        public DirectorViewModel Director { get; set; }
+
+        public IEnumerable<GenreViewModel> Genres { get; set; }
 
         public string Description { get; set; }
 
@@ -33,8 +32,6 @@
         public IEnumerable<string> Images { get; set; }
 
         public IEnumerable<ActorViewModel> Actors { get; set; }
-
-        public string Director { get; set; }
 
         public IEnumerable<PlatformViewModel> Platforms { get; set; }
 

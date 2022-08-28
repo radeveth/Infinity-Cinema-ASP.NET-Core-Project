@@ -16,7 +16,7 @@
 
         IEnumerable<GenreFormModel> GetMovieGenres();
 
-        IEnumerable<string> GetGenresForParticularMovie(int movieId);
+        IEnumerable<GenreViewModel> GetGenresForParticularMovie(int movieId);
 
         // Update
 

@@ -16,6 +16,7 @@
     using InfinityCinema.Services.Data.DirectorsService;
     using InfinityCinema.Services.Data.DirectorsService.Models;
     using InfinityCinema.Services.Data.GenresService;
+    using InfinityCinema.Services.Data.GenresService.Models;
     using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.ImagesService.Models;
     using InfinityCinema.Services.Data.LanguagesService;
@@ -58,6 +59,28 @@
             this.platformService = platformService;
             this.languageService = languageService;
             this.genreService = genreService;
+        }
+
+        // Create
+        public async Task<Movie> CreateAsync(MovieFormModel movieFormModel, int directorId, int countryId, string userId)
+        {
+            Movie movie = new Movie()
+            {
+                Name = movieFormModel.Name,
+                DateOfReleased = movieFormModel.DateOfReleased,
+                Resolution = movieFormModel.Resolution,
+                Description = movieFormModel.Description,
+                TrailerPath = movieFormModel.TrailerPath,
+                Duration = movieFormModel.Duration,
+                DirectorId = directorId,
+                CountryId = countryId,
+                UserId = userId,
+            };
+
+            await this.dbContext.AddAsync(movie);
+            await this.dbContext.SaveChangesAsync();
+
+            return movie;
         }
 
         public async Task<string> CreateMovieAsync(CreateMovieServiceModel createMovieModel, ClaimsPrincipal user)
@@ -160,25 +183,60 @@
             return "Successfully created movie";
         }
 
-        public async Task<Movie> CreateAsync(MovieFormModel movieFormModel, int directorId, int countryId, string userId)
+        // Read
+        public MovieDetailsViewModel Details(int id)
         {
-            Movie movie = new Movie()
+            Movie movie = this.dbContext.Movies.Find(id);
+
+            IEnumerable<string> images = this.imageService.GetImagesForGivenMovie(id);
+            IEnumerable<ActorViewModel> actors = this.actorService.GetActorsForGivenMovie(id);
+            IEnumerable<GenreViewModel> genres = this.genreService.GetGenresForParticularMovie(id);
+            IEnumerable<string> languages = this.languageService.GetLanguagesForParticularMovie(id);
+            IEnumerable<PlatformViewModel> platforms = this.platformService.GetPlatformsForGivenMovie(id);
+            DirectorViewModel director = this.directorService.GetDirectorForParticularMovie(movie.DirectorId);
+
+            string country = this.countryService.GetCountryNameById(movie.CountryId);
+
+            IQueryable<MovieListingViewModel> upNextMovies = this.dbContext.Movies
+                .Where(m => m.Id != movie.Id)
+                .Take(8)
+                .Select(m => new MovieListingViewModel()
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    Duration = m.Duration,
+                    ImageUrl = m.Images.First().Url,
+                    Genres = m.MovieGenres.Select(m => m.Genre.Name),
+                    StarRating = m.StarRatings.Count != 0 ? m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count : -1,
+                });
+
+            return new MovieDetailsViewModel()
             {
-                Name = movieFormModel.Name,
-                DateOfReleased = movieFormModel.DateOfReleased,
-                Resolution = movieFormModel.Resolution,
-                Description = movieFormModel.Description,
-                TrailerPath = movieFormModel.TrailerPath,
-                Duration = movieFormModel.Duration,
-                DirectorId = directorId,
-                CountryId = countryId,
-                UserId = userId,
+                Genres = genres,
+                Images = images,
+                Actors = actors,
+                Name = movie.Name,
+                Countruy = country,
+                Director = director,
+                Platforms = platforms,
+                Languages = languages,
+                Duration = movie.Duration,
+                UpNextMovies = upNextMovies,
+                Trailer = movie.TrailerPath,
+                Resolution = movie.Resolution,
+                Description = movie.Description,
+                DateOfReleased = movie.DateOfReleased,
             };
+        }
 
-            await this.dbContext.AddAsync(movie);
-            await this.dbContext.SaveChangesAsync();
+        public async Task<MovieFormModel> GetMovieById(int id)
+        {
+            Movie movie = await this.dbContext.Movies.FindAsync();
 
-            return movie;
+            return new MovieFormModel()
+            {
+                Name = movie.Name,
+            };
         }
 
         public AllMoviesQueryModel All
@@ -238,61 +296,7 @@
             };
         }
 
-        public MovieDetailsViewModel Details(int id)
-        {
-            Movie movie = this.dbContext.Movies.Find(id);
-
-            IEnumerable<string> images = this.imageService.GetImagesForGivenMovie(id);
-            IEnumerable<ActorViewModel> actors = this.actorService.GetActorsForGivenMovie(id);
-            string directorFullName = this.directorService.GetDirectorFullNameById(movie.DirectorId);
-            IEnumerable<PlatformViewModel> platforms = this.platformService.GetPlatformsForGivenMovie(id);
-            IEnumerable<string> languages = this.languageService.GetLanguagesForParticularMovie(id);
-            IEnumerable<string> genres = this.genreService.GetGenresForParticularMovie(id);
-
-            string country = this.countryService.GetCountryNameById(movie.CountryId);
-
-            IQueryable<MovieListingViewModel> upNextMovies = this.dbContext.Movies
-                .Where(m => m.Id != movie.Id)
-                .Take(8)
-                .Select(m => new MovieListingViewModel()
-                {
-                    Id = m.Id,
-                    Name = m.Name,
-                    ImageUrl = m.Images.First().Url,
-                    StarRating = m.StarRatings.Count != 0 ? m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count : -1,
-                    Duration = m.Duration,
-                    Genres = m.MovieGenres.Select(m => m.Genre.Name),
-                });
-
-            return new MovieDetailsViewModel()
-            {
-                Name = movie.Name,
-                Trailer = movie.TrailerPath,
-                Genres = genres,
-                Description = movie.Description,
-                Duration = movie.Duration,
-                Resolution = movie.Resolution,
-                DateOfReleased = movie.DateOfReleased,
-                Images = images,
-                Actors = actors,
-                Director = directorFullName,
-                Platforms = platforms,
-                Languages = languages,
-                Countruy = country,
-                UpNextMovies = upNextMovies,
-            };
-        }
-
-        public async Task<MovieFormModel> GetMovieById(int id)
-        {
-            Movie movie = await this.dbContext.Movies.FindAsync();
-
-            return new MovieFormModel()
-            {
-                Name = movie.Name,
-            };
-        }
-
+        // Update
         public async Task<bool> Edit(EditMovieServiceModel movieModel, int movieId)
         {
             Movie movie = this.dbContext.Movies.Find(movieId);
@@ -351,6 +355,7 @@
             throw new NotImplementedException();
         }
 
+        // Useful methods
         private async Task MatchLanguagesWithMovie(int movieId, IEnumerable<int> languagesIds)
         {
             ICollection<MovieLanguage> movieLanguages = new HashSet<MovieLanguage>();

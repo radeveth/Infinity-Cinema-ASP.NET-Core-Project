@@ -23,7 +23,7 @@
             Genre genre = new Genre()
             {
                 Name = genreFormModel.Name,
-                ImageUrl = genreFormModel.ImaqgeUrl,
+                ImageUrl = genreFormModel.ImageUrl,
             };
 
             await this.dbContext.Genres.AddAsync(genre);
@@ -56,12 +56,16 @@
                 })
                 .ToList();
 
-        public IEnumerable<string> GetGenresForParticularMovie(int movieId)
-        {
-            IQueryable<MovieGenre> movieGenres = this.dbContext.MovieGenres.Where(m => m.MovieId == movieId);
-
-            return movieGenres.Select(m => m.Genre.Name);
-        }
+        public IEnumerable<GenreViewModel> GetGenresForParticularMovie(int movieId)
+            => this.dbContext
+                .MovieGenres
+                .Where(m => m.MovieId == movieId)
+                .Select(m => new GenreViewModel()
+                {
+                    Id = m.GenreId,
+                    Name = m.Genre.Name,
+                    ImageUrl = m.Genre.ImageUrl,
+                });
 
         // Update
 

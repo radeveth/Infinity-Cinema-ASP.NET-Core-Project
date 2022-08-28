@@ -9,16 +9,21 @@
 
     public interface IMovieService
     {
+        // Create
+        Task<Movie> CreateAsync(MovieFormModel movieFormModel, int dealerId, int countryId, string userId);
+
         Task<string> CreateMovieAsync(CreateMovieServiceModel movieModel, ClaimsPrincipal user);
 
-        Task<Movie> CreateAsync(MovieFormModel movieFormModel, int dealerId, int countryId, string userId);
+        // Read
+        MovieDetailsViewModel Details(int id);
+
+        Task<MovieFormModel> GetMovieById(int id);
 
         AllMoviesQueryModel All(string searchName, MovieSorting sorting, int currentPage, int moviesPerPage, string searchGenre);
 
-        MovieDetailsViewModel Details(int id);
-
+        // Update
         Task<bool> Edit(EditMovieServiceModel movieModel, int movieId);
 
-        Task<MovieFormModel> GetMovieById(int id);
+        // Delete
     }
 }

@@ -153,7 +153,6 @@
             e.preventDefault();
 
             $('#images-form-model').append("<p class='font-weight-bold mt-3' style='margin-bottom:3px'>Url: </p> <input name='Images[" + imagesIndex + "].ImageUrl' class='form-control' placeholder=''>");
-            $('#images-form-model').append("<span asp-validation-for='Images.ImageUrl' class='small text-danger'></span>");
             $('#images-form-model').append("<hr>")
             imagesIndex++;
         });
@@ -186,6 +185,5 @@
             $('#platforms-form-model').append("<hr>")
             platformsIndex++;
         });
-
     </script>
     }

@@ -17,6 +17,6 @@
 
         [Display(Name = "Genre Image")]
         [StringLength(ImageUrlMaxLength, ErrorMessage = ImageUrlMaxLengthErrorMessage)]
-        public string ImaqgeUrl { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

@@ -94,7 +94,7 @@
                                     <img style="width:100%; height:100%" class="card-img" src="@movie.ImageUrl">
                                 </div>
                                 <div class="card-body">
-                                    <span class="badge badge-warning">@(movie.StarRating == -1 ? "No rating" : movie.StarRating)</span>
+                                    <span class="badge badge-warning">@(movie.StarRating == -1 ? "No rating" : $"{movie.StarRating} {Html.Raw("★")}")</span>
                                     <h4 class="card-title mt-2">@movie.Name</h4>
                                     @foreach (var genre in movie.Genres)
                                     {

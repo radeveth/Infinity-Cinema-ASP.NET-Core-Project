@@ -58,7 +58,7 @@
             if (!this.ModelState.IsValid)
             {
                 return this.View(new CreateMovieServiceModel()
-                    { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
+                { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
             }
 
             string message = await this.movieService.CreateMovieAsync(movieModel, this.User);
@@ -69,7 +69,7 @@
             else
             {
                 return this.View(new CreateMovieServiceModel()
-                    { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
+                { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
             }
         }
 
@@ -143,15 +143,45 @@
         }
 
         [HttpPost]
-        public IActionResult Edit([FromQuery] EditMovieServiceModel movieModel)
+        public async Task<IActionResult> EditAsync(EditMovieServiceModel movieModel, int id)
         {
-            return this.View(new EditMovieServiceModel() { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
+            if (movieModel.OverallMovieInformation.GenresId != null)
+            {
+                IEnumerable<int> genresIds = movieModel.OverallMovieInformation.GenresId;
+
+                if (!this.genreService.IsGenresExists(genresIds))
+                {
+                    this.ModelState.AddModelError(string.Empty, "One of given genre does not exist");
+                }
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(movieModel);
+            }
+
+            movieModel.MovieId = id;
+            bool isSuccessfullEditing = await this.movieService.EditAsync(movieModel);
+
+            if (!isSuccessfullEditing)
+            {
+                return this.View(movieModel);
+            }
+
+            return this.RedirectToAction(nameof(this.All), "Movies");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await this.movieService.DeleteAsync(id);
+            return this.RedirectToAction(nameof(this.All), "Movies");
         }
 
         private static MovieFormModel CreateInitializationOfMovieGenres(MovieFormModel movieFormModel, IGenreService genreService)
             => new MovieFormModel()
-                {
-                    Genres = genreService.GetMovieGenres(),
-                };
+            {
+                Genres = genreService.GetMovieGenres(),
+            };
     }
 }

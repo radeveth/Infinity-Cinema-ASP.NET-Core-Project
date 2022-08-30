@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Data;
+    using InfinityCinema.Data.Common.Repositories;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Data.Models.Enums;
     using InfinityCinema.Services.Data.ActorsService;
@@ -29,6 +30,10 @@
 
     public class MovieService : IMovieService
     {
+        private readonly IDeletableEntityRepository<Movie> movieRepository;
+        private readonly IDeletableEntityRepository<MovieLanguage> movieLanguagesRepository;
+        private readonly IDeletableEntityRepository<MovieGenre> movieGenresRepository;
+
         private readonly InfinityCinemaDbContext dbContext;
         private readonly IDirectorService directorService;
         private readonly IImageService imageService;
@@ -48,7 +53,10 @@
             IActorService actorService,
             IPlatformService platformService,
             ILanguageService languageService,
-            IGenreService genreService)
+            IGenreService genreService,
+            IDeletableEntityRepository<Movie> movieRepository,
+            IDeletableEntityRepository<MovieLanguage> movieLanguagesRepository,
+            IDeletableEntityRepository<MovieGenre> movieGenresRepository)
         {
             this.dbContext = dbContext;
             this.directorService = directorService;
@@ -59,6 +67,9 @@
             this.platformService = platformService;
             this.languageService = languageService;
             this.genreService = genreService;
+            this.movieRepository = movieRepository;
+            this.movieLanguagesRepository = movieLanguagesRepository;
+            this.movieGenresRepository = movieGenresRepository;
         }
 
         // Create
@@ -296,63 +307,117 @@
             };
         }
 
-        // Update
-        public async Task<bool> Edit(EditMovieServiceModel movieModel, int movieId)
+        public MovieStatisticsViewModel MovieStatistics()
         {
-            Movie movie = this.dbContext.Movies.Find(movieId);
-
-            if (movie == null)
+            MovieStatisticsViewModel movieStatistics = new MovieStatisticsViewModel()
             {
-                return false;
+                TotalMovies = this.dbContext.Movies.Count(),
+                TotalGenres = this.dbContext.Genres.Count(),
+                TotalUsers = this.dbContext.Users.Count(),
+            };
+
+            return movieStatistics;
+        }
+
+        // Update
+        public async Task<bool> EditAsync(EditMovieServiceModel movieModel)
+        {
+            try
+            {
+                Movie movie = this.dbContext
+                .Movies
+                .FirstOrDefault(m => m.Id == movieModel.MovieId);
+
+                MovieFormModel newMovieData = movieModel.OverallMovieInformation;
+
+                movie.Name = newMovieData.Name;
+                movie.DateOfReleased = newMovieData.DateOfReleased;
+                movie.Resolution = newMovieData.Resolution;
+                movie.Description = newMovieData.Description;
+                movie.TrailerPath = newMovieData.TrailerPath;
+                movie.Duration = newMovieData.Duration;
+
+                int directorId = this.directorService.GetDirectorIdByGivenFullName(newMovieData.Director.FullName);
+                if (directorId == 0)
+                {
+                    await this.directorService.CreateAsync(newMovieData.Director);
+                    directorId = this.directorService.GetDirectorIdByGivenFullName(newMovieData.Director.FullName);
+                }
+                else if (directorId != 0)
+                {
+                    await this.directorService.EditDirectorAsync(directorId, newMovieData.Director);
+                }
+
+                movie.DirectorId = directorId;
+
+                // When edit movie country create new country
+                Country country = this.countryService.GetCountryByName(newMovieData.Country);
+                if (country == null)
+                {
+                    await this.countryService.CreateAsync(newMovieData.Country);
+                    int countryId = this.countryService.GetCountryIdByGivenName(newMovieData.Country);
+                    movie.CountryId = countryId;
+                }
+            }
+            catch (Exception)
+            {
+                throw new InvalidOperationException();
             }
 
-            MovieFormModel newMovieData = movieModel.OverallMovieInformation;
+            return true;
+        }
 
-            // Get Director Id
-            DirectorFormModel directorFormModel = newMovieData.Director;
-            int directorId = this.directorService.GetDirectorIdByGivenFullName(directorFormModel.FullName);
-
-            if (directorId == 0)
+        // Delete
+        public async Task<bool> DeleteAsync(int movieId)
+        {
+            try
             {
-                await this.directorService.CreateAsync(directorFormModel);
-                directorId = this.directorService.GetDirectorIdByGivenFullName(directorFormModel.FullName);
+                IEnumerable<MovieLanguage> movieLanguages = this.dbContext.MovieLanguages.Where(m => m.MovieId == movieId);
+                foreach (MovieLanguage movieLanguage in movieLanguages)
+                {
+                    this.dbContext.Remove(movieLanguage);
+                }
+
+                IEnumerable<MovieActor> movieActors = this.dbContext.MovieActors.Where(m => m.MovieId == movieId);
+                foreach (MovieActor movieActor in movieActors)
+                {
+                    this.dbContext.MovieActors.Remove(movieActor);
+                }
+
+                IEnumerable<MovieGenre> movieGenres = this.dbContext.MovieGenres.Where(m => m.MovieId == movieId);
+                foreach (MovieGenre movieGenre in movieGenres)
+                {
+                    this.dbContext.MovieGenres.Remove(movieGenre);
+                }
+
+                IEnumerable<MoviePlatform> moviePlatforms = this.dbContext.MoviePlatform.Where(m => m.MovieId == movieId);
+                foreach (MoviePlatform moviePlatform in moviePlatforms)
+                {
+                    this.dbContext.MoviePlatform.Remove(moviePlatform);
+                }
+
+                IEnumerable<StarRating> starRatings = this.dbContext.StarRatings.Where(s => s.MovieId == movieId);
+                foreach (StarRating starRating in starRatings)
+                {
+                    this.dbContext.StarRatings.Remove(starRating);
+                }
+
+                IEnumerable<Image> images = this.dbContext.Images.Where(m => m.MovieId == movieId);
+                foreach (Image image in images)
+                {
+                    this.dbContext.Images.Remove(image);
+                }
+
+                Movie movie = this.dbContext.Movies.FirstOrDefault(m => m.Id == movieId);
+                this.dbContext.Movies.Remove(movie);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(ex.Message);
             }
 
-            // Get Country Id
-            string countryName = newMovieData.Country;
-            if (!this.countryService.CheckIfCountryExist(countryName))
-            {
-                await this.countryService.CreateAsync(countryName);
-            }
-
-            int countryId = this.countryService.GetCountryIdByGivenName(countryName);
-
-            // Chnage overall movie data
-            movie.Name = newMovieData.Name;
-            movie.DateOfReleased = newMovieData.DateOfReleased;
-            movie.Resolution = newMovieData.Resolution;
-            movie.Description = newMovieData.Description;
-            movie.TrailerPath = newMovieData.TrailerPath;
-            movie.Duration = newMovieData.Duration;
-            movie.DirectorId = directorId;
-            movie.CountryId = countryId;
-
-            // Delete old movie languages
-            await this.languageService.DeleteLanguagesForParticularMovie(movieId);
-
-            // Delete old movie genres
-            await this.genreService.DeleteGenresForParticularMovie(movieId);
-
-            // Delete old movie actors
-            await this.actorService.DeleteActorsForParticularMovie(movieId);
-
-            // Delete old movie images
-            await this.imageService.DeleteImagesForParticularMovie(movieId);
-
-            // Delete old movie platforms
-            await this.platformService.DeletePlatformsForParticulatMovie(movieId);
-
-            throw new NotImplementedException();
+            await this.dbContext.SaveChangesAsync();
+            return true;
         }
 
         // Useful methods

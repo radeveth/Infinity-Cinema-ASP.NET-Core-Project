@@ -55,9 +55,13 @@
 
         public int GetDirectorIdByGivenFullName(string fullName)
         {
+            string[] directorNameParts = this.SplitDirectorFullName(fullName);
+            string firstName = directorNameParts[0];
+            string lastName = directorNameParts[1];
+
             Director director = this.dbContext
                 .Directors
-                .FirstOrDefault(d => (d.FirstName + d.LastName).ToLower() == fullName);
+                .FirstOrDefault(d => d.FirstName.ToLower() == firstName.ToLower() && d.LastName.ToLower() == lastName.ToLower());
 
             if (director == null)
             {
@@ -79,6 +83,28 @@
                 .FirstOrDefault(d => d.Id == directorId);
 
         // Update
+        public async Task<bool> EditDirectorAsync(int directorId, DirectorFormModel directorFormModel)
+        {
+            try
+            {
+                Director director = this.dbContext.Directors.FirstOrDefault(d => d.Id == directorId);
+
+                string[] directorNameParts = this.SplitDirectorFullName(directorFormModel.FullName);
+
+                director.FirstName = directorNameParts[0];
+                director.LastName = directorNameParts[1];
+                director.InformationUrl = directorFormModel.InformationUrl;
+
+            }
+            catch (Exception)
+            {
+                throw new InvalidOperationException();
+            }
+
+            await this.dbContext.SaveChangesAsync();
+            return true;
+        }
+
         // Delete
 
         // Useful methods

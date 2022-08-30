@@ -6,6 +6,8 @@
 
     public class EditMovieServiceModel
     {
+        public int MovieId { get; set; }
+
         public MovieFormModel OverallMovieInformation { get; set; }
 
         public EditActorsFormModel Actors { get; set; }

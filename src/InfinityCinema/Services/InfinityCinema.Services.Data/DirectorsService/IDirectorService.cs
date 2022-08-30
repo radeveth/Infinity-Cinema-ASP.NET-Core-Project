@@ -18,6 +18,8 @@
         DirectorViewModel GetDirectorForParticularMovie(int directorId);
 
         // Update
+        Task<bool> EditDirectorAsync(int directorId, DirectorFormModel directorFormModel);
+
         // Delete
     }
 }

@@ -11,7 +11,7 @@
 
     public class CountryService : ICountryService
     {
-        private const string TxtFilePath = @"C:\Users\User\Documents\GitHub\Infinity-Cinema-ASP.NET-Core-Project\src\InfinityCinema\Services\InfinityCinema.Services.Data\CountriesService\Abbreviation-Country.txt";
+        private const string TxtFilePath = @"C:\Users\User\Documents\GitHub\Infinity-Cinema-ASP.NET-Core-Project\src\InfinityCinema\Services\InfinityCinema.Services.Data\CountriesService\Files\Abbreviation-Country.txt";
         private readonly InfinityCinemaDbContext dbContext;
 
         public CountryService(InfinityCinemaDbContext dbContext)
@@ -80,6 +80,11 @@
         {
             Country country = this.dbContext.Countries.FirstOrDefault(c => c.Name == givenName);
 
+            if (country == null)
+            {
+                return 0;
+            }
+
             return country.Id;
         }
 
@@ -91,8 +96,28 @@
         }
 
         // Update
+        public async Task<bool> EditCountryAsync(int countryId, string countryName)
+        {
+            try
+            {
+                Country country = this.dbContext.Countries.FirstOrDefault(c => c.Id == countryId);
+
+                country.Name = countryName;
+                country.Abbreviation = this.GenerateCountryAbbreviation(countryName);
+            }
+            catch (Exception)
+            {
+                throw new InvalidOperationException();
+            }
+
+            await this.dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
         // Delete
 
+        // Useful methods
         public bool CheckIfCountryExist(string countryName)
             => this.dbContext.Countries.Any(c => c.Name.Replace(" ", string.Empty).ToLower() == countryName.Replace(" ", string.Empty).ToLower());
 

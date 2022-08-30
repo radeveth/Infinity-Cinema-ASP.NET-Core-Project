@@ -20,8 +20,11 @@
         string GetCountryNameById(int id);
 
         // Update
+        public Task<bool> EditCountryAsync(int countryId, string countryName);
+
         // Delete
 
+        // Useful methods
         bool CheckIfCountryExist(string countryName);
     }
 }

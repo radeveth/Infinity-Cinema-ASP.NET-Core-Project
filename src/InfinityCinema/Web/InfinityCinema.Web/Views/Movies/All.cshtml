@@ -104,11 +104,10 @@
                                 <span class="badge badge-warning offset-4 col-4">@movie.Duration</span>
                                 <div class="card-footer">
                                     <form method="get">
-                                        <div class="float-start">
-                                            <button asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-warning">Details</button>
-                                        </div>
-                                        <div class="float-end">
-                                            <button asp-controller="Movies" asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-outline-warning">Edit</button>
+                                        <div class="row">
+                                            <button asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-warning offset-1 col-3">Details</button>
+                                            <button asp-controller="Movies" asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-outline-warning offset-1 col-2">Edit</button>
+                                            <button asp-controller="Movies" asp-action="Delete" asp-route-id="@movie.Id" class="btn btn-outline-warning offset-1 col-3" id="delete-movie-btn">Delete</button>
                                         </div>
                                     </form>
                                 </div>
@@ -134,14 +133,10 @@
 
 @section Scripts {
     <script>
-        let allGenresButtonElement = document.getElementById('all-genres');
-        let actionGenresButtonElement = document.getElementById('action-genres');
-        let dramaGenresButtonElement = document.getElementById('drama-genres');
-        let comedyGenresButtonElement = document.getElementById('comedy-genres');
-        let thrillerGenresButtonElement = document.getElementById('thriller-genres');
-        let fantasyGenresButtonElement = document.getElementById('fantasy-genres');
+        let deleteButtonElement = document.querySelector('#delete-movie-btn');
 
-        allGenresButtonElement.addEventListener('click', (e) => {
-        })
+        deleteButtonElement.addEventListener('click', (e) => {
+            alert("Successfully Deleting Movie!");
+        });
     </script>
 }

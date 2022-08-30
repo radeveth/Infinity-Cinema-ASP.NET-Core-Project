@@ -21,9 +21,12 @@
 
         AllMoviesQueryModel All(string searchName, MovieSorting sorting, int currentPage, int moviesPerPage, string searchGenre);
 
+        MovieStatisticsViewModel MovieStatistics();
+
         // Update
-        Task<bool> Edit(EditMovieServiceModel movieModel, int movieId);
+        Task<bool> EditAsync(EditMovieServiceModel movieModel);
 
         // Delete
+        Task<bool> DeleteAsync(int movieId);
     }
 }

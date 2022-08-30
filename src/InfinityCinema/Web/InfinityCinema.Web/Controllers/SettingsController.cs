@@ -6,7 +6,7 @@
     using InfinityCinema.Data.Common.Repositories;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.SettingsService;
-    using InfinityCinema.Web.ViewModels.Settings;
+    using InfinityCinema.Services.Data.SettingsService.Models;
 
     using Microsoft.AspNetCore.Mvc;
 

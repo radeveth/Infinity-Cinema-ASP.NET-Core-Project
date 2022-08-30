@@ -1,0 +1,121 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<div class="container">
+    <div class="row">
+        <section class="vh-100">
+            <div class="container-fluid h-custom">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-md-9 col-lg-6 col-xl-5">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                             class="img-fluid" alt="Sample image">
+                    </div>
+                    <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                        <form id="account" method="post">
+                            <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+                                <p class="lead fw-normal mb-0 me-3" style="margin-left:10px">Sign in with</p>
+                                <button type="button" class="btn btn-warning btn-floating mx-1">
+                                    <i class="fab fa-facebook-f"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-warning btn-floating mx-1">
+                                    <i class="fab fa-twitter"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-warning btn-floating mx-1">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </button>
+                            </div>
+
+                            <div class="mt-4"></div>
+
+                            <div class="divider d-flex align-items-center my-4">
+                                <p class="text-center fw-bold mx-3 mb-0">Or</p>
+                            </div>
+
+                            <div class="mb-4"></div>
+
+                            <!-- Email input -->
+                            <hr />
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-floating">
+                                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
+                                <label asp-for="Input.Email" class="form-label"></label>
+                                <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3"></div>
+                            <div class="form-floating">
+                                <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
+                                <label asp-for="Input.Password" class="form-label"></label>
+                                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3"></div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <!-- Checkbox -->
+                                <div>
+                                    <div class="checkbox">
+                                        <label asp-for="Input.RememberMe" class="form-label">
+                                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                        </label>
+                                    </div>
+                                </div>
+                                <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                            </div>
+
+                            <div class="text-center text-lg-start mt-4 pt-2">
+                                <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-warning">LOGIN</button>
+                                <p class="small fw-bold mt-2 pt-1 mb-0">
+                                    Don't have an account? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register</a>
+                                </p>
+                            </div>
+                            <div class="mb-2"></div>
+                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation"><span>Resend email confirmation</span></a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    @*<div class="col-md-6 col-md-offset-2">
+    <section>
+    <h3>Use another service to log in.</h3>
+    <hr />
+    @{
+    if ((Model.ExternalLogins?.Count ?? 0) == 0)
+    {
+    <div>
+    <p>
+    There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
+    article
+    about setting up this ASP.NET application to support logging in via external services
+    </a>.
+    </p>
+    </div>
+    }
+    else
+    {
+    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+    <div>
+    <p>
+    @foreach (var provider in Model.ExternalLogins)
+    {
+    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+    }
+    </p>
+    </div>
+    </form>
+    }
+    }
+    </section>
+    </div>*@
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -6,7 +6,7 @@
     {
         public MovieListingViewModel()
         {
-            Genres = new List<string>();
+            this.Genres = new List<string>();
         }
 
         public int Id { get; set; }

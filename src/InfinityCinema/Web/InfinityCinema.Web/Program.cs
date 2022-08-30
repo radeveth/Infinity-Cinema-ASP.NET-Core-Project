@@ -1,5 +1,6 @@
-﻿namespace InfinityCinema.Web
+namespace InfinityCinema.Web
 {
+    using System;
     using System.Reflection;
 
     using InfinityCinema.Data;
@@ -21,7 +22,6 @@
     using InfinityCinema.Services.Messaging;
     using InfinityCinema.Web.Infrastructure;
     using InfinityCinema.Web.ViewModels;
-
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -90,7 +90,7 @@
             using (var serviceScope = app.Services.CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<InfinityCinemaDbContext>();
-                dbContext.Database.Migrate();
+                // dbContext.Database.Migrate();
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
             }
 

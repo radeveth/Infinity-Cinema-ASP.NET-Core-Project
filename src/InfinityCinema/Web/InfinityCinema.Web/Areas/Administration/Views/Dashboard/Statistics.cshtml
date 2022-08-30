@@ -1,0 +1,40 @@
+﻿@model MovieStatisticsViewModel
+
+@{
+    this.ViewData["Title"] = "Admin dashboard";
+}
+
+<div class="container">
+    <center>
+        <h1 class="text-center mt-5">@this.ViewData["Title"]</h1>
+    </center>
+    <div class="jumbotron mt-5">
+        <div class="container">
+            <div class="row">
+                <span class="badge badge-warning offset-1 col-2">Movies: @Model.TotalMovies</span>
+                <span class="badge badge-warning offset-2 col-2">Genres: @Model.TotalGenres</span>
+                <span class="badge badge-warning offset-2 col-2">Users: @Model.TotalUsers</span>
+            </div>
+        </div>
+        <div class="mt-5"></div>
+        <hr class="my-4">
+        <div class="mb-5"></div>
+        <p class="lead">
+            <center>
+                <a asp-area="" asp-controller="Movies" asp-action="Create" class="btn btn-warning btn-lg" role="button">Create Movie</a>
+            </center>
+            @*<a asp-area="" asp-controller="Movies" asp-action="Edit" class="btn btn-warning btn-lg offset-2" role="button">Edit Movie</a>
+            <a asp-area="" asp-controller="Movies" asp-action="Delete" class="btn btn-warning btn-lg offset-2" role="button">Delete Movie</a>*@
+        </p>
+    </div>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />

@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
 
-    using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.DirectorsService.Models;
 
     public interface IDirectorService

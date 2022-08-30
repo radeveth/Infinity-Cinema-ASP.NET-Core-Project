@@ -1,4 +1,4 @@
-﻿namespace InfinityCinema.Web.ViewModels.Settings
+﻿namespace InfinityCinema.Services.Data.SettingsService.Models
 {
     using System.Collections.Generic;
 

@@ -1,22 +1,23 @@
 ﻿namespace InfinityCinema.Web.Areas.Administration.Controllers
 {
     using InfinityCinema.Services.Data.MoviesService;
-
+    using InfinityCinema.Services.Data.MoviesService.Models;
     using Microsoft.AspNetCore.Mvc;
 
-    [Area("Administration")]
     public class DashboardController : AdministrationController
     {
-        private readonly MovieService movieService;
+        private readonly IMovieService movieService;
 
-        public DashboardController(MovieService movieService)
+        public DashboardController(IMovieService movieService)
         {
             this.movieService = movieService;
         }
 
-        public IActionResult Index()
+        public IActionResult Statistics()
         {
-            return this.View(this.movieService.MovieStatistics());
+            MovieStatisticsViewModel movieStatistics = this.movieService.MovieStatistics();
+
+            return this.View(movieStatistics);
         }
     }
 }

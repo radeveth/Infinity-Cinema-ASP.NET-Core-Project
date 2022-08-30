@@ -7,8 +7,6 @@
     using InfinityCinema.Services.Data.ActorsService.Models;
     using InfinityCinema.Services.Data.DirectorsService.Models;
     using InfinityCinema.Services.Data.GenresService.Models;
-    using InfinityCinema.Services.Data.ImagesService.Models;
-    using InfinityCinema.Services.Data.LanguagesService.Models;
     using InfinityCinema.Services.Data.PlatformsService.Models;
 
     public class MovieDetailsViewModel

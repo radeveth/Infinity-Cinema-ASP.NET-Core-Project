@@ -1,13 +1,18 @@
 ﻿namespace InfinityCinema.Web.Infrastructure
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
+
+    using static InfinityCinema.Common.GlobalConstants;
 
     public static class ApplicationBuilderExtension
     {
@@ -17,8 +22,11 @@
 
             var data = scopedService.ServiceProvider.GetService<InfinityCinemaDbContext>();
 
+            IServiceProvider services = scopedService.ServiceProvider;
+
             data.Database.Migrate();
             SeedGenres(data);
+            SeedAdministrator(services);
 
             return app;
         }
@@ -48,6 +56,41 @@
 
             data.Genres.AddRange(genres);
             data.SaveChanges();
+        }
+
+        private static void SeedAdministrator(IServiceProvider services)
+        {
+            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
+
+            Task
+                .Run(async () =>
+                {
+                    if (await roleManager.RoleExistsAsync(AdministratorRoleName))
+                    {
+                        return;
+                    }
+
+                    var role = new ApplicationRole { Name = AdministratorRoleName };
+
+                    await roleManager.CreateAsync(role);
+
+                    const string adminEmail = "admin@crs.com";
+                    const string adminPassword = "admin12";
+
+                    ApplicationUser user = new ApplicationUser
+                    {
+                        Email = adminEmail,
+                        UserName = adminEmail,
+                        FullName = "Admin",
+                    };
+
+                    await userManager.CreateAsync(user, adminPassword);
+
+                    await userManager.AddToRoleAsync(user, role.Name);
+                })
+                .GetAwaiter()
+                .GetResult();
         }
     }
 }

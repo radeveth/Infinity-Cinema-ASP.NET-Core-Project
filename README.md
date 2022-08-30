@@ -1,5 +1,5 @@
 # Infinity Cinema - ASP.NET Core Project
-<h3>Current state of project (daily update)</h3>
+<h3>Current state of project</h3>
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

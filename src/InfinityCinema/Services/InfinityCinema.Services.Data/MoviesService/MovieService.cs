@@ -203,6 +203,7 @@
             IEnumerable<string> languages = this.languageService.GetLanguagesForParticularMovie(id);
             IEnumerable<PlatformViewModel> platforms = this.platformService.GetPlatformsForGivenMovie(id);
             DirectorViewModel director = this.directorService.GetDirectorForParticularMovie(movie.DirectorId);
+            IEnumerable<string> applicationUsersId = this.dbContext.ApplicationUserMovies.Where(a => a.MovieId == id).Select(a => a.UserId);
 
             string country = this.countryService.GetCountryNameById(movie.CountryId);
 
@@ -221,6 +222,7 @@
 
             return new MovieDetailsViewModel()
             {
+                Id = movie.Id,
                 Genres = genres,
                 Images = images,
                 Actors = actors,
@@ -235,6 +237,7 @@
                 Resolution = movie.Resolution,
                 Description = movie.Description,
                 DateOfReleased = movie.DateOfReleased,
+                ApplicationUsersId = applicationUsersId,
             };
         }
 
@@ -317,6 +320,63 @@
             return movieStatistics;
         }
 
+        public AllMoviesQueryModel GetDeletedMovies
+            (string searchName = null,
+            MovieSorting sorting = MovieSorting.Rating,
+            int currentPage = 1,
+            int moviesPerPage = AllMoviesQueryModel.MoviesPerPage,
+            string searchGenre = "all")
+        {
+            IQueryable<Movie> moviesQuery = this.dbContext.Movies.Where(m => m.IsDeleted).AsQueryable();
+
+            if (searchGenre.ToLower() != "all")
+            {
+                IQueryable<Movie> moviesByTargetGenre = this.dbContext
+                    .MovieGenres
+                    .Where(m => m.Genre.Name.ToLower() == searchGenre.ToLower() && m.Movie.MovieGenres.Count == 1)
+                    .Select(m => m.Movie);
+
+                moviesQuery = moviesByTargetGenre;
+            }
+
+            if (!string.IsNullOrEmpty(searchName))
+            {
+                moviesQuery = moviesQuery.Where(m => m.Name.ToLower().Contains(searchName));
+            }
+
+            // Default sorting is by rating
+            moviesQuery = sorting switch
+            {
+                MovieSorting.Rating => moviesQuery.OrderByDescending(m => m.StarRatings.Count != 0 ? m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count : 0),
+                MovieSorting.YearNewest => moviesQuery.OrderBy(m => m.DateOfReleased),
+                MovieSorting.YearOldest => moviesQuery.OrderByDescending(m => m.DateOfReleased),
+                MovieSorting.NameAlphabetically => moviesQuery.OrderBy(m => m.Name),
+                MovieSorting.DurationSmallest => moviesQuery.OrderBy(m => m.Duration),
+                MovieSorting.DurationLargest => moviesQuery.OrderByDescending(m => m.Duration),
+                _ => moviesQuery.OrderByDescending(m => m.DateOfReleased),
+            };
+
+            IQueryable<MovieListingViewModel> movies = moviesQuery
+                .Skip((currentPage - 1) * moviesPerPage)
+                .Take(moviesPerPage)
+                .Select(m => new MovieListingViewModel()
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    ImageUrl = m.Images.First().Url,
+                    StarRating = m.StarRatings.Count != 0 ? m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count : -1,
+                    Duration = m.Duration,
+                    Genres = m.MovieGenres.Select(m => m.Genre.Name),
+                });
+
+            return new AllMoviesQueryModel()
+            {
+                Movies = movies,
+                TotalMovies = moviesQuery.Count(),
+                CurrentPage = currentPage,
+            };
+        }
+
         // Update
         public async Task<bool> EditAsync(EditMovieServiceModel movieModel)
         {
@@ -366,48 +426,56 @@
         }
 
         // Delete
-        public async Task<bool> DeleteAsync(int movieId)
+        public async Task<bool> DeleteAsync(DeleteMovieServiceModel deleteMovieServiceModel)
         {
+            int movieId = deleteMovieServiceModel.Id;
+
             try
             {
                 IEnumerable<MovieLanguage> movieLanguages = this.dbContext.MovieLanguages.Where(m => m.MovieId == movieId);
                 foreach (MovieLanguage movieLanguage in movieLanguages)
                 {
-                    this.dbContext.Remove(movieLanguage);
+                    movieLanguage.IsDeleted = true;
+                    movieLanguage.DeletedOn = DateTime.UtcNow;
                 }
 
                 IEnumerable<MovieActor> movieActors = this.dbContext.MovieActors.Where(m => m.MovieId == movieId);
                 foreach (MovieActor movieActor in movieActors)
                 {
-                    this.dbContext.MovieActors.Remove(movieActor);
+                    movieActor.IsDeleted = true;
+                    movieActor.DeletedOn = DateTime.UtcNow;
                 }
 
                 IEnumerable<MovieGenre> movieGenres = this.dbContext.MovieGenres.Where(m => m.MovieId == movieId);
                 foreach (MovieGenre movieGenre in movieGenres)
                 {
-                    this.dbContext.MovieGenres.Remove(movieGenre);
+                    movieGenre.IsDeleted = true;
+                    movieGenre.DeletedOn = DateTime.UtcNow;
                 }
 
                 IEnumerable<MoviePlatform> moviePlatforms = this.dbContext.MoviePlatform.Where(m => m.MovieId == movieId);
                 foreach (MoviePlatform moviePlatform in moviePlatforms)
                 {
-                    this.dbContext.MoviePlatform.Remove(moviePlatform);
+                    moviePlatform.IsDeleted = true;
+                    moviePlatform.DeletedOn = DateTime.UtcNow;
                 }
 
                 IEnumerable<StarRating> starRatings = this.dbContext.StarRatings.Where(s => s.MovieId == movieId);
                 foreach (StarRating starRating in starRatings)
                 {
-                    this.dbContext.StarRatings.Remove(starRating);
+                    starRating.IsDeleted = true;
+                    starRating.DeletedOn = DateTime.UtcNow;
                 }
 
                 IEnumerable<Image> images = this.dbContext.Images.Where(m => m.MovieId == movieId);
                 foreach (Image image in images)
                 {
-                    this.dbContext.Images.Remove(image);
+                    image.IsDeleted = true;
                 }
 
                 Movie movie = this.dbContext.Movies.FirstOrDefault(m => m.Id == movieId);
-                this.dbContext.Movies.Remove(movie);
+                movie.IsDeleted = true;
+                movie.DeletedOn = DateTime.UtcNow;
             }
             catch (Exception ex)
             {
@@ -417,6 +485,9 @@
             await this.dbContext.SaveChangesAsync();
             return true;
         }
+
+        public bool CheckIfMovieWithGivenIdExist(int id)
+            => this.dbContext.Movies.Any(m => m.Id == id);
 
         // Useful methods
         private async Task MatchLanguagesWithMovie(int movieId, IEnumerable<int> languagesIds)

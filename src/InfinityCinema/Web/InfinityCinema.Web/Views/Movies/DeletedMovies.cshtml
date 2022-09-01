@@ -1,10 +1,7 @@
 ﻿@model AllMoviesQueryModel
 
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
-
 @{
-    ViewData["Title"] = "All";
+    ViewData["Title"] = "Deleted Movies";
 
     bool isHaveMovies = Model.Movies.Any();
     int totalPages = (int)Math.Ceiling((double)Model.TotalMovies / AllMoviesQueryModel.MoviesPerPage);
@@ -81,7 +78,7 @@
         @if (!isHaveMovies)
         {
             <div class="row mb-3 mt-5">
-                <div class="text-center offset-3 col-6"><h1>There are no movies by given criteria!</h1></div>
+                <div class="text-center offset-3 col-6"><h1>There are no mvoes by given criteria!</h1></div>
             </div>
             <img class="rounded mx-auto d-block" width:100px height:100px src="https://www.cambridge.org/elt/blog/wp-content/uploads/2019/07/Sad-Face-Emoji-480x480.png.webp" />
         }
@@ -97,10 +94,7 @@
                                     <img style="width:100%; height:100%" class="card-img" src="@movie.ImageUrl">
                                 </div>
                                 <div class="card-body">
-                                    <div class="row">
-                                        <span class="badge badge-warning offset-1 col-2" style="margin-left:10px">@(movie.StarRating == -1 ? "No rating" : $"{movie.StarRating} {Html.Raw("★")}")</span>
-                                        <button style="text-decoration: none !important; margin-right:5px" id="save-to-watch-later-btn" title="Save to watch later" class="badge badge-warning offset-8 col-1"><i class="fas fa-save"></i></button>
-                                    </div>
+                                    <span class="badge badge-warning">@(movie.StarRating == -1 ? "No rating" : $"{movie.StarRating} {Html.Raw("★")}")</span>
                                     <h4 class="card-title mt-2">@movie.Name</h4>
                                     @foreach (var genre in movie.Genres)
                                     {
@@ -109,22 +103,13 @@
                                 </div>
                                 <span class="badge badge-warning offset-4 col-4">@movie.Duration</span>
                                 <div class="card-footer">
-                                    @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
-                                    {
-                                        <form method="get">
-                                            <div class="row">
-                                                <button asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-warning offset-1 col-3">Details</button>
-                                                <button asp-area="" asp-controller="Movies" asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-outline-warning offset-1 col-2">Edit</button>
-                                                <button asp-area="" asp-controller="Movies" asp-action="DeleteConfirmation" asp-route-id="@movie.Id" class="btn btn-outline-warning offset-1 col-3" id="delete-movie-btn">Delete</button>
-                                            </div>
-                                        </form>
-                                    }
-                                    else
-                                    {
-                                        <form method="get">
-                                            <button asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-warning">Details</button>
-                                        </form>
-                                    }
+                                    <form method="get">
+                                        <div class="row">
+                                            <button asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-outline-warning offset-1 col-3">Details</button>
+                                            <button asp-area="" asp-controller="Movies" asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-outline-warning offset-1 col-2">Edit</button>
+                                            <button asp-area="" asp-controller="Movies" asp-action="DeleteConfirmation" asp-route-id="@movie.Id" class="btn btn-outline-warning offset-1 col-3" id="delete-movie-btn">Delete</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -145,17 +130,3 @@
         }
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        $('#save-to-watch-later-btn').on('click', ev => {
-
-
-            $.get('/api/applicationusersapi/savetowatchlater/?id=@Model.', (data) => {
-                let saveToLatchLaterButtonElement = document.querySelector('#save-to-watch-later-btn');
-
-                saveToLatchLaterButtonElement.textContent = data;
-            });
-        });
-    </script>
-}

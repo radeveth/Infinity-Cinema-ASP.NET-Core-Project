@@ -5,8 +5,10 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using InfinityCinema.Common;
     using InfinityCinema.Services.Data.ActorsService;
     using InfinityCinema.Services.Data.ActorsService.Models;
+    using InfinityCinema.Services.Data.ApplicationUsersService;
     using InfinityCinema.Services.Data.DirectorsService.Models;
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.GenresService.Models;
@@ -16,6 +18,8 @@
     using InfinityCinema.Services.Data.MoviesService.Models;
     using InfinityCinema.Services.Data.PlatformsService;
     using InfinityCinema.Services.Data.PlatformsService.Models;
+    using InfinityCinema.Web.Infrastructure;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class MoviesController : BaseController
@@ -36,6 +40,7 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public IActionResult Create()
         {
             return this.View(new CreateMovieServiceModel()
@@ -45,6 +50,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> CreateAsync(CreateMovieServiceModel movieModel)
         {
             IEnumerable<int> genresIds = movieModel.OverallMovieInformation.Genres.Select(g => g.Id);
@@ -87,14 +93,31 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        public IActionResult DeletedMovies([FromQuery] AllMoviesQueryModel moviesQueryModel)
+        {
+            AllMoviesQueryModel queryResult = this.movieService
+                .GetDeletedMovies(moviesQueryModel.SearchName, moviesQueryModel.Sorting, moviesQueryModel.CurrentPage, AllMoviesQueryModel.MoviesPerPage, moviesQueryModel.SearchGenre);
+
+            moviesQueryModel.Movies = queryResult.Movies;
+            moviesQueryModel.TotalMovies = queryResult.TotalMovies;
+            moviesQueryModel.CurrentPage = queryResult.CurrentPage;
+            moviesQueryModel.SearchGenre = queryResult.SearchGenre;
+
+            return this.View(moviesQueryModel);
+        }
+
+        [HttpGet]
         public IActionResult Details(int id)
         {
             MovieDetailsViewModel movie = this.movieService.Details(id);
+            this.ViewData["UserId"] = ClaimsPrincipalExtensions.GetId(this.User);
 
             return this.View(movie);
         }
 
         [HttpGet]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public IActionResult Edit(int id)
         {
             MovieDetailsViewModel targetMovie = this.movieService.Details(id);
@@ -142,6 +165,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> EditAsync(EditMovieServiceModel movieModel, int id)
         {
             if (movieModel.OverallMovieInformation.GenresId != null)
@@ -171,9 +195,37 @@
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete(int id)
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        public IActionResult DeleteConfirmation(int id)
         {
-            await this.movieService.DeleteAsync(id);
+            DeleteMovieServiceModel deleteMovieServiceModel = new DeleteMovieServiceModel()
+            {
+                Id = id,
+            };
+            return this.View(deleteMovieServiceModel);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            DeleteMovieServiceModel deleteMovieServiceModel = new DeleteMovieServiceModel()
+            {
+                Id = id,
+            };
+
+            if (!this.movieService.CheckIfMovieWithGivenIdExist(id))
+            {
+                this.ModelState.AddModelError(string.Empty, "This movie does not exist!");
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(deleteMovieServiceModel);
+            }
+
+            await this.movieService.DeleteAsync(deleteMovieServiceModel);
+
             return this.RedirectToAction(nameof(this.All), "Movies");
         }
 

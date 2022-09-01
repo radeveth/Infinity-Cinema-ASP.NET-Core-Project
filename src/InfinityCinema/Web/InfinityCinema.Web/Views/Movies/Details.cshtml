@@ -5,6 +5,8 @@
 
     IEnumerable<GenreViewModel> genres = Model.Genres;
     int neededColumnsForGenres = genres.Count() + 1;
+
+    bool ifMovieIsAddedToWatchLater = Model.ApplicationUsersId.Any(a => a == ViewData["UserId"].ToString());
 }
 
 <div class="container mt-4">
@@ -56,7 +58,7 @@
 
             <hr class="offset-1 col-10">
             <div class="row mb-1"></div>
-            
+
             <center><strong>Country:</strong> @Model.Countruy</center>
 
             <hr class="offset-1 col-10">
@@ -113,8 +115,9 @@
             <div class="row mb-1"></div>
 
             <div class="row">
-                <button class="offset-2 col-3 btn btn-warning rounded-pill">Add to Favorite <span class="text-danger">❤</span></button>
-                <button class="offset-2 col-3 btn btn-warning rounded-pill">Save to watch later&nbsp&nbsp<i class="fas fa-save"></i></button>
+                <button asp-area="" class="offset-2 col-3 btn btn-warning rounded-pill">Like this movie <span class="text-danger">❤</span></button>
+                <button class="offset-2 col-3 btn btn-warning rounded-pill @(ifMovieIsAddedToWatchLater == true ? string.Empty : "d-none")" id="remove-from-watch-later-btn">Remove to watch later&nbsp&nbsp<i class="fas fa-save"></i></button>
+                <button class="offset-2 col-3 btn btn-warning rounded-pill @(ifMovieIsAddedToWatchLater == true ? "d-none" : string.Empty)" id="save-to-watch-later-btn">Save to watch later&nbsp&nbsp<i class="fas fa-save"></i></button>
             </div>
         </div>
 
@@ -172,5 +175,28 @@
                 }
             }
         })
+    </script>
+
+    <script>
+        let removeFromWatchLaterButtonElement = document.querySelector('#remove-from-watch-later-btn');
+        let saveToWatchLaterButtonElement = document.querySelector('#save-to-watch-later-btn');
+
+        $('#save-to-watch-later-btn').on('click', ev => {
+            $.get('/api/applicationusersapi/savetowatchlater/?id=@(Model.Id)', (data) => {
+                alert(data);
+
+                removeFromWatchLaterButtonElement.classList.remove('d-none');
+                saveToWatchLaterButtonElement.classList.add('d-none');
+            });
+        });
+
+        $('#remove-from-watch-later-btn').on('click', ev => {
+            $.get('/api/applicationusersapi/removefromwatchlater/?id=@(Model.Id)', (data) => {
+                alert(data);
+
+                saveToWatchLaterButtonElement.classList.remove('d-none');
+                removeFromWatchLaterButtonElement.classList.add('d-none');
+            });
+        });
     </script>
 }

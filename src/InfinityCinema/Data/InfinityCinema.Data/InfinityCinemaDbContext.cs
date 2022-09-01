@@ -27,6 +27,8 @@
 
         public DbSet<Actor> Actors { get; set; }
 
+        public DbSet<ApplicationUserMovie> ApplicationUserMovies { get; set; }
+
         public DbSet<Country> Countries { get; set; }
 
         public DbSet<Director> Directors { get; set; }
@@ -78,6 +80,7 @@
         {
             builder.ApplyConfiguration(new ActorConfiguration());
             builder.ApplyConfiguration(new ApplicationUserConfiguration());
+            builder.ApplyConfiguration(new ApplicationUserMoviesConfiguration());
             builder.ApplyConfiguration(new CountryConfiguration());
             builder.ApplyConfiguration(new DirectorConfiguration());
             builder.ApplyConfiguration(new GenreConfiguration());

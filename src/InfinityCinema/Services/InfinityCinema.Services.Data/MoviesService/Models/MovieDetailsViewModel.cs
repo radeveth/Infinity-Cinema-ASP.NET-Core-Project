@@ -11,6 +11,8 @@
 
     public class MovieDetailsViewModel
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public string Trailer { get; set; }
@@ -38,5 +40,9 @@
         public string Countruy { get; set; }
 
         public IEnumerable<MovieListingViewModel> UpNextMovies { get; set; }
+
+        public IEnumerable<string> ApplicationUsersId { get; set; }
+
+
     }
 }

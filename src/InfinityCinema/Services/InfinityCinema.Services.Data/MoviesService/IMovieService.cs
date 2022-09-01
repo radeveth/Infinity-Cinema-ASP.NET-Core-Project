@@ -23,10 +23,14 @@
 
         MovieStatisticsViewModel MovieStatistics();
 
+        AllMoviesQueryModel GetDeletedMovies(string searchName, MovieSorting sorting, int currentPage, int moviesPerPage, string searchGenre);
+
         // Update
         Task<bool> EditAsync(EditMovieServiceModel movieModel);
 
         // Delete
-        Task<bool> DeleteAsync(int movieId);
+        Task<bool> DeleteAsync(DeleteMovieServiceModel deleteMovieServiceModel);
+
+        bool CheckIfMovieWithGivenIdExist(int id);
     }
 }

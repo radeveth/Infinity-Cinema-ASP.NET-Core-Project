@@ -1,0 +1,23 @@
+﻿@model DeleteMovieServiceModel
+
+@{
+    ViewData["Title"] = "Delete Movie";
+}
+
+<div class="container">
+    <br />
+    <div class="row mt-5">
+        <center>
+            <h1>Are you sure?</h1>
+            <div class="container">
+                <div class="mb-5"></div>
+                <div class="row">
+                    <a class="btn btn-danger offset-3 col-2" asp-area="" asp-controller="Movies" asp-action="Delete" asp-route-id="@Model.Id">Yes</a>
+                    <a class="offset-2 col-2 btn btn-warning" asp-area="" asp-controller="Movies" asp-action="All">No</a>
+                </div>
+            </div>
+        </center>
+    </div>
+    <br />
+    <br />
+</div>

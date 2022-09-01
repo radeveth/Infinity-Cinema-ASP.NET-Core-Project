@@ -1,6 +1,5 @@
 namespace InfinityCinema.Web
 {
-    using System;
     using System.Reflection;
 
     using InfinityCinema.Data;
@@ -10,6 +9,7 @@ namespace InfinityCinema.Web
     using InfinityCinema.Data.Repositories;
     using InfinityCinema.Data.Seeding;
     using InfinityCinema.Services.Data.ActorsService;
+    using InfinityCinema.Services.Data.ApplicationUsersService;
     using InfinityCinema.Services.Data.CountriesService;
     using InfinityCinema.Services.Data.DirectorsService;
     using InfinityCinema.Services.Data.GenresService;
@@ -82,6 +82,7 @@ namespace InfinityCinema.Web
             services.AddTransient<IMovieService, MovieService>();
             services.AddTransient<IActorService, ActorService>();
             services.AddTransient<IPlatformService, PlatformService>();
+            services.AddTransient<IApplicationUserService, ApplicationUserService>();
         }
 
         private static void Configure(WebApplication app)

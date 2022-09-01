@@ -22,6 +22,7 @@ namespace InfinityCinema.Data.Models
 
             this.MoviesCreated = new HashSet<Movie>();
             this.CommentsCreated = new HashSet<MovieComment>();
+            this.ApplicationUserMovies = new HashSet<ApplicationUserMovie>();
         }
 
         [Required]
@@ -50,5 +51,7 @@ namespace InfinityCinema.Data.Models
         public virtual ICollection<Movie> MoviesCreated { get; set; }
 
         public virtual ICollection<MovieComment> CommentsCreated { get; set; }
+
+        public virtual ICollection<ApplicationUserMovie> ApplicationUserMovies { get; set; }
     }
 }

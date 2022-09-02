@@ -8,7 +8,7 @@
 
     using static InfinityCinema.Data.Common.DataValidation.StarRatingValidation;
 
-    public class StarRating : BaseDeletableModel<int>
+    public class MovieUserStarRating : BaseDeletableModel<int>
     {
         [Required]
         [Range(0, StarMaLength)]
@@ -19,5 +19,11 @@
         public int MovieId { get; set; }
 
         public virtual Movie Movie { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(ApplicationUser))]
+        public string UserId { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
     }
 }

@@ -51,6 +51,8 @@
 
         public DbSet<MoviePlatform> MoviePlatform { get; set; }
 
+        public DbSet<MovieUserStarRating> MovieUserStarRatings { get; set; }
+
         public DbSet<Platform> Platforms { get; set; }
 
         public DbSet<StarRating> StarRatings { get; set; }
@@ -91,6 +93,7 @@
             builder.ApplyConfiguration(new MovieGenreConfiguration());
             builder.ApplyConfiguration(new MovieLanguageConfiguration());
             builder.ApplyConfiguration(new MoviePlatformConfiguration());
+            builder.ApplyConfiguration(new MovieUserStarRatingConfiguration());
             builder.ApplyConfiguration(new PlatformConfiguration());
 
             // Needed for Identity models configuration

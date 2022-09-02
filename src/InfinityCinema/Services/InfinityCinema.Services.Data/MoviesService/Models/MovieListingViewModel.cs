@@ -17,7 +17,7 @@
 
         public string ImageUrl { get; set; }
 
-        public double StarRating { get; set; }
+        public decimal StarRating { get; set; }
 
         public string Duration { get; set; }
 

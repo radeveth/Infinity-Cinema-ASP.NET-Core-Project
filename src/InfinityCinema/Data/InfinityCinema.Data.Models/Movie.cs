@@ -22,6 +22,7 @@
             this.StarRatings = new HashSet<StarRating>();
             this.Comments = new HashSet<MovieComment>();
             this.ApplicationUserMovies = new HashSet<ApplicationUserMovie>();
+            this.MovieUserStarRatings = new HashSet<MovieUserStarRating>();
         }
 
         [Required]
@@ -75,5 +76,7 @@
         public virtual ICollection<MovieComment> Comments { get; set; }
 
         public virtual ICollection<ApplicationUserMovie> ApplicationUserMovies { get; set; }
+
+        public virtual ICollection<MovieUserStarRating> MovieUserStarRatings { get; set; }
     }
 }

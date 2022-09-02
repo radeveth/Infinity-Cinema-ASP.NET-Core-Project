@@ -96,11 +96,36 @@
                                 <div class="card-header" style="width:414px; height:220px">
                                     <img style="width:100%; height:100%" class="card-img" src="@movie.ImageUrl">
                                 </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <span class="badge badge-warning offset-1 col-2" style="margin-left:10px">@(movie.StarRating == -1 ? "No rating" : $"{movie.StarRating} {Html.Raw("★")}")</span>
-                                        <button style="text-decoration: none !important; margin-right:5px" id="save-to-watch-later-btn" title="Save to watch later" class="badge badge-warning offset-8 col-1"><i class="fas fa-save"></i></button>
+                                <div class="row">
+                                    <span class="badge badge-warning col-2" style="margin-left:20px">@(movie.StarRating == -1 ? "No rating" : $"{movie.StarRating} {Html.Raw("★")}")</span>
+
+                                    <div class="offset-6 col-3">
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#addRating" data-url="@Url.Action("AdRating")">
+                                            Rate
+                                        </button>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="addRating">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="addRatingLabel">Modal title</h5>
+                                                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Hii!
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-warning" data-save="modal">Save changes</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
+                                <div class="card-body">
                                     <h4 class="card-title mt-2">@movie.Name</h4>
                                     @foreach (var genre in movie.Genres)
                                     {
@@ -147,15 +172,4 @@
 </div>
 
 @section Scripts {
-    <script>
-        $('#save-to-watch-later-btn').on('click', ev => {
-
-
-            $.get('/api/applicationusersapi/savetowatchlater/?id=@Model.', (data) => {
-                let saveToLatchLaterButtonElement = document.querySelector('#save-to-watch-later-btn');
-
-                saveToLatchLaterButtonElement.textContent = data;
-            });
-        });
-    </script>
 }

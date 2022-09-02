@@ -88,5 +88,10 @@
 
             public const int AbbreviationMaxLength = 10;
         }
+
+        public class StarRatingValidation
+        {
+            public const int StarMaLength = 10;
+        }
     }
 }

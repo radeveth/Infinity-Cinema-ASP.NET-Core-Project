@@ -96,19 +96,40 @@
             <div class="mb-5"></div>
 
             <h3>| Actors</h3>
-            <div class="owl-carousel owl-theme mt-3">
-                @foreach (var actor in Model.Actors)
-                {
-                    <div class="card" style="width:150px; height:330px">
-                        <img class="card-img-top" src="@actor.ImageUrl" alt="Card image">
-                        <div class="card-body">
-                            <center>
-                                <a href="@actor.InformationLink" class="card-title">@actor.FullName</a>
-                            </center>
+            @if (Model.Actors.Count() > 5)
+            {
+                <div class="owl-carousel owl-theme mt-3">
+                    @foreach (var actor in Model.Actors)
+                    {
+                        <div class="card" @*style="width:150px; height:330px"*@>
+                            <img class="card-img-top" src="@actor.ImageUrl" alt="Card image">
+                            <div class="card-body">
+                                <center>
+                                    <a href="@actor.InformationLink" class="card-title">@actor.FullName</a>
+                                </center>
+                            </div>
                         </div>
-                    </div>
-                }
-            </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var actor in Model.Actors)
+                    {
+                        <div class="col-3">
+                            <div class="card" @*style="width:150px; height:330px"*@>
+                                <img class="card-img-top" src="@actor.ImageUrl" alt="Card image">
+                                <div class="card-body">
+                                    <center>
+                                        <a href="@actor.InformationLink" class="card-title">@actor.FullName</a>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
 
             <div class="row mt-3"></div>
             <hr class="offset-1 col-10">

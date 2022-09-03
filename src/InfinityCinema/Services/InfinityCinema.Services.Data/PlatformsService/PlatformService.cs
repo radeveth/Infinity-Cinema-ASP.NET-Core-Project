@@ -40,6 +40,26 @@
         }
 
         // Read
+        public IEnumerable<PlatformViewModel> All(string searchName)
+        {
+            IEnumerable<PlatformViewModel> platforms = this.dbContext
+                .Platforms
+                .Select(p => new PlatformViewModel()
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Icon = p.IconUrl,
+                    SiteUrl = p.PathUrl,
+                });
+
+            if (searchName != null)
+            {
+                platforms = platforms.Where(p => p.Name.ToLower().Contains(searchName.ToLower()));
+            }
+
+            return platforms;
+        }
+
         public IEnumerable<PlatformViewModel> GetPlatformsForGivenMovie(int movieId)
         {
             IQueryable<Platform> platfromsForTargetMovie = this.dbContext.MoviePlatform.Where(m => m.MovieId == movieId).Select(p => p.Platform);
@@ -58,13 +78,18 @@
         {
             Platform platform = this.dbContext.Platforms.FirstOrDefault(p => p.Name.ToLower() == platfrom.ToLower());
 
-            return new PlatformViewModel()
+            if (platform != null)
             {
-                Id = platform.Id,
-                Name = platform.Name,
-                Icon = platform.IconUrl,
-                SiteUrl = platform.PathUrl,
-            };
+                return new PlatformViewModel()
+                {
+                    Id = platform.Id,
+                    Name = platform.Name,
+                    Icon = platform.IconUrl,
+                    SiteUrl = platform.PathUrl,
+                };
+            }
+
+            return null;
         }
 
         // Update

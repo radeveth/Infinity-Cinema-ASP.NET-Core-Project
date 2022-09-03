@@ -11,6 +11,8 @@
         Task<ActorViewModel> CreateAsync(ActorFormModel actorFormModel);
 
         // Read
+        IEnumerable<ActorViewModel> All(string searchName);
+
         ActorViewModel GetActorByNames(string fullName);
 
         IEnumerable<ActorViewModel> GetActorsForGivenMovie(int movieId);

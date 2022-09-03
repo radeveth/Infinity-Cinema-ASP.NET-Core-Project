@@ -38,17 +38,22 @@
         }
 
         // Read
-        public IEnumerable<GenreViewModel> All()
+        public IEnumerable<GenreViewModel> All(string searchName)
         {
             IEnumerable<GenreViewModel> genres = this.dbContext
-                .Genres
-                .Select(g => new GenreViewModel()
-                {
-                    Id = g.Id,
-                    Name = g.Name,
-                    ImageUrl = g.ImageUrl,
-                    Description = g.Description,
-                });
+            .Genres
+            .Select(g => new GenreViewModel()
+            {
+                Id = g.Id,
+                Name = g.Name,
+                ImageUrl = g.ImageUrl,
+                Description = g.Description,
+            });
+
+            if (searchName != null)
+            {
+                genres = genres.Where(g => g.Name.ToLower().Contains(searchName.ToLower()));
+            }
 
             return genres;
         }

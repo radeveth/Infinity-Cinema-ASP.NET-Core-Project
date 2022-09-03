@@ -106,6 +106,14 @@
                         <div class="row form-group form-margin" id="platforms-form-model">
                             <input asp-for="Platforms" class="btn btn-warning rounded-pill offset-5 col-2 mt-4" type="submit" value="Add Platform" id="add-platform-btn">
                         </div>
+                        <div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                        </div>
                     </div>
 
                     <input class="btn btn-warning mt-5 text-center mb-4 d-none rounded-pill d-grid gap-2 col-3 mx-auto" type="submit" value="Create" id="create-movie-btn" />
@@ -185,5 +193,11 @@
             $('#platforms-form-model').append("<hr>")
             platformsIndex++;
         });
+    </script>
+
+    <script>
+        let mainContainerElement = document.querySelector('#main-container');
+
+        mainContainerElement.classList.remove('container');
     </script>
     }

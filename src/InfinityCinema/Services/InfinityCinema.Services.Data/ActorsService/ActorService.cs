@@ -51,6 +51,25 @@
         }
 
         // Read
+        public IEnumerable<ActorViewModel> All(string searchName)
+        {
+            IEnumerable<ActorViewModel> actors = this.dbContext
+                    .Actors
+                    .Select(a => new ActorViewModel()
+                    {
+                        Id = a.Id,
+                        FullName = a.FirstName + " " + a.LastName,
+                        ImageUrl = a.ImageUrl,
+                        InformationLink = a.InformationLink,
+                    });
+            if (searchName != null)
+            {
+                actors = actors.Where(a => a.FullName.ToLower().Contains(searchName.ToLower()));
+            }
+
+            return actors;
+        }
+
         public ActorViewModel GetActorByNames(string fullName)
         {
             // Get (split) first and last name of actor
@@ -65,13 +84,18 @@
                 .FirstOrDefault(a => a.FirstName.ToLower() == firstName && a.LastName.ToLower() == lastName);
 
             // Return the actor view model
-            return new ActorViewModel()
+            if (actor != null)
             {
-                Id = actor.Id,
-                FullName = actor.FirstName + " " + actor.LastName,
-                ImageUrl = actor.ImageUrl,
-                InformationLink = actor.InformationLink,
-            };
+                return new ActorViewModel()
+                {
+                    Id = actor.Id,
+                    FullName = actor.FirstName + " " + actor.LastName,
+                    ImageUrl = actor.ImageUrl,
+                    InformationLink = actor.InformationLink,
+                };
+            }
+
+            return null;
         }
 
         public IEnumerable<ActorViewModel> GetActorsForGivenMovie(int movieId)

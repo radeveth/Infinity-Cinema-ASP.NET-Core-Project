@@ -24,8 +24,10 @@
             <div class="carousel-inner">
                 @if (firstMovie != null)
                 {
-                    <div class="carousel-item active">
-                        <img src="@firstMovie.ImageUrl" class="d-block w-100" alt="">
+                    <div class="carousel-item">
+                        <div class="row" style="width:1300px; height:690px">
+                            <img src="@firstMovie.ImageUrl" class="d-block w-100" alt="">
+                        </div>
                         <div class="carousel-caption d-none d-md-block">
                             <center>
                                 <a asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@firstMovie.Id" class="btn btn-outline-light rounded-pill">@firstMovie.Name</a>
@@ -35,19 +37,27 @@
                 }
                 @if (secondMovie != null)
                 {
-                    <div class="carousel-item active">
-                        <img src="@secondMovie.ImageUrl" class="d-block w-100" alt="">
+                    <div class="carousel-item">
+                        <div class="row" style="width:1300px; height:690px">
+                            <img src="@secondMovie.ImageUrl" class="d-block w-100" alt="">
+                        </div>
                         <div class="carousel-caption d-none d-md-block">
-                            <h5>@secondMovie.Name</h5>
+                            <center>
+                                <a asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@secondMovie.Id" class="btn btn-outline-light rounded-pill">@secondMovie.Name</a>
+                            </center>
                         </div>
                     </div>
                 }
                 @if (thirdMovie != null)
                 {
                     <div class="carousel-item active">
-                        <img src="@thirdMovie.ImageUrl" class="d-block w-100" alt="">
+                        <div class="row" style="width:1300px; height:690px">
+                            <img src="@thirdMovie.ImageUrl" class="d-block w-100" alt="">
+                        </div>
                         <div class="carousel-caption d-none d-md-block">
-                            <h5>@thirdMovie.Name</h5>
+                            <center>
+                                <a asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@thirdMovie.Id" class="btn btn-outline-light rounded-pill">@thirdMovie.Name</a>
+                            </center>
                         </div>
                     </div>
                 }
@@ -138,7 +148,7 @@
                 <p class="lead">
                     <div class="row">
                         <a asp-area="" asp-controller="Movies" asp-action="All" asp-route-Sorting=0 class="btn btn-warning btn-lg offset-2 col-3" role="button">Browse Popular Movies</a>
-                        <a asp-area="" asp-controller="Genres" asp-action="All" class="btn btn-warning btn-lg offset-2 col-3"  role="button">Browse By Genres</a>
+                        <a asp-area="" asp-controller="Genres" asp-action="All" class="btn btn-warning btn-lg offset-2 col-3" role="button">Browse By Genres</a>
                     </div>
                 </p>
             </div>
@@ -162,35 +172,3 @@
         </div>
     }
 </div>
-@section Scripts {
-    <script>
-        var owl = $('.owl-carousel');
-        owl.owlCarousel({
-            loop: true,
-            nav: true,
-            margin: 10,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items: 3
-                },
-                960: {
-                    items: 5
-                },
-                1200: {
-                    items: 6
-                }
-            }
-        });
-        owl.on('mousewheel', '.owl-stage', function (e) {
-            if (e.deltaY > 0) {
-                owl.trigger('next.owl');
-            } else {
-                owl.trigger('prev.owl');
-            }
-            e.preventDefault();
-        });
-    </script>
-}

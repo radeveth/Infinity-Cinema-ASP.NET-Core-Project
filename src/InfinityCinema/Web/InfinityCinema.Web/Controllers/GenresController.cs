@@ -15,9 +15,9 @@
             this.genreService = genreService;
         }
 
-        public IActionResult All()
+        public IActionResult All(string searchName)
         {
-            IEnumerable<GenreViewModel> genres = this.genreService.All();
+            IEnumerable<GenreViewModel> genres = this.genreService.All(searchName);
 
             return this.View(genres);
         }

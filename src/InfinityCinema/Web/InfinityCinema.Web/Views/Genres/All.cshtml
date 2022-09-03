@@ -7,31 +7,53 @@
 <div class="container mt-4">
     <center><img src="~/img/movies-genres.png" width="300px" height="300px"></center>
 
-    <div class="mb-4"></div>
+    <div class="mb-1"></div>
 
-    <div class="row">
-        @foreach (var genre in Model)
-        {
-            <div class="col-6 mb-4">
-                <div class="card">
-                    <center>
-                        <div class="card-header" style="width:414px; height:270px">
-                            <img style="width:100%; height:100%" class="card-img" src="@genre.ImageUrl">
-                        </div>
-                    </center>
-                    <center>
-                        <h6 class="card-header">
-                            @genre.Name
-                        </h6>
-                    </center>
-                    <div class="card-body">
-                        <center>
-                            <p style="height:270px" class="card-text">@genre.Description</p>
-                        </center>
-                        <a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="@genre.Name" class="btn btn-outline-warning rounded-pill offset-3 col-6">Explore @(genre.Name.ToString().ToLower()) movies</a>
+    <form method="get">
+        <div class="row">
+            <div class="offset-4 col-3">
+                <div class="form-group">
+                    <div class="row">
+                        <input name="searchName" class="form-control border-warning" placeholder="Search Genres by name" style="margin-left:50px;" />
                     </div>
                 </div>
             </div>
-        }
-    </div>
+            <button asp-area="" asp-controller="Genres" asp-action="All" class="btn col-1 float-start" style="margin-left:50px; background-color: aliceblue;"><i class="fa fa-search"></i></button>
+        </div>
+    </form>
+    <div class="mb-5"></div>
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var genre in Model)
+            {
+                <div class="col-6 mb-4">
+                    <div class="card">
+                        <center>
+                            <div class="card-header" style="width:414px; height:270px">
+                                <img style="width:100%; height:100%" class="card-img" src="@genre.ImageUrl">
+                            </div>
+                        </center>
+                        <center>
+                            <h6 class="card-header">
+                                @genre.Name
+                            </h6>
+                        </center>
+                        <div class="card-body">
+                            <center>
+                                <p style="height:270px" class="card-text">@genre.Description</p>
+                            </center>
+                            <a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="@genre.Name" class="btn btn-outline-warning rounded-pill offset-3 col-6">Explore @(genre.Name.ToString().ToLower()) movies</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row mb-3 mt-5">
+            <div class="text-center offset-3 col-6"><h1>There are no genres by given name!</h1></div>
+        </div>
+    }
 </div>

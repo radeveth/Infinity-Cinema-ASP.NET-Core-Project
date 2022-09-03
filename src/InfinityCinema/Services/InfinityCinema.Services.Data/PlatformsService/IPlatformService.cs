@@ -11,6 +11,8 @@
         Task<PlatformViewModel> CreateAsync(PlatformFormModel platformFormModel);
 
         // Read
+        IEnumerable<PlatformViewModel> All(string searchName);
+
         PlatformViewModel GetPlatformByName(string platfrom);
 
         IEnumerable<PlatformViewModel> GetPlatformsForGivenMovie(int movieId);

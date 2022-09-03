@@ -156,10 +156,9 @@
             // Create actors for particular movie
             IEnumerable<ActorFormModel> actors = createMovieModel.Actors;
             ICollection<int> actorsIds = new List<int>();
-            ActorViewModel actor;
             foreach (ActorFormModel actorFormModel in actors)
             {
-                actor = this.actorService.GetActorByNames(actorFormModel.FullName);
+                ActorViewModel actor = this.actorService.GetActorByNames(actorFormModel.FullName);
 
                 if (actor == null)
                 {
@@ -174,10 +173,9 @@
             // Create Platforms for particular movie
             IEnumerable<PlatformFormModel> platforms = createMovieModel.Platforms;
             ICollection<int> platformsIds = new List<int>();
-            PlatformViewModel platform;
             foreach (PlatformFormModel platformFormModel in platforms)
             {
-                platform = this.platformService.GetPlatformByName(platformFormModel.Name);
+                PlatformViewModel platform = this.platformService.GetPlatformByName(platformFormModel.Name);
 
                 if (platform == null)
                 {
@@ -217,7 +215,7 @@
                     Duration = m.Duration,
                     ImageUrl = m.Images.First().Url,
                     Genres = m.MovieGenres.Select(m => m.Genre.Name),
-                    StarRating = Math.Round(m.MovieUserStarRatings.Sum(s => s.Rate) / m.MovieUserStarRatings.Count, 2),
+                    StarRating = m.MovieUserStarRatings.Count != 0 ? m.MovieUserStarRatings.Sum(r => r.Rate) / m.MovieUserStarRatings.Count : -1,
                 });
 
             return new MovieDetailsViewModel()
@@ -280,8 +278,8 @@
             {
                 MovieSorting.Rating => moviesQuery
                     .OrderByDescending(m => m.MovieUserStarRatings.Count != 0 ? m.MovieUserStarRatings.Sum(r => r.Rate) / m.MovieUserStarRatings.Count : 0),
-                MovieSorting.YearNewest => moviesQuery.OrderBy(m => m.DateOfReleased),
-                MovieSorting.YearOldest => moviesQuery.OrderByDescending(m => m.DateOfReleased),
+                MovieSorting.YearNewest => moviesQuery.OrderByDescending(m => m.DateOfReleased),
+                MovieSorting.YearOldest => moviesQuery.OrderBy(m => m.DateOfReleased),
                 MovieSorting.NameAlphabetically => moviesQuery.OrderBy(m => m.Name),
                 MovieSorting.DurationSmallest => moviesQuery.OrderBy(m => m.Duration),
                 MovieSorting.DurationLargest => moviesQuery.OrderByDescending(m => m.Duration),
@@ -296,7 +294,7 @@
                     Id = m.Id,
                     Name = m.Name,
                     ImageUrl = m.Images.First().Url,
-                    StarRating = m.MovieUserStarRatings.Sum(s => s.Rate) / m.MovieUserStarRatings.Count,
+                    StarRating = m.MovieUserStarRatings.Count != 0 ? m.MovieUserStarRatings.Sum(r => r.Rate) / m.MovieUserStarRatings.Count : -1,
                     Duration = m.Duration,
                     Genres = m.MovieGenres.Select(m => m.Genre.Name),
                 });
@@ -313,7 +311,7 @@
         {
             IEnumerable<MovieHomeViewModel> topThreeRatedMovies = this.dbContext
                 .Movies
-                .OrderByDescending(m => m.MovieUserStarRatings.Sum(s => s.Rate))
+                .OrderByDescending(m => m.MovieUserStarRatings.Count != 0 ? m.MovieUserStarRatings.Sum(s => s.Rate) / m.MovieUserStarRatings.Count : 0)
                 .Select(m => new MovieHomeViewModel()
                 {
                     Id = m.Id,

@@ -8,6 +8,8 @@
 
         Task<bool> RemoveMovieFromWatchLaterAsync(int movieId, string userId);
 
-        bool IfUserIsSavedThisMovie(int movieId, string userId);
+        Task RateMovie(int movieId, string userId, decimal rating);
+
+        bool CheckIfUserIsAlreadyRatedThisMovie(int movieId, string userId);
     }
 }

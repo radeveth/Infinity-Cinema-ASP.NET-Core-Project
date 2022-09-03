@@ -29,11 +29,6 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             movieBuilder
-                .HasMany(m => m.StarRatings)
-                .WithOne(r => r.Movie)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            movieBuilder
                 .HasMany(m => m.Comments)
                 .WithOne(r => r.Movie)
                 .OnDelete(DeleteBehavior.Restrict);

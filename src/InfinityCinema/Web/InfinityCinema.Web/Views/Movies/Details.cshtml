@@ -10,11 +10,11 @@
 }
 
 <div class="container mt-4">
-    <cemter>
+    <center>
         <div class="mb-5">
             <h1 class="text-center fw-bold">@Model.Name</h1>
         </div>
-    </cemter>
+    </center>
 
     <div class="row">
         <div class="col-8 single-left">
@@ -86,17 +86,17 @@
             <div class="row mt-5"></div>*@
 
             <h3>| Images</h3>
-            <dix class="owl-carousel owl-theme mt-3">
+            <div class="owl-carousel owl-theme mt-3">
                 @foreach (var image in Model.Images)
                 {
                     <img class="item img-fluid" src="@image" alt="">
                 }
-            </dix>
+            </div>
 
             <div class="mb-5"></div>
 
             <h3>| Actors</h3>
-            <dix class="owl-carousel owl-theme mt-3">
+            <div class="owl-carousel owl-theme mt-3">
                 @foreach (var actor in Model.Actors)
                 {
                     <div class="card" style="width:150px; height:330px">
@@ -108,15 +108,15 @@
                         </div>
                     </div>
                 }
-            </dix>
+            </div>
 
             <div class="row mt-3"></div>
             <hr class="offset-1 col-10">
             <div class="row mb-1"></div>
 
             <div class="row">
-                <button asp-area="" class="offset-2 col-3 btn btn-warning rounded-pill">Like this movie <span class="text-danger">❤</span></button>
-                <button class="offset-2 col-3 btn btn-warning rounded-pill @(ifMovieIsAddedToWatchLater == true ? string.Empty : "d-none")" id="remove-from-watch-later-btn">Remove to watch later&nbsp&nbsp<i class="fas fa-save"></i></button>
+                <button class="offset-2 col-3 btn btn-warning rounded-pill" id="rate-movie-btn">Rate this movie ★</button>
+                <button class="offset-2 col-3 btn btn-warning rounded-pill @(ifMovieIsAddedToWatchLater == true ? string.Empty : "d-none")" id="remove-from-watch-later-btn">Remove&nbsp;&nbsp<span class="text-danger">✖</span></button>
                 <button class="offset-2 col-3 btn btn-warning rounded-pill @(ifMovieIsAddedToWatchLater == true ? "d-none" : string.Empty)" id="save-to-watch-later-btn">Save to watch later&nbsp&nbsp<i class="fas fa-save"></i></button>
             </div>
         </div>
@@ -181,7 +181,7 @@
         let removeFromWatchLaterButtonElement = document.querySelector('#remove-from-watch-later-btn');
         let saveToWatchLaterButtonElement = document.querySelector('#save-to-watch-later-btn');
 
-        $('#save-to-watch-later-btn').on('click', ev => {
+        $('#save-to-watch-later-btn').on('click', (e) => {
             $.get('/api/applicationusersapi/savetowatchlater/?id=@(Model.Id)', (data) => {
                 alert(data);
 
@@ -190,13 +190,26 @@
             });
         });
 
-        $('#remove-from-watch-later-btn').on('click', ev => {
+        $('#remove-from-watch-later-btn').on('click', (e) => {
             $.get('/api/applicationusersapi/removefromwatchlater/?id=@(Model.Id)', (data) => {
                 alert(data);
 
                 saveToWatchLaterButtonElement.classList.remove('d-none');
                 removeFromWatchLaterButtonElement.classList.add('d-none');
             });
+        });
+
+        $('#rate-movie-btn').on('click', (e) => {
+            let rate = prompt('Rate this movie from 1 to 10:');
+
+            if (rate < 0 || rate > 10) {
+                alert('Invalid rating is given!');
+                return;
+            };
+
+            $.get('/api/applicationusersapi/ratemovie/?id=@(Model.Id)&rating=' + rate, (data) => {
+                alert(data);
+            })
         });
     </script>
 }

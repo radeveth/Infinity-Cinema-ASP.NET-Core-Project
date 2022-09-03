@@ -31,11 +31,6 @@
                 return this.RedirectToAction("Details", "Movies", id);
             }
 
-            //if (this.applicationUserService.IfUserIsSavedThisMovie(id, userId))
-            //{
-            //    return "Movie is already saved to latch later!";
-            //}
-
             await this.applicationUserService.SaveMovieToWatchLaterAsync(id, userId);
 
             return "Successfully saved to watch later!";
@@ -55,6 +50,32 @@
             await this.applicationUserService.RemoveMovieFromWatchLaterAsync(id, userId);
 
             return "Removed from watch later!";
+        }
+
+        [HttpGet]
+        [Route("ratemovie")]
+        public async Task<ActionResult<string>> RateMovie(int id, decimal rating)
+        {
+            if (rating < 0 || rating > 10)
+            {
+                return "Invalid rating is given";
+            }
+
+            string userId = ClaimsPrincipalExtensions.GetId(this.User);
+
+            if (!this.movieService.CheckIfMovieWithGivenIdExist(id))
+            {
+                return this.RedirectToAction("Details", "Movies", id);
+            }
+
+            if (this.applicationUserService.CheckIfUserIsAlreadyRatedThisMovie(id, userId))
+            {
+                return "You are already rated this movie";
+            }
+
+            await this.applicationUserService.RateMovie(id, userId, rating);
+
+            return $"Successfully rate this movie with {rating}";
         }
     }
 }

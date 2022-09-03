@@ -48,13 +48,19 @@
             return true;
         }
 
-        public bool IfUserIsSavedThisMovie(int movieId, string userId)
+        public async Task RateMovie(int movieId, string userId, decimal rating)
         {
-            //IQueryable<ApplicationUser> user = this.dbContext.Users.Where(u => u.Id == userId);
+            this.dbContext.MovieUserStarRatings.Add(new MovieUserStarRating()
+            {
+                MovieId = movieId,
+                UserId = userId,
+                Rate = rating,
+            });
 
-            //return user.Select(u => u.ApplicationUserMovies).Any(a => a.Select(m => m.MovieId) == movieId);
-
-            throw new NotImplementedException();
+            await this.dbContext.SaveChangesAsync();
         }
+
+        public bool CheckIfUserIsAlreadyRatedThisMovie(int movieId, string userId)
+            => this.dbContext.MovieUserStarRatings.Any(m => m.UserId == userId && m.MovieId == movieId);
     }
 }

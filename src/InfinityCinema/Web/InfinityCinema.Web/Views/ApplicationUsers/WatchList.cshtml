@@ -1,0 +1,60 @@
+﻿@model IEnumerable<UserSavedMovieViewModel>
+
+@{
+    ViewData["Title"] = "Your Watchlist";
+}
+
+<div class="container">
+    @if (Model.Any())
+    {
+        @foreach (var movie in Model)
+        {
+            <div class="card mt-3 offset-2 col-8">
+                <div class="row">
+                    <div class="single-left col-7">
+                        <img src="@movie.ImageUrl" class="card-img-top h-100" alt="">
+                    </div>
+                    <div class="single-right col-5">
+                        <div class="card-body mt-4">
+                            <h5 class="offset-2 col-8">@movie.Name</h5>
+                            <hr style="margin-right:28px">
+                            <h6 class="card-text offset-3 col-6">@(string.Join(", ", movie.Genres))</h6>
+                            <a asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.MovieId" class="offset-8 col-4 btn btn-warning mt-5">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="jumbotron">
+            <div class="mt-4"></div>
+            <center>
+                <img style="margin-left:2px; margin-bottom:5px;" width="250px" height="250px" src="https://cdn-icons-png.flaticon.com/512/6748/6748737.png">
+            </center>
+            <div class="mt-2"></div>
+            <center>
+                <h1 class="display-6">Your Watchlist is empty</h1>
+                <p class="lead">Add movies and shows to your Watchlist to keep track of what you want to watch.</p>
+            </center>
+            <hr class="my-4">
+            <p class="lead">
+                <div class="row">
+                    <a asp-area="" asp-controller="Movies" asp-action="All" asp-route-Sorting=0 class="btn btn-warning btn-lg offset-1 col-4" role="button">Browse Popular Movies</a>
+                    <a asp-area="" asp-controller="Genres" asp-action="All" class="btn btn-warning btn-lg offset-2 col-4" role="button">Browse By Genres</a>
+                </div>
+            </p>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+    }
+</div>

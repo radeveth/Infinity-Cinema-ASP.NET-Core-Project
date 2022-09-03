@@ -90,10 +90,6 @@ ahover {
     text-decoration: none !important;
 }
 
-#link-href {
-    text-decoration: none !important;
-}
-
 .divider:after,
 .divider:before {
     content: "";

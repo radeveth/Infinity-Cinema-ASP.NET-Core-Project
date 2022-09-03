@@ -96,35 +96,7 @@
                                 <div class="card-header" style="width:414px; height:220px">
                                     <img style="width:100%; height:100%" class="card-img" src="@movie.ImageUrl">
                                 </div>
-                                <div class="row">
-                                    <span class="badge badge-warning col-2" style="margin-left:20px">@(movie.StarRating == -1 ? "No rating" : $"{movie.StarRating} {Html.Raw("★")}")</span>
-
-                                    <div class="offset-6 col-3">
-                                        <!-- Button trigger modal -->
-                                        <button type="button" class="btn btn-warning" data-toggle="ajax-modal" data-target="#addRating" data-url="@Url.Action("AdRating")">
-                                            Rate
-                                        </button>
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="addRating">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="addRatingLabel">Modal title</h5>
-                                                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Hii!
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-                                                        <button type="button" class="btn btn-warning" data-save="modal">Save changes</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <span class="badge badge-warning col-3" style="margin-left:15px">@(movie.StarRating == -1 ? "No rating" : $"{movie.StarRating:f2}/10 {Html.Raw("★")}")</span>
                                 <div class="card-body">
                                     <h4 class="card-title mt-2">@movie.Name</h4>
                                     @foreach (var genre in movie.Genres)
@@ -172,4 +144,9 @@
 </div>
 
 @section Scripts {
+    <script>
+        $('#btn').on('click', function () {
+            $('#goalModal').modal('show');
+        })
+    </script>
 }

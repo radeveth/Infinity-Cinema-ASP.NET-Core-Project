@@ -21,6 +21,9 @@
         [MaxLength(ImageUrlMaxLength)]
         public string ImageUrl { get; set; }
 
+        [MaxLength(DescriptionMaxLength)]
+        public string Description { get; set; }
+
         public virtual ICollection<MovieGenre> MovieGenres { get; set; }
     }
 }

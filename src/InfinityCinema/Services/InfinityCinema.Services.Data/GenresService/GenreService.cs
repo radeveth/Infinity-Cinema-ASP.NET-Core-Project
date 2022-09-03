@@ -38,6 +38,21 @@
         }
 
         // Read
+        public IEnumerable<GenreViewModel> All()
+        {
+            IEnumerable<GenreViewModel> genres = this.dbContext
+                .Genres
+                .Select(g => new GenreViewModel()
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    ImageUrl = g.ImageUrl,
+                    Description = g.Description,
+                });
+
+            return genres;
+        }
+
         public int GetGenreIdByGivenName(string genreName)
         {
             genreName = genreName.ToLower();
@@ -55,6 +70,9 @@
                     Name = g.Name,
                 })
                 .ToList();
+
+        public IEnumerable<string> AllApplicationMovieGenres()
+            => this.dbContext.Genres.Select(g => g.Name);
 
         public IEnumerable<GenreViewModel> GetGenresForParticularMovie(int movieId)
             => this.dbContext

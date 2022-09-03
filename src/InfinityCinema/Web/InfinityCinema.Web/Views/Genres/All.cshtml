@@ -1,0 +1,37 @@
+﻿@model IEnumerable<GenreViewModel>
+
+@{
+    ViewData["Title"] = "All Genres";
+}
+
+<div class="container mt-4">
+    <center><img src="~/img/movies-genres.png" width="300px" height="300px"></center>
+
+    <div class="mb-4"></div>
+
+    <div class="row">
+        @foreach (var genre in Model)
+        {
+            <div class="col-6 mb-4">
+                <div class="card">
+                    <center>
+                        <div class="card-header" style="width:414px; height:270px">
+                            <img style="width:100%; height:100%" class="card-img" src="@genre.ImageUrl">
+                        </div>
+                    </center>
+                    <center>
+                        <h6 class="card-header">
+                            @genre.Name
+                        </h6>
+                    </center>
+                    <div class="card-body">
+                        <center>
+                            <p style="height:270px" class="card-text">@genre.Description</p>
+                        </center>
+                        <a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="@genre.Name" class="btn btn-outline-warning rounded-pill offset-3 col-6">Explore @(genre.Name.ToString().ToLower()) movies</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -40,6 +40,8 @@
             public const int NameMaxLength = 60;
 
             public const int ImageUrlMaxLength = 2048;
+
+            public const int DescriptionMaxLength = 1000;
         }
 
         public class LanguageValidation

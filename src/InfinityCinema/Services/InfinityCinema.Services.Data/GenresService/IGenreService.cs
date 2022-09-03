@@ -11,9 +11,13 @@
         Task<GenreViewModel> CreateAsync(GenreFormModel genreFormModel);
 
         // Read
+        IEnumerable<GenreViewModel> All();
+
         int GetGenreIdByGivenName(string genreName);
 
         IEnumerable<GenreFormModel> GetMovieGenres();
+
+        IEnumerable<string> AllApplicationMovieGenres();
 
         IEnumerable<GenreViewModel> GetGenresForParticularMovie(int movieId);
 

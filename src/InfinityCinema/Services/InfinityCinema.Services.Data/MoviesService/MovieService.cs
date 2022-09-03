@@ -217,7 +217,7 @@
                     Duration = m.Duration,
                     ImageUrl = m.Images.First().Url,
                     Genres = m.MovieGenres.Select(m => m.Genre.Name),
-                    StarRating = m.StarRatings.Count != 0 ? m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count : -1,
+                    StarRating = Math.Round(m.MovieUserStarRatings.Sum(s => s.Rate) / m.MovieUserStarRatings.Count, 2),
                 });
 
             return new MovieDetailsViewModel()
@@ -278,7 +278,8 @@
             // Default sorting is by rating
             moviesQuery = sorting switch
             {
-                MovieSorting.Rating => moviesQuery.OrderByDescending(m => m.StarRatings.Count != 0 ? m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count : 0),
+                MovieSorting.Rating => moviesQuery
+                    .OrderByDescending(m => m.MovieUserStarRatings.Count != 0 ? m.MovieUserStarRatings.Sum(r => r.Rate) / m.MovieUserStarRatings.Count : 0),
                 MovieSorting.YearNewest => moviesQuery.OrderBy(m => m.DateOfReleased),
                 MovieSorting.YearOldest => moviesQuery.OrderByDescending(m => m.DateOfReleased),
                 MovieSorting.NameAlphabetically => moviesQuery.OrderBy(m => m.Name),
@@ -295,7 +296,7 @@
                     Id = m.Id,
                     Name = m.Name,
                     ImageUrl = m.Images.First().Url,
-                    StarRating = m.StarRatings.Count != 0 ? m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count : -1,
+                    StarRating = m.MovieUserStarRatings.Sum(s => s.Rate) / m.MovieUserStarRatings.Count,
                     Duration = m.Duration,
                     Genres = m.MovieGenres.Select(m => m.Genre.Name),
                 });
@@ -306,6 +307,22 @@
                 TotalMovies = moviesQuery.Count(),
                 CurrentPage = currentPage,
             };
+        }
+
+        public IEnumerable<MovieHomeViewModel> GetTopThreeRatedMovies()
+        {
+            IEnumerable<MovieHomeViewModel> topThreeRatedMovies = this.dbContext
+                .Movies
+                .OrderByDescending(m => m.MovieUserStarRatings.Sum(s => s.Rate))
+                .Select(m => new MovieHomeViewModel()
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    ImageUrl = m.Images.Select(i => i.Url).First(),
+                })
+                .Take(3);
+
+            return topThreeRatedMovies;
         }
 
         public MovieStatisticsViewModel MovieStatistics()
@@ -320,62 +337,17 @@
             return movieStatistics;
         }
 
-        public AllMoviesQueryModel GetDeletedMovies
-            (string searchName = null,
-            MovieSorting sorting = MovieSorting.Rating,
-            int currentPage = 1,
-            int moviesPerPage = AllMoviesQueryModel.MoviesPerPage,
-            string searchGenre = "all")
-        {
-            IQueryable<Movie> moviesQuery = this.dbContext.Movies.Where(m => m.IsDeleted).AsQueryable();
-
-            if (searchGenre.ToLower() != "all")
+        public IEnumerable<UserSavedMovieViewModel> GetUserSavedMovies(string userId)
+            => this.dbContext.ApplicationUserMovies.Where(a => a.UserId == userId).Select(a => a.Movie).Select(a => new UserSavedMovieViewModel()
             {
-                IQueryable<Movie> moviesByTargetGenre = this.dbContext
-                    .MovieGenres
-                    .Where(m => m.Genre.Name.ToLower() == searchGenre.ToLower() && m.Movie.MovieGenres.Count == 1)
-                    .Select(m => m.Movie);
-
-                moviesQuery = moviesByTargetGenre;
-            }
-
-            if (!string.IsNullOrEmpty(searchName))
-            {
-                moviesQuery = moviesQuery.Where(m => m.Name.ToLower().Contains(searchName));
-            }
-
-            // Default sorting is by rating
-            moviesQuery = sorting switch
-            {
-                MovieSorting.Rating => moviesQuery.OrderByDescending(m => m.StarRatings.Count != 0 ? m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count : 0),
-                MovieSorting.YearNewest => moviesQuery.OrderBy(m => m.DateOfReleased),
-                MovieSorting.YearOldest => moviesQuery.OrderByDescending(m => m.DateOfReleased),
-                MovieSorting.NameAlphabetically => moviesQuery.OrderBy(m => m.Name),
-                MovieSorting.DurationSmallest => moviesQuery.OrderBy(m => m.Duration),
-                MovieSorting.DurationLargest => moviesQuery.OrderByDescending(m => m.Duration),
-                _ => moviesQuery.OrderByDescending(m => m.DateOfReleased),
-            };
-
-            IQueryable<MovieListingViewModel> movies = moviesQuery
-                .Skip((currentPage - 1) * moviesPerPage)
-                .Take(moviesPerPage)
-                .Select(m => new MovieListingViewModel()
-                {
-                    Id = m.Id,
-                    Name = m.Name,
-                    ImageUrl = m.Images.First().Url,
-                    StarRating = m.StarRatings.Count != 0 ? m.StarRatings.Sum(r => r.Rate) / m.StarRatings.Count : -1,
-                    Duration = m.Duration,
-                    Genres = m.MovieGenres.Select(m => m.Genre.Name),
-                });
-
-            return new AllMoviesQueryModel()
-            {
-                Movies = movies,
-                TotalMovies = moviesQuery.Count(),
-                CurrentPage = currentPage,
-            };
-        }
+                UserId = userId,
+                MovieId = a.Id,
+                Name = a.Name,
+                ImageUrl = a.Images.Select(i => i.Url).First(),
+                Genres = a.MovieGenres.Select(m => m.Genre.Name),
+                Duration = a.Duration,
+                StarRating = a.MovieUserStarRatings.Count != 0 ? a.MovieUserStarRatings.Sum(m => m.Rate) / a.MovieUserStarRatings.Count : 0,
+            });
 
         // Update
         public async Task<bool> EditAsync(EditMovieServiceModel movieModel)
@@ -458,13 +430,6 @@
                 {
                     moviePlatform.IsDeleted = true;
                     moviePlatform.DeletedOn = DateTime.UtcNow;
-                }
-
-                IEnumerable<StarRating> starRatings = this.dbContext.StarRatings.Where(s => s.MovieId == movieId);
-                foreach (StarRating starRating in starRatings)
-                {
-                    starRating.IsDeleted = true;
-                    starRating.DeletedOn = DateTime.UtcNow;
                 }
 
                 IEnumerable<Image> images = this.dbContext.Images.Where(m => m.MovieId == movieId);

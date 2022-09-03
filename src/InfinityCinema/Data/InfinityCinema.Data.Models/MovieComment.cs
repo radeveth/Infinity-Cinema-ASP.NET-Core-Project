@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Data.Models
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,7 +8,7 @@
 
     using static InfinityCinema.Data.Common.DataValidation.CommentValidation;
 
-    public class MovieComment : BaseDeletableModel<int>
+    public class MovieComment : IDeletableEntity
     {
         [Required]
         [MaxLength(ContentMaxLength)]
@@ -22,5 +23,9 @@
         public string UserId { get; set; }
 
         public virtual ApplicationUser User { get; set; }
+
+        public bool IsDeleted { get; set; }
+
+        public DateTime? DeletedOn { get; set; }
     }
 }

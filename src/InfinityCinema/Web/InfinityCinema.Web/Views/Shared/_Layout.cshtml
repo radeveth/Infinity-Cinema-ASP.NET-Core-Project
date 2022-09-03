@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="~/css/owl.carousel.min.css">
     <link rel="stylesheet" href="~/css/owl.theme.default.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" type="text/css" href="~/css/glider.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
@@ -22,15 +23,6 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-warning">
         <div class="container">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img class="navbar-brand d-flex align-items-center" src="https://cdn-icons-png.flaticon.com/512/4987/4987504.png" width=50 height=50 /></a>
-            @*<button type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            class="navbar-toggler"
-            aria-controls="navbarNav"
-            aria-explained="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon" style="border:0px"></span>
-            </button>*@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown-1" aria-controls="navbarNavDropdown-1"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -43,8 +35,26 @@
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Genres" asp-action="All">Genres</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Genres
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a asp-area="" asp-controller="Genres" asp-action="All" class="dropdown-item">All</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="Action" class="dropdown-item">Action</a></li>
+                            <li><a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="Drama" class="dropdown-item">Drama</a></li>
+                            <li><a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="Comedy" class="dropdown-item">Comedy</a></li>
+                            <li><a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="Thriller" class="dropdown-item">Thriller</a></li>
+                            <li><a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="Fantasy" class="dropdown-item">Fantasy</a></li>
+                            <li><a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="Animation" class="dropdown-item">Animation</a></li>
+                            <li><a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="Crime" class="dropdown-item">Crime</a></li>
+                            <li><a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="Historical" class="dropdown-item">Historical</a></li>
+                            <li><a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="Horror" class="dropdown-item">Horror</a></li>
+                            <li><a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="Mystery" class="dropdown-item">Mystery</a></li>
+                            <li><a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="Romance" class="dropdown-item">Romance</a></li>
+                            <li><a asp-area="" asp-controller="Movies" asp-action="All" asp-route-SearchGenre="Western" class="dropdown-item">Western</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -181,6 +191,8 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"></script>
+    <script src="~/js//glider-compat.min.js"></script>
+    <script src="~/js/glider.min.js"></script>
 
     @await this.RenderSectionAsync("Scripts", required: false)
 </body>

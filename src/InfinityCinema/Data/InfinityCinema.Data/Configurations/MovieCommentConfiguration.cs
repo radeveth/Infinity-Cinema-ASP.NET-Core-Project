@@ -9,6 +9,9 @@
         public void Configure(EntityTypeBuilder<MovieComment> movieCommentBuilder)
         {
             movieCommentBuilder
+                .HasKey(m => new { m.MovieId, m.UserId });
+
+            movieCommentBuilder
                 .HasOne(m => m.Movie)
                 .WithMany(m => m.Comments)
                 .HasForeignKey(m => m.MovieId)

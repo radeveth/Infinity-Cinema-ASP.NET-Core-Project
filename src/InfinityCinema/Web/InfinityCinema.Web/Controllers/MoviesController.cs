@@ -93,21 +93,6 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
-        public IActionResult DeletedMovies([FromQuery] AllMoviesQueryModel moviesQueryModel)
-        {
-            AllMoviesQueryModel queryResult = this.movieService
-                .GetDeletedMovies(moviesQueryModel.SearchName, moviesQueryModel.Sorting, moviesQueryModel.CurrentPage, AllMoviesQueryModel.MoviesPerPage, moviesQueryModel.SearchGenre);
-
-            moviesQueryModel.Movies = queryResult.Movies;
-            moviesQueryModel.TotalMovies = queryResult.TotalMovies;
-            moviesQueryModel.CurrentPage = queryResult.CurrentPage;
-            moviesQueryModel.SearchGenre = queryResult.SearchGenre;
-
-            return this.View(moviesQueryModel);
-        }
-
-        [HttpGet]
         public IActionResult Details(int id)
         {
             MovieDetailsViewModel movie = this.movieService.Details(id);

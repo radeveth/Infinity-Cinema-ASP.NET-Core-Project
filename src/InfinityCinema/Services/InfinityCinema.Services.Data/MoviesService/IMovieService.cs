@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.MoviesService
 {
+    using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
 
@@ -21,9 +22,11 @@
 
         AllMoviesQueryModel All(string searchName, MovieSorting sorting, int currentPage, int moviesPerPage, string searchGenre);
 
+        IEnumerable<MovieHomeViewModel> GetTopThreeRatedMovies();
+
         MovieStatisticsViewModel MovieStatistics();
 
-        AllMoviesQueryModel GetDeletedMovies(string searchName, MovieSorting sorting, int currentPage, int moviesPerPage, string searchGenre);
+        IEnumerable<UserSavedMovieViewModel> GetUserSavedMovies(string userId);
 
         // Update
         Task<bool> EditAsync(EditMovieServiceModel movieModel);

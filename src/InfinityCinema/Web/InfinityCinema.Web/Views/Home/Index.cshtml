@@ -12,7 +12,7 @@
     <img src="~/img/cinema-site-background.jpg" width="100%" height="700px"/>
 </div>*@
 
-<div class="container mt-3">
+<div class="container mt-3 mb-5">
     <div>
         <h3 class="mb-3"><img style="margin-left:2px; margin-bottom:5px;" width="30px" height="30px" src="https://images.all-free-download.com/images/graphicwebp/file_video_sign_icon_flat_contrast_black_white_camera_film_outline_6921632.webp"> Top Movies</h3>
         <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
@@ -122,20 +122,25 @@
                                 </div>
                             }
                         }
-                        else
-                        {
-                            <div class="jumbotron">
-                                <center>
-                                    <h1 class="display-6">No added movies</h1>
-                                </center>
-                                <hr class="my-4">
-                                <p class="lead">
-                                    <a asp-area="" asp-controller="Movies" asp-action="All" class="btn btn-outline-warning btn-lg" role="button">Explore</a>
-                                </p>
-                            </div>
-                        }
                     </div>
                 </div>
+            </div>
+        }
+        else
+        {
+            <div class="jumbotron">
+                <div class="mt-4"></div>
+                <div class="mt-2"></div>
+                <center>
+                    <h3>Your Watchlist is empty</h3>
+                </center>
+                <hr class="mt-4 offset-2 col-8">
+                <p class="lead">
+                    <div class="row">
+                        <a asp-area="" asp-controller="Movies" asp-action="All" asp-route-Sorting=0 class="btn btn-warning btn-lg offset-2 col-3" role="button">Browse Popular Movies</a>
+                        <a asp-area="" asp-controller="Genres" asp-action="All" class="btn btn-warning btn-lg offset-2 col-3"  role="button">Browse By Genres</a>
+                    </div>
+                </p>
             </div>
         }
     }
@@ -157,7 +162,6 @@
         </div>
     }
 </div>
-
 @section Scripts {
     <script>
         var owl = $('.owl-carousel');

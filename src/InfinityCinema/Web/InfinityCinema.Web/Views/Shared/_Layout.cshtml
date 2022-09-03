@@ -59,8 +59,8 @@
                 </ul>
             </div>
             <div class="row">
-                <form class="d-flex form-inline my-2 my-lg-0">
-                    <input type="search" class="form-control me-2" placeholder="Search Movie" aria-label="Search">
+                <form class="d-flex form-inline my-2 my-lg-0" method="get">
+                    <input name="SearchName" type="search" class="form-control me-2" placeholder="Search Movie" aria-label="Search">
                     <button asp-controller="Movies" asp-action="All" type="submit" class="btn btn-warning"><center><img style="margin-bottom:3px" src="https://cdn-icons-png.flaticon.com/512/251/251116.png" width=20 height=20 /></center></button>
                 </form>
             </div>
@@ -71,7 +71,7 @@
         </div>
     </nav>
 
-    <div>
+    <div class="container">
         <main>
             <partial name="_CookieConsentPartial" />
             @this.RenderBody()

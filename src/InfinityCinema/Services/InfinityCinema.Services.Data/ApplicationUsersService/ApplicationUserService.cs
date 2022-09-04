@@ -6,6 +6,7 @@
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.ApplicationUsersService.Models;
 
     public class ApplicationUserService : IApplicationUserService
     {
@@ -59,6 +60,16 @@
 
             await this.dbContext.SaveChangesAsync();
         }
+
+        public ApplicationUserViewModel GetUserById(string userId)
+            => this.dbContext
+                .Users
+                .Select(u => new ApplicationUserViewModel()
+                {
+                    Id = u.Id,
+                    FullName = u.FullName,
+                })
+                .FirstOrDefault(u => u.Id == userId);
 
         public bool CheckIfUserIsAlreadyRatedThisMovie(int movieId, string userId)
             => this.dbContext.MovieUserStarRatings.Any(m => m.UserId == userId && m.MovieId == movieId);

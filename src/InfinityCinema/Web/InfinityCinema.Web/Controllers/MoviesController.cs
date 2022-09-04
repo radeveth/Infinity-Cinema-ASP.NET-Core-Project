@@ -14,6 +14,8 @@
     using InfinityCinema.Services.Data.GenresService.Models;
     using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.ImagesService.Models;
+    using InfinityCinema.Services.Data.MovieCommentsService;
+    using InfinityCinema.Services.Data.MovieCommentsService.Models;
     using InfinityCinema.Services.Data.MoviesService;
     using InfinityCinema.Services.Data.MoviesService.Models;
     using InfinityCinema.Services.Data.PlatformsService;
@@ -29,14 +31,17 @@
         private readonly IActorService actorService;
         private readonly IImageService imagesService;
         private readonly IPlatformService platformService;
+        private readonly IMovieCommentService movieCommentService;
 
-        public MoviesController(IMovieService movieService, IGenreService genreService, IActorService actorService, IImageService imagesService, IPlatformService platformService)
+
+        public MoviesController(IMovieService movieService, IGenreService genreService, IActorService actorService, IImageService imagesService, IPlatformService platformService, IMovieCommentService movieCommentService)
         {
             this.movieService = movieService;
             this.genreService = genreService;
             this.actorService = actorService;
             this.imagesService = imagesService;
             this.platformService = platformService;
+            this.movieCommentService = movieCommentService;
         }
 
         [HttpGet]
@@ -213,6 +218,22 @@
 
             return this.RedirectToAction(nameof(this.All), "Movies");
         }
+
+        //[HttpPost]
+        //[Authorize]
+        //public async Task<IActionResult> CreateCommentForMovie(string commentContent, int movieId)
+        //{
+        //    MovieCommentFormModel movieComment = new MovieCommentFormModel()
+        //    {
+        //        Content = commentContent,
+        //        MovieId = movieId,
+        //        UserId = ClaimsPrincipalExtensions.GetId(this.User),
+        //    };
+
+        //    await this.movieCommentService.CreateAsync(movieComment);
+
+        //    return this.RedirectToAction(nameof(this.Details), "Movies", movieId);
+        //}
 
         private static MovieFormModel CreateInitializationOfMovieGenres(MovieFormModel movieFormModel, IGenreService genreService)
             => new MovieFormModel()

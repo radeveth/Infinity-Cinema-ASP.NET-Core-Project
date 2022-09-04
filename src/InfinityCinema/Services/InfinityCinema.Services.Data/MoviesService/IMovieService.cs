@@ -24,8 +24,6 @@
 
         IEnumerable<MovieHomeViewModel> GetTopThreeRatedMovies();
 
-        MovieStatisticsViewModel MovieStatistics();
-
         IEnumerable<UserSavedMovieViewModel> GetUserSavedMovies(string userId);
 
         // Update

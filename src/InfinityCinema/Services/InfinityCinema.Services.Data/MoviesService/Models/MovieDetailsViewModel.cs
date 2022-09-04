@@ -7,6 +7,7 @@
     using InfinityCinema.Services.Data.ActorsService.Models;
     using InfinityCinema.Services.Data.DirectorsService.Models;
     using InfinityCinema.Services.Data.GenresService.Models;
+    using InfinityCinema.Services.Data.MovieCommentsService.Models;
     using InfinityCinema.Services.Data.PlatformsService.Models;
 
     public class MovieDetailsViewModel
@@ -43,6 +44,6 @@
 
         public IEnumerable<string> ApplicationUsersId { get; set; }
 
-
+        public IEnumerable<MovieCommentViewModel> Comments { get; set; }
     }
 }

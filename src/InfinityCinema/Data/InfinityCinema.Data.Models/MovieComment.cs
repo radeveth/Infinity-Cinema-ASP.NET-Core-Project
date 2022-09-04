@@ -8,7 +8,7 @@
 
     using static InfinityCinema.Data.Common.DataValidation.CommentValidation;
 
-    public class MovieComment : IDeletableEntity
+    public class MovieComment : BaseDeletableModel<int>
     {
         [Required]
         [MaxLength(ContentMaxLength)]
@@ -23,9 +23,5 @@
         public string UserId { get; set; }
 
         public virtual ApplicationUser User { get; set; }
-
-        public bool IsDeleted { get; set; }
-
-        public DateTime? DeletedOn { get; set; }
     }
 }

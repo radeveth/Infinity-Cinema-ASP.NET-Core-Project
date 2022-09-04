@@ -2,22 +2,21 @@
 {
     using InfinityCinema.Services.Data.MoviesService;
     using InfinityCinema.Services.Data.MoviesService.Models;
+    using InfinityCinema.Web.Areas.Administration.AdministartionsService;
     using Microsoft.AspNetCore.Mvc;
 
     public class DashboardController : AdministrationController
     {
-        private readonly IMovieService movieService;
+        private readonly IAdministartionService administartionService;
 
-        public DashboardController(IMovieService movieService)
+        public DashboardController(IAdministartionService administartionService)
         {
-            this.movieService = movieService;
+            this.administartionService = administartionService;
         }
 
         public IActionResult Statistics()
         {
-            MovieStatisticsViewModel movieStatistics = this.movieService.MovieStatistics();
-
-            return this.View(movieStatistics);
+            return this.View(this.administartionService.ApplicationStatistics());
         }
     }
 }

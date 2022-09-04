@@ -1,5 +1,7 @@
 ﻿@model MovieDetailsViewModel
 
+@inject UserManager<ApplicationUser> UserManager;
+
 @{
     ViewData["Title"] = Model.Name;
 
@@ -7,6 +9,9 @@
     int neededColumnsForGenres = genres.Count() + 1;
 
     bool ifMovieIsAddedToWatchLater = Model.ApplicationUsersId.Any(a => a == ViewData["UserId"].ToString());
+
+    ApplicationUser user = await this.UserManager.GetUserAsync(this.User);
+    string userId = user.Id;
 }
 
 <div class="container mt-4">
@@ -168,8 +173,50 @@
         <center>
             <h3 class="text-center">Comments</h3>
         </center>
-    </div>
+        @if (Model.Comments.Any())
+        {
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-8 col-lg-7">
+                    <div class="card shadow-0 border" style="background-color: #aliceblue;">
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <div class="form-outline mb-4">
+                                    <input id="comment-content" type="text" class="col-md-10 col-lg-8 border-warning rounded-1" placeholder="Type comment..." />
+                                    <button id="add-comment-btn" class="btn btn-warning rounded-pill col-2">Add</button>
+                                </div>
+                            </div>
 
+                            @foreach (var comment in Model.Comments)
+                            {
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <p>@comment.Content</p>
+
+                                        <div class="d-flex justify-content-between">
+                                            <div class="d-flex flex-row align-items-center">
+                                                <i class='fas fa-user-alt'></i>
+                                                <p class="small mb-0 ms-2">@comment.User.FullName</p>
+                                            </div>
+                                            @*<div class="d-flex flex-row align-items-center">
+                                    <p class="small text-muted mb-0">Upvote?</p>
+                                    <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
+                                    <p class="small text-muted mb-0">3</p>
+                                    </div>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <h1>No comments</h1>
+        }
+
+    </div>
     <br />
     <br />
     <br />
@@ -233,4 +280,20 @@
             })
         });
     </script>
-}
+
+    <script>
+        let createCommentButtonElement = document.querySelector('#add-comment-btn');
+        let commnetContenteElement = document.querySelector('#comment-content');
+
+        createCommentButtonElement.addEventListener('click', (e) => {
+            console.log(commnetContenteElement);
+
+            $.post('/api/moviecomments/create',
+                {
+                    content: commnetContenteElement.textContent,
+                    movieId: @Model.Id
+                }, 
+                (data) => {})
+        });
+    </script>
+}   

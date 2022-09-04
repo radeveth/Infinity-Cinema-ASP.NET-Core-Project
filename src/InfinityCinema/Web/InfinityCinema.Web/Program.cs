@@ -15,11 +15,13 @@ namespace InfinityCinema.Web
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.LanguagesService;
+    using InfinityCinema.Services.Data.MovieCommentsService;
     using InfinityCinema.Services.Data.MoviesService;
     using InfinityCinema.Services.Data.PlatformsService;
     using InfinityCinema.Services.Data.SettingsService;
     using InfinityCinema.Services.Mapping;
     using InfinityCinema.Services.Messaging;
+    using InfinityCinema.Web.Areas.Administration.AdministartionsService;
     using InfinityCinema.Web.Infrastructure;
     using InfinityCinema.Web.ViewModels;
     using Microsoft.AspNetCore.Builder;
@@ -83,6 +85,8 @@ namespace InfinityCinema.Web
             services.AddTransient<IActorService, ActorService>();
             services.AddTransient<IPlatformService, PlatformService>();
             services.AddTransient<IApplicationUserService, ApplicationUserService>();
+            services.AddTransient<IAdministartionService, AdministartionService>();
+            services.AddTransient<IMovieCommentService, MovieCommentService>();
         }
 
         private static void Configure(WebApplication app)

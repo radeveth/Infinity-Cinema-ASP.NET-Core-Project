@@ -20,6 +20,8 @@
     using InfinityCinema.Services.Data.ImagesService.Models;
     using InfinityCinema.Services.Data.LanguagesService;
     using InfinityCinema.Services.Data.LanguagesService.Models;
+    using InfinityCinema.Services.Data.MovieCommentsService;
+    using InfinityCinema.Services.Data.MovieCommentsService.Models;
     using InfinityCinema.Services.Data.MoviesService.Enums;
     using InfinityCinema.Services.Data.MoviesService.Models;
     using InfinityCinema.Services.Data.PlatformsService;
@@ -40,6 +42,7 @@
         private readonly IPlatformService platformService;
         private readonly ILanguageService languageService;
         private readonly IGenreService genreService;
+        private readonly IMovieCommentService movieCommentService;
 
         private readonly UserManager<ApplicationUser> userManager;
 
@@ -54,7 +57,8 @@
             IGenreService genreService,
             IDeletableEntityRepository<Movie> movieRepository,
             IDeletableEntityRepository<MovieLanguage> movieLanguagesRepository,
-            IDeletableEntityRepository<MovieGenre> movieGenresRepository)
+            IDeletableEntityRepository<MovieGenre> movieGenresRepository,
+            IMovieCommentService movieCommentService)
         {
             this.dbContext = dbContext;
             this.directorService = directorService;
@@ -68,6 +72,7 @@
             this.movieRepository = movieRepository;
             this.movieLanguagesRepository = movieLanguagesRepository;
             this.movieGenresRepository = movieGenresRepository;
+            this.movieCommentService = movieCommentService;
         }
 
         // Create
@@ -202,6 +207,7 @@
             IEnumerable<PlatformViewModel> platforms = this.platformService.GetPlatformsForGivenMovie(id);
             DirectorViewModel director = this.directorService.GetDirectorForParticularMovie(movie.DirectorId);
             IEnumerable<string> applicationUsersId = this.dbContext.ApplicationUserMovies.Where(a => a.MovieId == id).Select(a => a.UserId);
+            IEnumerable<MovieCommentViewModel> comments = this.movieCommentService.GetCommentsForGivenMovie(id);
 
             string country = this.countryService.GetCountryNameById(movie.CountryId);
 
@@ -227,6 +233,7 @@
                 Name = movie.Name,
                 Countruy = country,
                 Director = director,
+                Comments = comments,
                 Platforms = platforms,
                 Languages = languages,
                 Duration = movie.Duration,
@@ -321,18 +328,6 @@
                 .Take(3);
 
             return topThreeRatedMovies;
-        }
-
-        public MovieStatisticsViewModel MovieStatistics()
-        {
-            MovieStatisticsViewModel movieStatistics = new MovieStatisticsViewModel()
-            {
-                TotalMovies = this.dbContext.Movies.Count(),
-                TotalGenres = this.dbContext.Genres.Count(),
-                TotalUsers = this.dbContext.Users.Count(),
-            };
-
-            return movieStatistics;
         }
 
         public IEnumerable<UserSavedMovieViewModel> GetUserSavedMovies(string userId)

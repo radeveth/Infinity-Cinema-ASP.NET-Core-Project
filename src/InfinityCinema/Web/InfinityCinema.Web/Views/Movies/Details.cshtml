@@ -1,4 +1,4 @@
-﻿@model MovieDetailsViewModel
+﻿@model MovieDetailsServiceModel
 
 @inject UserManager<ApplicationUser> UserManager;
 
@@ -176,19 +176,13 @@
         @if (Model.Comments.Any())
         {
             <div class="row d-flex justify-content-center">
-                <div class="col-md-8 col-lg-7">
-                    <div class="card shadow-0 border" style="background-color: #aliceblue;">
+                <div class="col-md-10 col-lg-9">
+                    <div style="background-color: #aliceblue;">
                         <div class="card-body p-4">
-                            <div class="row">
-                                <div class="form-outline mb-4">
-                                    <input id="comment-content" type="text" class="col-md-10 col-lg-8 border-warning rounded-1" placeholder="Type comment..." />
-                                    <button id="add-comment-btn" class="btn btn-warning rounded-pill col-2">Add</button>
-                                </div>
-                            </div>
 
                             @foreach (var comment in Model.Comments)
                             {
-                                <div class="card mb-4">
+                                <div class="card mb-3">
                                     <div class="card-body">
                                         <p>@comment.Content</p>
 
@@ -197,11 +191,13 @@
                                                 <i class='fas fa-user-alt'></i>
                                                 <p class="small mb-0 ms-2">@comment.User.FullName</p>
                                             </div>
-                                            @*<div class="d-flex flex-row align-items-center">
-                                    <p class="small text-muted mb-0">Upvote?</p>
-                                    <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
-                                    <p class="small text-muted mb-0">3</p>
-                                    </div>*@
+                                            <div class="d-flex flex-row align-items-center">
+                                                <a onclick="IncreaseCommentLikes(@comment.Id)" disabled><i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></a>
+                                                <p id="comment@(comment.Id)-likes-counter" class="small text-muted mb-0">@comment.Likes</p>
+                                                <div style="margin-left:8px"></div>
+                                                <a onclick="IncreaseCommentDislikes(@comment.Id)"><i class="far fa-thumbs-down mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></a>
+                                                <p id="comment@(comment.Id)-dislikes-counter" class="small text-muted mb-0">@comment.Dislikes</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -213,14 +209,27 @@
         }
         else
         {
-            <h1>No comments</h1>
+            <center>
+                <div class="mt-4"></div>
+                <h5>No comments added</h5>
+                <h5>Be first and let your opinion</h5>
+            </center>
         }
+        <form method="post">
+            <div class="row">
+                <div class="form-group form-margin offset-2 col-7">
+                    <input asp-for="NewCommentContent" type="text" class="border-warning rounded-1 form-control" placeholder="Type comment..." />
+                    <span asp-validation-for="NewCommentContent" class="small text-danger"></span>
+                </div>
+
+                <input type="submit" class="btn btn-warning col-1" style="background-color:aliceblue; margin-top:15px;" value="Add">
+            </div>
+        </form>
+
 
     </div>
     <br />
     <br />
-    <br />
-
     <center class="mb-3"><a asp-controller="Movies" asp-action="All" class="btn btn-warning rounded-pill">Explore More</a></center>
     <br />
 </div>
@@ -282,18 +291,21 @@
     </script>
 
     <script>
-        let createCommentButtonElement = document.querySelector('#add-comment-btn');
-        let commnetContenteElement = document.querySelector('#comment-content');
+        function IncreaseCommentLikes(commentId) {
+            $.get('/api/moviecomments/increaselikes/?commentId=' + commentId, (data) => {
+                let commentLikesCountElement = document.querySelector('#comment' + commentId + '-likes-counter');
 
-        createCommentButtonElement.addEventListener('click', (e) => {
-            console.log(commnetContenteElement);
+                commentLikesCountElement.textContent = data;
+                commentLikesCountElement.parentElement.classList.add('disabled');
+            }) 
+        };
 
-            $.post('/api/moviecomments/create',
-                {
-                    content: commnetContenteElement.textContent,
-                    movieId: @Model.Id
-                }, 
-                (data) => {})
-        });
+        function IncreaseCommentDislikes(commentId) {
+            $.get('/api/moviecomments/increasedislikes/?commentId=' + commentId, (data) => {
+                let commentDislikesCountElement = document.querySelector('#comment' + commentId + '-dislikes-counter');
+
+                commentDislikesCountElement.textContent = data;
+            }) 
+        };
     </script>
-}   
+}

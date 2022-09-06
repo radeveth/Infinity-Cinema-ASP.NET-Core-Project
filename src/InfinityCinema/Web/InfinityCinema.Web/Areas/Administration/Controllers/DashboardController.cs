@@ -1,7 +1,5 @@
 ﻿namespace InfinityCinema.Web.Areas.Administration.Controllers
 {
-    using InfinityCinema.Services.Data.MoviesService;
-    using InfinityCinema.Services.Data.MoviesService.Models;
     using InfinityCinema.Web.Areas.Administration.AdministartionsService;
     using Microsoft.AspNetCore.Mvc;
 

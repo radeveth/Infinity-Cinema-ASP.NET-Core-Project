@@ -498,11 +498,11 @@ namespace InfinityCinema.Data.Migrations
 
             modelBuilder.Entity("InfinityCinema.Data.Models.MovieComment", b =>
                 {
-                    b.Property<int>("MovieId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -515,16 +515,22 @@ namespace InfinityCinema.Data.Migrations
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Id")
+                    b.Property<int>("Dislikes")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Likes")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("MovieId", "UserId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("IsDeleted");
 
@@ -600,6 +606,29 @@ namespace InfinityCinema.Data.Migrations
                     b.HasIndex("PlatformId");
 
                     b.ToTable("MoviePlatform");
+                });
+
+            modelBuilder.Entity("InfinityCinema.Data.Models.MovieUserComment", b =>
+                {
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("MovieId", "CommentId");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.ToTable("MovieUserComments");
                 });
 
             modelBuilder.Entity("InfinityCinema.Data.Models.MovieUserStarRating", b =>
@@ -701,6 +730,32 @@ namespace InfinityCinema.Data.Migrations
                     b.HasIndex("IsDeleted");
 
                     b.ToTable("Settings");
+                });
+
+            modelBuilder.Entity("InfinityCinema.Data.Models.UserComment", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsUserIsVoted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("UserId", "CommentId");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.ToTable("UserComments");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -886,19 +941,9 @@ namespace InfinityCinema.Data.Migrations
 
             modelBuilder.Entity("InfinityCinema.Data.Models.MovieComment", b =>
                 {
-                    b.HasOne("InfinityCinema.Data.Models.Movie", "Movie")
-                        .WithMany("Comments")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("InfinityCinema.Data.Models.ApplicationUser", "User")
-                        .WithMany("CommentsCreated")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
+                        .WithMany("CommentCreated")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -960,6 +1005,25 @@ namespace InfinityCinema.Data.Migrations
                     b.Navigation("Platform");
                 });
 
+            modelBuilder.Entity("InfinityCinema.Data.Models.MovieUserComment", b =>
+                {
+                    b.HasOne("InfinityCinema.Data.Models.MovieComment", "MovieComment")
+                        .WithMany("MovieUserComments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("InfinityCinema.Data.Models.Movie", "Movie")
+                        .WithMany("MovieUserComments")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+
+                    b.Navigation("MovieComment");
+                });
+
             modelBuilder.Entity("InfinityCinema.Data.Models.MovieUserStarRating", b =>
                 {
                     b.HasOne("InfinityCinema.Data.Models.Movie", "Movie")
@@ -975,6 +1039,25 @@ namespace InfinityCinema.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Movie");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("InfinityCinema.Data.Models.UserComment", b =>
+                {
+                    b.HasOne("InfinityCinema.Data.Models.MovieComment", "Comment")
+                        .WithMany("UserComments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("InfinityCinema.Data.Models.ApplicationUser", "User")
+                        .WithMany("UserComments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
 
                     b.Navigation("User");
                 });
@@ -1041,7 +1124,7 @@ namespace InfinityCinema.Data.Migrations
 
                     b.Navigation("Claims");
 
-                    b.Navigation("CommentsCreated");
+                    b.Navigation("CommentCreated");
 
                     b.Navigation("Logins");
 
@@ -1050,6 +1133,8 @@ namespace InfinityCinema.Data.Migrations
                     b.Navigation("MoviesCreated");
 
                     b.Navigation("Roles");
+
+                    b.Navigation("UserComments");
                 });
 
             modelBuilder.Entity("InfinityCinema.Data.Models.Country", b =>
@@ -1076,8 +1161,6 @@ namespace InfinityCinema.Data.Migrations
                 {
                     b.Navigation("ApplicationUserMovies");
 
-                    b.Navigation("Comments");
-
                     b.Navigation("Images");
 
                     b.Navigation("MovieActors");
@@ -1088,7 +1171,16 @@ namespace InfinityCinema.Data.Migrations
 
                     b.Navigation("MoviePlatforms");
 
+                    b.Navigation("MovieUserComments");
+
                     b.Navigation("MovieUserStarRatings");
+                });
+
+            modelBuilder.Entity("InfinityCinema.Data.Models.MovieComment", b =>
+                {
+                    b.Navigation("MovieUserComments");
+
+                    b.Navigation("UserComments");
                 });
 
             modelBuilder.Entity("InfinityCinema.Data.Models.Platform", b =>

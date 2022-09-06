@@ -1,12 +1,8 @@
 ﻿namespace InfinityCinema.Web.Controllers.Api
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.MovieCommentsService;
-    using InfinityCinema.Services.Data.MovieCommentsService.Models;
     using InfinityCinema.Web.Infrastructure;
     using Microsoft.AspNetCore.Mvc;
 
@@ -21,21 +17,18 @@
             this.movieCommentService = movieCommentService;
         }
 
-        [Route("create")]
-        public async Task<ActionResult> Create(string content, int movieId)
+        [HttpGet]
+        [Route("increaselikes")]
+        public async Task<ActionResult<int>> IncreaseLikes(int commentId)
         {
-            MovieCommentFormModel movieComment = new MovieCommentFormModel()
-            {
-                Content = content,
-                MovieId = movieId,
-                UserId = ClaimsPrincipalExtensions.GetId(this.User),
-            };
+            return await this.movieCommentService.IncreaseCommentLikesAsync(commentId);
+        }
 
-            await this.movieCommentService.CreateAsync(movieComment);
-
-            IEnumerable<MovieCommentViewModel> comments = this.movieCommentService.GetCommentsForGivenMovie(movieId);
-
-            return this.Json(comments);
+        [HttpGet]
+        [Route("increasedislikes")]
+        public async Task<ActionResult<int>> IncreaseDislikes(int commentId)
+        {
+            return await this.movieCommentService.IncreaseCommentDislikesAsync(commentId);
         }
     }
 }

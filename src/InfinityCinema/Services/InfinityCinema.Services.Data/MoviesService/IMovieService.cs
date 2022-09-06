@@ -16,7 +16,7 @@
         Task<string> CreateMovieAsync(CreateMovieServiceModel movieModel, ClaimsPrincipal user);
 
         // Read
-        MovieDetailsViewModel Details(int id);
+        MovieDetailsServiceModel Details(int id);
 
         Task<MovieFormModel> GetMovieById(int id);
 

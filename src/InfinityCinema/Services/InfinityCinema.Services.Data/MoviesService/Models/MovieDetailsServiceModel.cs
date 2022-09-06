@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
     using InfinityCinema.Data.Models.Enums;
     using InfinityCinema.Services.Data.ActorsService.Models;
@@ -10,7 +11,9 @@
     using InfinityCinema.Services.Data.MovieCommentsService.Models;
     using InfinityCinema.Services.Data.PlatformsService.Models;
 
-    public class MovieDetailsViewModel
+    using static InfinityCinema.Data.Common.DataValidation.CommentValidation;
+
+    public class MovieDetailsServiceModel
     {
         public int Id { get; set; }
 
@@ -45,5 +48,10 @@
         public IEnumerable<string> ApplicationUsersId { get; set; }
 
         public IEnumerable<MovieCommentViewModel> Comments { get; set; }
+
+        [Required]
+        [StringLength(ContentMaxLength)]
+        [Display(Name = "Comment content")]
+        public string NewCommentContent { get; set; }
     }
 }

@@ -19,9 +19,9 @@
             this.MovieActors = new HashSet<MovieActor>();
             this.MoviePlatforms = new HashSet<MoviePlatform>();
             this.MovieLanguages = new HashSet<MovieLanguage>();
-            this.Comments = new HashSet<MovieComment>();
             this.ApplicationUserMovies = new HashSet<ApplicationUserMovie>();
             this.MovieUserStarRatings = new HashSet<MovieUserStarRating>();
+            this.MovieUserComments = new HashSet<MovieUserComment>();
         }
 
         [Required]
@@ -70,10 +70,10 @@
 
         public virtual ICollection<MovieLanguage> MovieLanguages { get; set; }
 
-        public virtual ICollection<MovieComment> Comments { get; set; }
-
         public virtual ICollection<ApplicationUserMovie> ApplicationUserMovies { get; set; }
 
         public virtual ICollection<MovieUserStarRating> MovieUserStarRatings { get; set; }
+
+        public ICollection<MovieUserComment> MovieUserComments { get; set; }
     }
 }

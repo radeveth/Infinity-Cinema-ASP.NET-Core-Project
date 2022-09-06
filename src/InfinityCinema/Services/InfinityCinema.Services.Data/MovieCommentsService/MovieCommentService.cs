@@ -1,12 +1,13 @@
 ﻿namespace InfinityCinema.Services.Data.MovieCommentsService
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.ApplicationUsersService;
-    using InfinityCinema.Services.Data.ApplicationUsersService.Models;
     using InfinityCinema.Services.Data.MovieCommentsService.Models;
 
     public class MovieCommentService : IMovieCommentService
@@ -21,48 +22,62 @@
         }
 
         // Create
-        public async Task<MovieCommentViewModel> CreateAsync(MovieCommentFormModel commentFormModel)
+        public async Task<MovieCommentViewModel> CreateAsync(MovieCommentFormModel comment)
         {
-            MovieComment comment = new MovieComment()
+            MovieComment movieComment = new MovieComment()
             {
-                Content = commentFormModel.Content,
-                MovieId = commentFormModel.MovieId,
-                UserId = commentFormModel.UserId,
+                Content = comment.Content,
+                UserId = comment.UserId,
+                Likes = 0,
+                Dislikes = 0,
             };
 
-            await this.dbContext.MovieComments.AddAsync(comment);
+            await this.dbContext.MovieComments.AddAsync(movieComment);
             await this.dbContext.SaveChangesAsync();
 
             return new MovieCommentViewModel()
             {
-                Id = comment.Id,
-                Content = comment.Content,
-                MovieId = comment.MovieId,
-                User = new ApplicationUserViewModel()
-                {
-                    Id = comment.UserId,
-                    FullName = comment.User.FullName,
-                },
+                Id = movieComment.Id,
+                Content = movieComment.Content,
+                User = this.userService.GetUserById(movieComment.UserId),
             };
         }
 
         // Read
-        public IEnumerable<MovieCommentViewModel> GetCommentsForGivenMovie(int movieId)
+        public ICollection<int> GetVotedCommentsForGivenUser(string userId)
         {
-            return this.dbContext
+            IEnumerable<UserComment> userComments = this.dbContext
+                .UserComments
+                .Where(u => u.UserId == userId);
+
+            return (ICollection<int>)userComments.Select(u => u.CommentId);
+        }
+
+        // Update
+        public async Task<int> IncreaseCommentLikesAsync(int commentId)
+        {
+            MovieComment movieComment = this.dbContext
                 .MovieComments
-                .Where(m => m.MovieId == movieId)
-                .Select(m => new MovieCommentViewModel()
-                {
-                    Id = m.Id,
-                    Content = m.Content,
-                    User = new ApplicationUserViewModel()
-                    {
-                        Id = m.UserId,
-                        FullName = m.User.FullName,
-                    },
-                    MovieId = m.MovieId,
-                });
+                .FirstOrDefault(m => m.Id == commentId);
+
+            movieComment.Likes++;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return movieComment.Likes;
+        }
+
+        public async Task<int> IncreaseCommentDislikesAsync(int commentId)
+        {
+            MovieComment movieComment = this.dbContext
+                .MovieComments
+                .FirstOrDefault(m => m.Id == commentId);
+
+            movieComment.Dislikes++;
+
+            await this.dbContext.SaveChangesAsync();
+
+            return movieComment.Dislikes;
         }
     }
 }

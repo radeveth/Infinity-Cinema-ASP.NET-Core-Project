@@ -29,11 +29,6 @@
                 .OnDelete(DeleteBehavior.Restrict);
 
             movieBuilder
-                .HasMany(m => m.Comments)
-                .WithOne(r => r.Movie)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            movieBuilder
                 .HasMany(m => m.Images)
                 .WithOne(i => i.Movie)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -54,6 +49,11 @@
                 .HasOne(m => m.User)
                 .WithMany(u => u.MoviesCreated)
                 .HasForeignKey(m => m.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            movieBuilder
+                .HasMany(m => m.MovieUserComments)
+                .WithOne(m => m.Movie)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

@@ -11,9 +11,13 @@
         Task<MovieCommentViewModel> CreateAsync(MovieCommentFormModel comment);
 
         // Read
-        IEnumerable<MovieCommentViewModel> GetCommentsForGivenMovie(int movieId);
+        ICollection<int> GetVotedCommentsForGivenUser(string userId);
 
         // Update
+        Task<int> IncreaseCommentLikesAsync(int commentId);
+
+        Task<int> IncreaseCommentDislikesAsync(int commentId);
+
         // Delete
     }
 }

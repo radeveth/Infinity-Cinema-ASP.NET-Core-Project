@@ -40,6 +40,11 @@
         {
             Language language = this.dbContext.Languages.FirstOrDefault(l => l.Name.ToLower() == languageName.ToLower());
 
+            if (language == null)
+            {
+                return null;
+            }
+
             return new LanguageViewModel()
             {
                 Id = language.Id,

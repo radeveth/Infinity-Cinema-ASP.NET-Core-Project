@@ -8,7 +8,6 @@
     using InfinityCinema.Common;
     using InfinityCinema.Services.Data.ActorsService;
     using InfinityCinema.Services.Data.ActorsService.Models;
-    using InfinityCinema.Services.Data.ApplicationUsersService;
     using InfinityCinema.Services.Data.DirectorsService.Models;
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.GenresService.Models;
@@ -18,6 +17,7 @@
     using InfinityCinema.Services.Data.MovieCommentsService.Models;
     using InfinityCinema.Services.Data.MoviesService;
     using InfinityCinema.Services.Data.MoviesService.Models;
+    using InfinityCinema.Services.Data.MovieUserCommentsService;
     using InfinityCinema.Services.Data.PlatformsService;
     using InfinityCinema.Services.Data.PlatformsService.Models;
     using InfinityCinema.Web.Infrastructure;
@@ -32,9 +32,10 @@
         private readonly IImageService imagesService;
         private readonly IPlatformService platformService;
         private readonly IMovieCommentService movieCommentService;
+        private readonly IMovieUserCommentService movieUserCommentService;
 
 
-        public MoviesController(IMovieService movieService, IGenreService genreService, IActorService actorService, IImageService imagesService, IPlatformService platformService, IMovieCommentService movieCommentService)
+        public MoviesController(IMovieService movieService, IGenreService genreService, IActorService actorService, IImageService imagesService, IPlatformService platformService, IMovieCommentService movieCommentService, IMovieUserCommentService movieUserCommentService)
         {
             this.movieService = movieService;
             this.genreService = genreService;
@@ -42,6 +43,7 @@
             this.imagesService = imagesService;
             this.platformService = platformService;
             this.movieCommentService = movieCommentService;
+            this.movieUserCommentService = movieUserCommentService;
         }
 
         [HttpGet]
@@ -100,17 +102,46 @@
         [HttpGet]
         public IActionResult Details(int id)
         {
-            MovieDetailsViewModel movie = this.movieService.Details(id);
-            this.ViewData["UserId"] = ClaimsPrincipalExtensions.GetId(this.User);
+            MovieDetailsServiceModel movie = this.movieService.Details(id);
 
             return this.View(movie);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> DetailsAsync(int id, string newCommentContent)
+        {
+            string userId = ClaimsPrincipalExtensions.GetId(this.User);
+
+            if (string.IsNullOrEmpty(newCommentContent))
+            {
+                this.ModelState.AddModelError(string.Empty, "Invalid comment!");
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(newCommentContent);
+            }
+
+            if (!string.IsNullOrEmpty(newCommentContent))
+            {
+                MovieCommentViewModel commentViewModel = await this.movieCommentService.CreateAsync(new MovieCommentFormModel()
+                {
+                    Content = newCommentContent,
+                    UserId = userId,
+                });
+
+                await this.movieUserCommentService.CreateAsync(id, commentViewModel.Id);
+            }
+
+            return this.RedirectToAction(nameof(this.Details), "Movies");
         }
 
         [HttpGet]
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public IActionResult Edit(int id)
         {
-            MovieDetailsViewModel targetMovie = this.movieService.Details(id);
+            MovieDetailsServiceModel targetMovie = this.movieService.Details(id);
 
             MovieFormModel movieFormModel = new MovieFormModel()
             {
@@ -218,22 +249,6 @@
 
             return this.RedirectToAction(nameof(this.All), "Movies");
         }
-
-        //[HttpPost]
-        //[Authorize]
-        //public async Task<IActionResult> CreateCommentForMovie(string commentContent, int movieId)
-        //{
-        //    MovieCommentFormModel movieComment = new MovieCommentFormModel()
-        //    {
-        //        Content = commentContent,
-        //        MovieId = movieId,
-        //        UserId = ClaimsPrincipalExtensions.GetId(this.User),
-        //    };
-
-        //    await this.movieCommentService.CreateAsync(movieComment);
-
-        //    return this.RedirectToAction(nameof(this.Details), "Movies", movieId);
-        //}
 
         private static MovieFormModel CreateInitializationOfMovieGenres(MovieFormModel movieFormModel, IGenreService genreService)
             => new MovieFormModel()

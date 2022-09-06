@@ -17,6 +17,7 @@ namespace InfinityCinema.Web
     using InfinityCinema.Services.Data.LanguagesService;
     using InfinityCinema.Services.Data.MovieCommentsService;
     using InfinityCinema.Services.Data.MoviesService;
+    using InfinityCinema.Services.Data.MovieUserCommentsService;
     using InfinityCinema.Services.Data.PlatformsService;
     using InfinityCinema.Services.Data.SettingsService;
     using InfinityCinema.Services.Mapping;
@@ -87,6 +88,7 @@ namespace InfinityCinema.Web
             services.AddTransient<IApplicationUserService, ApplicationUserService>();
             services.AddTransient<IAdministartionService, AdministartionService>();
             services.AddTransient<IMovieCommentService, MovieCommentService>();
+            services.AddTransient<IMovieUserCommentService, MovieUserCommentService>();
         }
 
         private static void Configure(WebApplication app)

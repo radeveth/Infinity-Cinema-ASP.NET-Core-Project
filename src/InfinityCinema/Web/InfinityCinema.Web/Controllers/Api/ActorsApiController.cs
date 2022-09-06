@@ -1,6 +1,5 @@
 ﻿namespace InfinityCinema.Web.Controllers.Api
 {
-    using System.Collections;
     using System.Collections.Generic;
 
     using InfinityCinema.Services.Data.ActorsService;

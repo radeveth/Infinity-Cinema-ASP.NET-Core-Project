@@ -6,10 +6,12 @@
     {
         public int Id { get; set; }
 
+        public ApplicationUserViewModel User { get; set; }
+
         public string Content { get; set; }
 
-        public int MovieId { get; set; }
+        public int Likes { get; set; }
 
-        public ApplicationUserViewModel User { get; set; }
+        public int Dislikes { get; set; }
     }
 }

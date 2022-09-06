@@ -1,6 +1,7 @@
 ﻿namespace InfinityCinema.Web.Controllers
 {
     using System.Diagnostics;
+
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.HomeService.Models;
     using InfinityCinema.Services.Data.MoviesService;

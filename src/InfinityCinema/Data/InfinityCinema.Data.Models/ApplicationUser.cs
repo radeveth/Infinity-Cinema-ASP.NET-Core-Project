@@ -21,9 +21,10 @@ namespace InfinityCinema.Data.Models
             this.Logins = new HashSet<IdentityUserLogin<string>>();
 
             this.MoviesCreated = new HashSet<Movie>();
-            this.CommentsCreated = new HashSet<MovieComment>();
             this.ApplicationUserMovies = new HashSet<ApplicationUserMovie>();
             this.MovieUserStarRatings = new HashSet<MovieUserStarRating>();
+            this.CommentCreated = new HashSet<MovieComment>();
+            this.UserComments = new HashSet<UserComment>();
         }
 
         [Required]
@@ -51,10 +52,12 @@ namespace InfinityCinema.Data.Models
 
         public virtual ICollection<Movie> MoviesCreated { get; set; }
 
-        public virtual ICollection<MovieComment> CommentsCreated { get; set; }
-
         public virtual ICollection<ApplicationUserMovie> ApplicationUserMovies { get; set; }
 
         public virtual ICollection<MovieUserStarRating> MovieUserStarRatings { get; set; }
+
+        public ICollection<MovieComment> CommentCreated { get; set; }
+
+        public ICollection<UserComment> UserComments { get; set; }
     }
 }

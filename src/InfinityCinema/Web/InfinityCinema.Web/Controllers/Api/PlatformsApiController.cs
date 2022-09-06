@@ -3,6 +3,7 @@
     using InfinityCinema.Services.Data.PlatformsService;
     using InfinityCinema.Services.Data.PlatformsService.Models;
     using Microsoft.AspNetCore.Mvc;
+
     using System.Collections.Generic;
 
     [ApiController]

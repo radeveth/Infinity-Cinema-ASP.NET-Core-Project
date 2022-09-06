@@ -18,6 +18,8 @@ namespace InfinityCinema.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
+                    InformationLink = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -103,6 +105,7 @@ namespace InfinityCinema.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    InformationUrl = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -121,6 +124,7 @@ namespace InfinityCinema.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -300,7 +304,7 @@ namespace InfinityCinema.Data.Migrations
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     DateOfReleased = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Resolution = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
                     TrailerPath = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: true),
                     Duration = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DirectorId = table.Column<int>(type: "int", nullable: false),
@@ -330,6 +334,32 @@ namespace InfinityCinema.Data.Migrations
                         name: "FK_Movies_Directors_DirectorId",
                         column: x => x.DirectorId,
                         principalTable: "Directors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ApplicationUserMovies",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MovieId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationUserMovies", x => new { x.UserId, x.MovieId });
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserMovies_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ApplicationUserMovies_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -391,8 +421,10 @@ namespace InfinityCinema.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: false),
-                    MovieId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Likes = table.Column<int>(type: "int", nullable: false),
+                    Dislikes = table.Column<int>(type: "int", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    MovieId = table.Column<int>(type: "int", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -402,17 +434,15 @@ namespace InfinityCinema.Data.Migrations
                 {
                     table.PrimaryKey("PK_MovieComments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MovieComments_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_MovieComments_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_MovieComments_Movies_MovieId",
                         column: x => x.MovieId,
                         principalTable: "Movies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -494,23 +524,59 @@ namespace InfinityCinema.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StarRatings",
+                name: "MovieUserStarRatings",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Rate = table.Column<int>(type: "int", nullable: false),
                     MovieId = table.Column<int>(type: "int", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Rate = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StarRatings", x => x.Id);
+                    table.PrimaryKey("PK_MovieUserStarRatings", x => new { x.UserId, x.MovieId });
                     table.ForeignKey(
-                        name: "FK_StarRatings_Movies_MovieId",
+                        name: "FK_MovieUserStarRatings_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MovieUserStarRatings_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MovieUserComments",
+                columns: table => new
+                {
+                    MovieId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CommentId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MovieUserComments", x => new { x.MovieId, x.UserId, x.CommentId });
+                    table.ForeignKey(
+                        name: "FK_MovieUserComments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MovieUserComments_MovieComments_CommentId",
+                        column: x => x.CommentId,
+                        principalTable: "MovieComments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MovieUserComments_Movies_MovieId",
                         column: x => x.MovieId,
                         principalTable: "Movies",
                         principalColumn: "Id",
@@ -521,6 +587,16 @@ namespace InfinityCinema.Data.Migrations
                 name: "IX_Actors_IsDeleted",
                 table: "Actors",
                 column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUserMovies_IsDeleted",
+                table: "ApplicationUserMovies",
+                column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicationUserMovies_MovieId",
+                table: "ApplicationUserMovies",
+                column: "MovieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -612,6 +688,11 @@ namespace InfinityCinema.Data.Migrations
                 column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MovieComments_ApplicationUserId",
+                table: "MovieComments",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MovieComments_IsDeleted",
                 table: "MovieComments",
                 column: "IsDeleted");
@@ -620,11 +701,6 @@ namespace InfinityCinema.Data.Migrations
                 name: "IX_MovieComments_MovieId",
                 table: "MovieComments",
                 column: "MovieId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MovieComments_UserId",
-                table: "MovieComments",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MovieGenres_GenreId",
@@ -677,6 +753,31 @@ namespace InfinityCinema.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MovieUserComments_CommentId",
+                table: "MovieUserComments",
+                column: "CommentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieUserComments_IsDeleted",
+                table: "MovieUserComments",
+                column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieUserComments_UserId",
+                table: "MovieUserComments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieUserStarRatings_IsDeleted",
+                table: "MovieUserStarRatings",
+                column: "IsDeleted");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieUserStarRatings_MovieId",
+                table: "MovieUserStarRatings",
+                column: "MovieId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Platforms_IsDeleted",
                 table: "Platforms",
                 column: "IsDeleted");
@@ -685,20 +786,13 @@ namespace InfinityCinema.Data.Migrations
                 name: "IX_Settings_IsDeleted",
                 table: "Settings",
                 column: "IsDeleted");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StarRatings_IsDeleted",
-                table: "StarRatings",
-                column: "IsDeleted");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StarRatings_MovieId",
-                table: "StarRatings",
-                column: "MovieId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ApplicationUserMovies");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -721,9 +815,6 @@ namespace InfinityCinema.Data.Migrations
                 name: "MovieActors");
 
             migrationBuilder.DropTable(
-                name: "MovieComments");
-
-            migrationBuilder.DropTable(
                 name: "MovieGenres");
 
             migrationBuilder.DropTable(
@@ -733,10 +824,13 @@ namespace InfinityCinema.Data.Migrations
                 name: "MoviePlatform");
 
             migrationBuilder.DropTable(
-                name: "Settings");
+                name: "MovieUserComments");
 
             migrationBuilder.DropTable(
-                name: "StarRatings");
+                name: "MovieUserStarRatings");
+
+            migrationBuilder.DropTable(
+                name: "Settings");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -752,6 +846,9 @@ namespace InfinityCinema.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Platforms");
+
+            migrationBuilder.DropTable(
+                name: "MovieComments");
 
             migrationBuilder.DropTable(
                 name: "Movies");

@@ -51,9 +51,13 @@
 
         public DbSet<MoviePlatform> MoviePlatform { get; set; }
 
+        public DbSet<MovieUserComment> MovieUserComments { get; set; }
+
         public DbSet<MovieUserStarRating> MovieUserStarRatings { get; set; }
 
         public DbSet<Platform> Platforms { get; set; }
+
+        public DbSet<UserComment> UserComments { get; set; }
 
         public DbSet<Setting> Settings { get; set; }
 
@@ -86,13 +90,14 @@
             builder.ApplyConfiguration(new GenreConfiguration());
             builder.ApplyConfiguration(new LanguageConfiguration());
             builder.ApplyConfiguration(new MovieActorConfiguration());
-            builder.ApplyConfiguration(new MovieCommentConfiguration());
             builder.ApplyConfiguration(new MovieConfiguration());
             builder.ApplyConfiguration(new MovieGenreConfiguration());
             builder.ApplyConfiguration(new MovieLanguageConfiguration());
             builder.ApplyConfiguration(new MoviePlatformConfiguration());
+            builder.ApplyConfiguration(new MovieUserCommentConfiguration());
             builder.ApplyConfiguration(new MovieUserStarRatingConfiguration());
             builder.ApplyConfiguration(new PlatformConfiguration());
+            builder.ApplyConfiguration(new UserCommentConfiguration());
 
             // Needed for Identity models configuration
             base.OnModelCreating(builder);

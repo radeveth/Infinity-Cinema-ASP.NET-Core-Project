@@ -24,6 +24,7 @@
     using InfinityCinema.Services.Data.MovieCommentsService.Models;
     using InfinityCinema.Services.Data.MoviesService.Enums;
     using InfinityCinema.Services.Data.MoviesService.Models;
+    using InfinityCinema.Services.Data.MovieUserCommentsService;
     using InfinityCinema.Services.Data.PlatformsService;
     using InfinityCinema.Services.Data.PlatformsService.Models;
     using Microsoft.AspNetCore.Identity;
@@ -43,6 +44,7 @@
         private readonly ILanguageService languageService;
         private readonly IGenreService genreService;
         private readonly IMovieCommentService movieCommentService;
+        private readonly IMovieUserCommentService movieUserCommentService;
 
         private readonly UserManager<ApplicationUser> userManager;
 
@@ -58,7 +60,8 @@
             IDeletableEntityRepository<Movie> movieRepository,
             IDeletableEntityRepository<MovieLanguage> movieLanguagesRepository,
             IDeletableEntityRepository<MovieGenre> movieGenresRepository,
-            IMovieCommentService movieCommentService)
+            IMovieCommentService movieCommentService,
+            IMovieUserCommentService movieUserCommentService)
         {
             this.dbContext = dbContext;
             this.directorService = directorService;
@@ -73,6 +76,7 @@
             this.movieLanguagesRepository = movieLanguagesRepository;
             this.movieGenresRepository = movieGenresRepository;
             this.movieCommentService = movieCommentService;
+            this.movieUserCommentService = movieUserCommentService;
         }
 
         // Create
@@ -196,7 +200,7 @@
         }
 
         // Read
-        public MovieDetailsViewModel Details(int id)
+        public MovieDetailsServiceModel Details(int id)
         {
             Movie movie = this.dbContext.Movies.Find(id);
 
@@ -207,7 +211,7 @@
             IEnumerable<PlatformViewModel> platforms = this.platformService.GetPlatformsForGivenMovie(id);
             DirectorViewModel director = this.directorService.GetDirectorForParticularMovie(movie.DirectorId);
             IEnumerable<string> applicationUsersId = this.dbContext.ApplicationUserMovies.Where(a => a.MovieId == id).Select(a => a.UserId);
-            IEnumerable<MovieCommentViewModel> comments = this.movieCommentService.GetCommentsForGivenMovie(id);
+            IEnumerable<MovieCommentViewModel> comments = this.movieUserCommentService.GetCommentsForGivenMovie(id).OrderByDescending(c => c.Id);
 
             string country = this.countryService.GetCountryNameById(movie.CountryId);
 
@@ -224,7 +228,7 @@
                     StarRating = m.MovieUserStarRatings.Count != 0 ? m.MovieUserStarRatings.Sum(r => r.Rate) / m.MovieUserStarRatings.Count : -1,
                 });
 
-            return new MovieDetailsViewModel()
+            return new MovieDetailsServiceModel()
             {
                 Id = movie.Id,
                 Genres = genres,

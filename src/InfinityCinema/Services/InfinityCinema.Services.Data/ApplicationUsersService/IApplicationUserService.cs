@@ -1,6 +1,7 @@
 ﻿namespace InfinityCinema.Services.Data.ApplicationUsersService
 {
     using InfinityCinema.Services.Data.ApplicationUsersService.Models;
+
     using System.Threading.Tasks;
 
     public interface IApplicationUserService

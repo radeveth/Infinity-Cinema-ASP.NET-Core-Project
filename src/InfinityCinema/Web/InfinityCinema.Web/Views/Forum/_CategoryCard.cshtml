@@ -1,0 +1,14 @@
+﻿@model IndexCategoryViewModel
+
+<div class="col-6 mb-4">
+    <div class="card">
+        <center>
+            <div class="card-header" style="width:430px; height:270px">
+                <img style="width:100%; height:100%" class="card-img" src="@Model.ImageUrl" alt="@Model.Title">
+            </div>
+        </center>
+        <div class="card-body">
+            <a asp-area="" asp-controller="Forum" asp-action="@Model.Title" class="btn btn-outline-warning rounded-pill offset-3 col-6">@Model.Title</a>
+        </div>
+    </div>
+</div>

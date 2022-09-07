@@ -1,0 +1,61 @@
+﻿@model IndexAllCategoriesListingViewModel
+
+@{
+    ViewData["Title"] = "Forum";
+
+    bool isCategoriesAreEvenCount = Model.Categories.Count() % 2 == 0;
+}
+<div class="mt-5"></div>
+
+<form method="get">
+    <div class="row">
+        <div class="offset-1 col-md-5 mt-3">
+            <div class="form-group">
+                <label asp-for="Sorting" class="form-label"></label>
+                <select asp-for="Sorting" class="form-control border-warning">
+                    <option selected disabled>Order by...</option>
+                    <option value="0">Ascending</option>
+                    <option value="1">Descending</option>
+                    <option value="2">Newest</option>
+                    <option value="3">Oldest</option>
+                    <option value="4">MostPopular</option>
+                    <option value="5">MostUnpopular</option>
+                </select>
+            </div>
+        </div>
+
+        <input type="submit" value="Seacrh">
+    </div>
+</form>
+
+<div class="row mt-4">
+    @foreach (var category in Model.Categories)
+    {
+        if (category == Model.Categories.Last())
+        {
+            if (!isCategoriesAreEvenCount)
+            {
+                <div class="offset-3 col-6 mb-4">
+                    <div class="card">
+                        <center>
+                            <div class="card-header" style="width:430px; height:270px">
+                                <img style="width:100%; height:100%" class="card-img" src="@category.ImageUrl" alt="@category.Title">
+                            </div>
+                        </center>
+                        <div class="card-body">
+                            <a asp-area="" asp-controller="Forum" asp-action="@category.Title" class="btn btn-outline-warning rounded-pill offset-3 col-6">@category.Title</a>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <partial name="_CategoryCard" model="category"></partial>
+            }
+        }
+        else
+        {
+            <partial name="_CategoryCard" model="category"></partial>
+        }
+    }
+</div>

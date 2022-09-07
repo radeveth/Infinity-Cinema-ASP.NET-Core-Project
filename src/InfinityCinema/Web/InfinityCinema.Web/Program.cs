@@ -12,6 +12,7 @@ namespace InfinityCinema.Web
     using InfinityCinema.Services.Data.ApplicationUsersService;
     using InfinityCinema.Services.Data.CountriesService;
     using InfinityCinema.Services.Data.DirectorsService;
+    using InfinityCinema.Services.Data.ForumSystem.CategoriesService;
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.LanguagesService;
@@ -23,7 +24,6 @@ namespace InfinityCinema.Web
     using InfinityCinema.Services.Mapping;
     using InfinityCinema.Services.Messaging;
     using InfinityCinema.Web.Areas.Administration.AdministartionsService;
-    using InfinityCinema.Web.Infrastructure;
     using InfinityCinema.Web.ViewModels;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
@@ -89,6 +89,8 @@ namespace InfinityCinema.Web
             services.AddTransient<IAdministartionService, AdministartionService>();
             services.AddTransient<IMovieCommentService, MovieCommentService>();
             services.AddTransient<IMovieUserCommentService, MovieUserCommentService>();
+
+            services.AddTransient<ICategoryService, CategoryService>();
         }
 
         private static void Configure(WebApplication app)
@@ -97,7 +99,7 @@ namespace InfinityCinema.Web
             using (var serviceScope = app.Services.CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<InfinityCinemaDbContext>();
-                // dbContext.Database.Migrate();
+                dbContext.Database.Migrate();
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
             }
 
@@ -113,8 +115,6 @@ namespace InfinityCinema.Web
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
-            app.PrepaerDatabase();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

@@ -13,7 +13,6 @@
         public MovieComment()
         {
             this.MovieUserComments = new HashSet<MovieUserComment>();
-            this.UserComments = new HashSet<UserComment>();
         }
 
         [Required]
@@ -30,7 +29,5 @@
         public virtual ApplicationUser User { get; set; }
 
         public ICollection<MovieUserComment> MovieUserComments { get; set; }
-
-        public ICollection<UserComment> UserComments { get; set; }
     }
 }

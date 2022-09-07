@@ -6,7 +6,7 @@
 
     public class IndexViewModel
     {
-        public IEnumerable<MovieHomeViewModel> TopThreeRatedMovies { get; set; }
+        public List<MovieHomeViewModel> TopThreeRatedMovies { get; set; }
 
         public IEnumerable<UserSavedMovieViewModel> SavdMoviesFromUser { get; set; }
     }

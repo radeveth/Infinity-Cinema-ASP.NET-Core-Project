@@ -27,6 +27,8 @@
                           {
                               new RolesSeeder(),
                               new SettingsSeeder(),
+                              new GenresSeeder(),
+                              new ForumCategoriesSeeder(),
                           };
 
             foreach (var seeder in seeders)

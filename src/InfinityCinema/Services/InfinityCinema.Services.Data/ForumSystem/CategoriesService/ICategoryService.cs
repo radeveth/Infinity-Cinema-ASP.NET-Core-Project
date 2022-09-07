@@ -1,0 +1,11 @@
+﻿namespace InfinityCinema.Services.Data.ForumSystem.CategoriesService
+{
+    using System.Collections.Generic;
+
+    using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models.Enums;
+
+    public interface ICategoryService
+    {
+        IEnumerable<T> GetAll<T>(CategorySorting categorySorting);
+    }
+}

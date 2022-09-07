@@ -1,39 +1,17 @@
-﻿namespace InfinityCinema.Web.Infrastructure
+﻿namespace InfinityCinema.Data.Seeding
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.DependencyInjection;
 
-    using static InfinityCinema.Common.GlobalConstants;
-
-    public static class ApplicationBuilderExtension
+    public class GenresSeeder : ISeeder
     {
-        public static IApplicationBuilder PrepaerDatabase(this IApplicationBuilder app)
+        public async Task SeedAsync(InfinityCinemaDbContext dbContext, IServiceProvider serviceProvider)
         {
-            using var scopedService = app.ApplicationServices.CreateScope();
-
-            var data = scopedService.ServiceProvider.GetService<InfinityCinemaDbContext>();
-
-            IServiceProvider services = scopedService.ServiceProvider;
-
-            data.Database.Migrate();
-            SeedGenres(data);
-            SeedAdministrator(services);
-
-            return app;
-        }
-
-        private static void SeedGenres(InfinityCinemaDbContext data)
-        {
-            if (data.Genres.Any())
+            if (dbContext.Genres.Any())
             {
                 return;
             }
@@ -55,44 +33,8 @@
                 new Genre() { Name = "Sports", ImageUrl = "https://res.cloudinary.com/jerrick/image/upload/c_scale,f_jpg,q_auto/n7ahytv0xmpgthetuouz.jpg", Description = "Movies in the sports genre will center around a team, individual player, or fan, with the sport itself to motivate the plot and keep the story advancing. These movies aren’t entirely focused on the sport itself, however, mainly using it as a backdrop to provide context into the emotional arcs of the main characters. Sports movies can be dramatic or comical and are often allegorical. Some popular sports movies include The Bad News Bears (1976), A League of Their Own (1992), and Bend It Like Beckham (2003)." },
             };
 
-            data.Genres.AddRange(genres);
-            data.SaveChanges();
-        }
-
-        private static void SeedAdministrator(IServiceProvider services)
-        {
-            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-            var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
-
-            Task
-                .Run(async () =>
-                {
-                    if (await roleManager.RoleExistsAsync(AdministratorRoleName))
-                    {
-                        return;
-                    }
-
-                    var role = new ApplicationRole { Name = AdministratorRoleName };
-
-                    await roleManager.CreateAsync(role);
-
-                    const string adminEmail = "infinitycinemaraadmin@gmail.com";
-                    const string adminPassword = "!RdIinfinityCcinemaAadmin0713!";
-                    const string adminFullName = "Radev Admin";
-
-                    ApplicationUser user = new ApplicationUser
-                    {
-                        Email = adminEmail,
-                        UserName = adminEmail,
-                        FullName = adminFullName,
-                    };
-
-                    await userManager.CreateAsync(user, adminPassword);
-
-                    await userManager.AddToRoleAsync(user, role.Name);
-                })
-                .GetAwaiter()
-                .GetResult();
+            await dbContext.Genres.AddRangeAsync(genres);
+            await dbContext.SaveChangesAsync();
         }
     }
 }

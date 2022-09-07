@@ -318,9 +318,9 @@
             };
         }
 
-        public IEnumerable<MovieHomeViewModel> GetTopThreeRatedMovies()
+        public List<MovieHomeViewModel> GetTopThreeRatedMovies()
         {
-            IEnumerable<MovieHomeViewModel> topThreeRatedMovies = this.dbContext
+            List<MovieHomeViewModel> topThreeRatedMovies = this.dbContext
                 .Movies
                 .OrderByDescending(m => m.MovieUserStarRatings.Count != 0 ? m.MovieUserStarRatings.Sum(s => s.Rate) / m.MovieUserStarRatings.Count : 0)
                 .Select(m => new MovieHomeViewModel()
@@ -329,7 +329,8 @@
                     Name = m.Name,
                     ImageUrl = m.Images.Select(i => i.Url).First(),
                 })
-                .Take(3);
+                .Take(3)
+                .ToList();
 
             return topThreeRatedMovies;
         }

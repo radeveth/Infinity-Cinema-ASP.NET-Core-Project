@@ -4,6 +4,7 @@ using InfinityCinema.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfinityCinema.Data.Migrations
 {
     [DbContext(typeof(InfinityCinemaDbContext))]
-    partial class InfinityCinemaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220907090236_UserCommentsRemoved")]
+    partial class UserCommentsRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "6.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -295,129 +297,6 @@ namespace InfinityCinema.Data.Migrations
                     b.HasIndex("IsDeleted");
 
                     b.ToTable("Directors");
-                });
-
-            modelBuilder.Entity("InfinityCinema.Data.Models.ForumSystem.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("InfinityCinema.Data.Models.ForumSystem.Comment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(1500)
-                        .HasColumnType("nvarchar(1500)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("InfinityCinema.Data.Models.ForumSystem.Post", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
-                        .HasMaxLength(1500)
-                        .HasColumnType("nvarchar(1500)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("InfinityCinema.Data.Models.Genre", b =>
@@ -980,44 +859,6 @@ namespace InfinityCinema.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("InfinityCinema.Data.Models.ForumSystem.Comment", b =>
-                {
-                    b.HasOne("InfinityCinema.Data.Models.ForumSystem.Post", "Post")
-                        .WithMany("Comments")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("InfinityCinema.Data.Models.ApplicationUser", "User")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("InfinityCinema.Data.Models.ForumSystem.Post", b =>
-                {
-                    b.HasOne("InfinityCinema.Data.Models.ForumSystem.Category", "Category")
-                        .WithMany("Posts")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("InfinityCinema.Data.Models.ApplicationUser", "User")
-                        .WithMany("Posts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("InfinityCinema.Data.Models.Image", b =>
                 {
                     b.HasOne("InfinityCinema.Data.Models.Movie", "Movie")
@@ -1242,15 +1083,11 @@ namespace InfinityCinema.Data.Migrations
 
                     b.Navigation("CommentCreated");
 
-                    b.Navigation("Comments");
-
                     b.Navigation("Logins");
 
                     b.Navigation("MovieUserStarRatings");
 
                     b.Navigation("MoviesCreated");
-
-                    b.Navigation("Posts");
 
                     b.Navigation("Roles");
                 });
@@ -1263,16 +1100,6 @@ namespace InfinityCinema.Data.Migrations
             modelBuilder.Entity("InfinityCinema.Data.Models.Director", b =>
                 {
                     b.Navigation("Movies");
-                });
-
-            modelBuilder.Entity("InfinityCinema.Data.Models.ForumSystem.Category", b =>
-                {
-                    b.Navigation("Posts");
-                });
-
-            modelBuilder.Entity("InfinityCinema.Data.Models.ForumSystem.Post", b =>
-                {
-                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("InfinityCinema.Data.Models.Genre", b =>

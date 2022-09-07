@@ -4,11 +4,12 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using InfinityCinema.Common;
     using InfinityCinema.Data.Models;
 
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.DependencyInjection;
+
+    using static InfinityCinema.Common.GlobalConstants;
 
     internal class RolesSeeder : ISeeder
     {
@@ -16,7 +17,9 @@
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
 
-            await SeedRoleAsync(roleManager, GlobalConstants.AdministratorRoleName);
+            await SeedRoleAsync(roleManager, AdministratorRoleName);
+
+            await SeedAdministrator(serviceProvider);
         }
 
         private static async Task SeedRoleAsync(RoleManager<ApplicationRole> roleManager, string roleName)
@@ -30,6 +33,43 @@
                     throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
                 }
             }
+        }
+
+        private static Task SeedAdministrator(IServiceProvider services)
+        {
+            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
+
+            Task
+                .Run(async () =>
+                {
+                    if (await roleManager.RoleExistsAsync(AdministratorRoleName))
+                    {
+                        return;
+                    }
+
+                    var role = new ApplicationRole { Name = AdministratorRoleName };
+
+                    await roleManager.CreateAsync(role);
+
+                    const string adminEmail = "infinitycinemaraadmin@gmail.com";
+                    const string adminPassword = "!RdIinfinityCcinemaAadmin0713!";
+                    const string adminFullName = "Radev Admin";
+
+                    ApplicationUser user = new ApplicationUser
+                    {
+                        Email = adminEmail,
+                        UserName = adminEmail,
+                        FullName = adminFullName,
+                    };
+
+                    await userManager.CreateAsync(user, adminPassword);
+
+                    await userManager.AddToRoleAsync(user, role.Name);
+                })
+                .GetAwaiter()
+                .GetResult();
+            return Task.CompletedTask;
         }
     }
 }

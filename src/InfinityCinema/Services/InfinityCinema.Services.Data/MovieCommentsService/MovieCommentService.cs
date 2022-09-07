@@ -1,7 +1,5 @@
 ﻿namespace InfinityCinema.Services.Data.MovieCommentsService
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -44,14 +42,6 @@
         }
 
         // Read
-        public ICollection<int> GetVotedCommentsForGivenUser(string userId)
-        {
-            IEnumerable<UserComment> userComments = this.dbContext
-                .UserComments
-                .Where(u => u.UserId == userId);
-
-            return (ICollection<int>)userComments.Select(u => u.CommentId);
-        }
 
         // Update
         public async Task<int> IncreaseCommentLikesAsync(int commentId)

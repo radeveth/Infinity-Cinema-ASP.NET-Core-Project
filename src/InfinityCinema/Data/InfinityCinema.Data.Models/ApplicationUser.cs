@@ -4,9 +4,10 @@ namespace InfinityCinema.Data.Models
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-
+    using System.Reflection.PortableExecutable;
     using InfinityCinema.Data.Common.Models;
     using InfinityCinema.Data.Models.Enums;
+    using InfinityCinema.Data.Models.ForumSystem;
     using Microsoft.AspNetCore.Identity;
 
     using static InfinityCinema.Data.Common.DataValidation.ApplicationUserValidation;
@@ -24,7 +25,9 @@ namespace InfinityCinema.Data.Models
             this.ApplicationUserMovies = new HashSet<ApplicationUserMovie>();
             this.MovieUserStarRatings = new HashSet<MovieUserStarRating>();
             this.CommentCreated = new HashSet<MovieComment>();
-            this.UserComments = new HashSet<UserComment>();
+
+            this.Posts = new HashSet<Post>();
+            this.Comments = new HashSet<Comment>();
         }
 
         [Required]
@@ -58,6 +61,9 @@ namespace InfinityCinema.Data.Models
 
         public ICollection<MovieComment> CommentCreated { get; set; }
 
-        public ICollection<UserComment> UserComments { get; set; }
+        // Forum System
+        public virtual ICollection<Post> Posts { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

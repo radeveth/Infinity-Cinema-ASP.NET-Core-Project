@@ -11,7 +11,6 @@
         Task<MovieCommentViewModel> CreateAsync(MovieCommentFormModel comment);
 
         // Read
-        ICollection<int> GetVotedCommentsForGivenUser(string userId);
 
         // Update
         Task<int> IncreaseCommentLikesAsync(int commentId);

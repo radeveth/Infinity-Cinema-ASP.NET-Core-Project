@@ -22,7 +22,7 @@
 
         AllMoviesQueryModel All(string searchName, MovieSorting sorting, int currentPage, int moviesPerPage, string searchGenre);
 
-        IEnumerable<MovieHomeViewModel> GetTopThreeRatedMovies();
+        List<MovieHomeViewModel> GetTopThreeRatedMovies();
 
         IEnumerable<UserSavedMovieViewModel> GetUserSavedMovies(string userId);
 

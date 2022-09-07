@@ -95,5 +95,23 @@
         {
             public const int StarMaLength = 10;
         }
+
+        public class ForumCategoryValidation
+        {
+            public const int TitleMaxLength = 100;
+            public const int DescriptionMaxLength = 1000;
+            public const int UrlMaxLength = 2048;
+        }
+
+        public class ForumPostValidation
+        {
+            public const int TitleMaxLength = 100;
+            public const int ContentMaxLength = 1500;
+        }
+
+        public class ForumCommentValidation
+        {
+            public const int ContentMaxLength = 1500;
+        }
     }
 }

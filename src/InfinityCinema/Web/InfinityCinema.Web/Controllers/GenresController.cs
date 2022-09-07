@@ -6,7 +6,7 @@
     using InfinityCinema.Services.Data.GenresService.Models;
     using Microsoft.AspNetCore.Mvc;
 
-    public class GenresController : Controller
+    public class GenresController : BaseController
     {
         private readonly IGenreService genreService;
 

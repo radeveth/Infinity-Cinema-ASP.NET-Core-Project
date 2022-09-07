@@ -4,6 +4,7 @@ using InfinityCinema.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfinityCinema.Data.Migrations
 {
     [DbContext(typeof(InfinityCinemaDbContext))]
-    partial class InfinityCinemaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220907115616_ForumSystemInitialSetUp")]
+    partial class ForumSystemInitialSetUp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "6.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -312,13 +314,10 @@ namespace InfinityCinema.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(2048)
-                        .HasColumnType("nvarchar(2048)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -327,9 +326,7 @@ namespace InfinityCinema.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -347,9 +344,7 @@ namespace InfinityCinema.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(1500)
-                        .HasColumnType("nvarchar(1500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -385,8 +380,7 @@ namespace InfinityCinema.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
-                        .HasMaxLength(1500)
-                        .HasColumnType("nvarchar(1500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -401,9 +395,7 @@ namespace InfinityCinema.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()

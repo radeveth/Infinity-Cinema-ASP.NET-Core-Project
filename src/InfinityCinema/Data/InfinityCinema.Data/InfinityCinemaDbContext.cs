@@ -9,7 +9,7 @@
     using InfinityCinema.Data.Common.Models;
     using InfinityCinema.Data.Configurations;
     using InfinityCinema.Data.Models;
-
+    using InfinityCinema.Data.Models.ForumSystem;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
@@ -57,9 +57,14 @@
 
         public DbSet<Platform> Platforms { get; set; }
 
-        public DbSet<UserComment> UserComments { get; set; }
-
         public DbSet<Setting> Settings { get; set; }
+
+        // Forum System
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Post> Posts { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
@@ -97,7 +102,6 @@
             builder.ApplyConfiguration(new MovieUserCommentConfiguration());
             builder.ApplyConfiguration(new MovieUserStarRatingConfiguration());
             builder.ApplyConfiguration(new PlatformConfiguration());
-            builder.ApplyConfiguration(new UserCommentConfiguration());
 
             // Needed for Identity models configuration
             base.OnModelCreating(builder);

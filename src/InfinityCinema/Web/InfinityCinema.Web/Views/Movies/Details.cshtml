@@ -191,12 +191,20 @@
                                                 <i class='fas fa-user-alt'></i>
                                                 <p class="small mb-0 ms-2">@comment.User.FullName</p>
                                             </div>
-                                            <div class="d-flex flex-row align-items-center">
-                                                <a onclick="IncreaseCommentLikes(@comment.Id)" disabled><i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></a>
+                                            <div id="comment@(comment.Id)-likes-counter" class="d-flex flex-row align-items-center">
+                                                <span role="button" onclick="IncreaseCommentLikes(@comment.Id)"><i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
                                                 <p id="comment@(comment.Id)-likes-counter" class="small text-muted mb-0">@comment.Likes</p>
                                                 <div style="margin-left:8px"></div>
-                                                <a onclick="IncreaseCommentDislikes(@comment.Id)"><i class="far fa-thumbs-down mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></a>
+                                                <span role="button" onclick="IncreaseCommentDislikes(@comment.Id)"><i class="far fa-thumbs-down mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
                                                 <p id="comment@(comment.Id)-dislikes-counter" class="small text-muted mb-0">@comment.Dislikes</p>
+                                            </div>
+
+                                            <div id="comment@(comment.Id)-likes-counter-after-user-click" class="d-none d-flex flex-row align-items-center">
+                                                <span><i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
+                                                <p class="small text-muted mb-0">@comment.Likes</p>
+                                                <div style="margin-left:8px"></div>
+                                                <span><i class="far fa-thumbs-down mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
+                                                <p class="small text-muted mb-0">@comment.Dislikes</p>
                                             </div>
                                         </div>
                                     </div>
@@ -291,21 +299,33 @@
     </script>
 
     <script>
+
         function IncreaseCommentLikes(commentId) {
             $.get('/api/moviecomments/increaselikes/?commentId=' + commentId, (data) => {
+                let initialCommentContainerElement = document.querySelector('#comment' + commentId + '-likes-counter');
+                let secondCommentContainerElement = document.querySelector('#comment' + commentId + '-likes-counter-after-user-click');
                 let commentLikesCountElement = document.querySelector('#comment' + commentId + '-likes-counter');
 
                 commentLikesCountElement.textContent = data;
-                commentLikesCountElement.parentElement.classList.add('disabled');
-            }) 
+                initialCommentContainerElement.classList.add('d-none');
+
+                secondCommentContainerElement.children[1].textContent = data;
+                secondCommentContainerElement.classList.remove('d-none');
+            })
         };
 
         function IncreaseCommentDislikes(commentId) {
             $.get('/api/moviecomments/increasedislikes/?commentId=' + commentId, (data) => {
+                let initialCommentContainerElement = document.querySelector('#comment' + commentId + '-likes-counter');
+                let secondCommentContainerElement = document.querySelector('#comment' + commentId + '-likes-counter-after-user-click');
                 let commentDislikesCountElement = document.querySelector('#comment' + commentId + '-dislikes-counter');
 
                 commentDislikesCountElement.textContent = data;
-            }) 
+                initialCommentContainerElement.classList.add('d-none');
+
+                secondCommentContainerElement.children[4].textContent = data;
+                secondCommentContainerElement.classList.remove('d-none');
+            })
         };
     </script>
 }

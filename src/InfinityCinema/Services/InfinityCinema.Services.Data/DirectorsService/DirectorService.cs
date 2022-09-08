@@ -42,29 +42,19 @@
         }
 
         // Read
-        public string GetDirectorFullNameById(int id)
-        {
-            Director director = this.dbContext.Directors.Find(id);
-
-            return $"{director.FirstName} {director.LastName}";
-        }
-
-        public int GetDirectorIdByGivenFullName(string fullName)
+        public T GetViewModelByGivenFullName<T>(string fullName)
         {
             string[] directorNameParts = this.SplitDirectorFullName(fullName);
             string firstName = directorNameParts[0];
             string lastName = directorNameParts[1];
 
-            Director director = this.dbContext
+            T director = this.dbContext
                 .Directors
-                .FirstOrDefault(d => d.FirstName.ToLower() == firstName.ToLower() && d.LastName.ToLower() == lastName.ToLower());
+                .Where(d => d.FirstName.ToLower() == firstName.ToLower() && d.LastName.ToLower() == lastName.ToLower())
+                .To<T>()
+                .FirstOrDefault();
 
-            if (director == null)
-            {
-                return 0;
-            }
-
-            return director.Id;
+            return director;
         }
 
         public T GetViewModelById<T>(int id)
@@ -73,17 +63,6 @@
                 .Where(d => d.Id == id)
                 .To<T>()
                 .FirstOrDefault();
-
-        public DirectorViewModel GetDirectorForParticularMovie(int directorId)
-            => this.dbContext
-                .Directors
-                .Select(d => new DirectorViewModel()
-                {
-                    Id = d.Id,
-                    FullName = d.FirstName + " " + d.LastName,
-                    InformationLink = d.InformationUrl,
-                })
-                .FirstOrDefault(d => d.Id == directorId);
 
         // Update
         public async Task<bool> EditDirectorAsync(int directorId, DirectorFormModel directorFormModel)

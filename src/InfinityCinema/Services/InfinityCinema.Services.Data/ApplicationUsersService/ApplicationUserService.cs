@@ -1,6 +1,8 @@
 ﻿namespace InfinityCinema.Services.Data.ApplicationUsersService
 {
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http.Headers;
     using System.Threading.Tasks;
 
     using InfinityCinema.Data;
@@ -67,6 +69,22 @@
                 .Where(u => u.Id == id)
                 .To<T>()
                 .FirstOrDefault();
+
+        public IEnumerable<string> GetUsersIdsThatAreCommentInGivenMovie(int movieId)
+        {
+            IQueryable<MovieUserComment> movieUserComments = this.dbContext.MovieUserComments.Where(m => m.MovieId == movieId).Distinct();
+            IQueryable<MovieComment> movieComments = movieUserComments.Select(m => m.MovieComment);
+            return (IEnumerable<string>)movieComments.Select(m => m.UserId);
+        }
+
+        public IEnumerable<string> GetUsersIdsThatAreSaveGivenMovie(int movieId)
+        {
+            return (IEnumerable<string>)this.dbContext
+                .ApplicationUserMovies
+                .Where(m => m.MovieId == movieId)
+                .Distinct()
+                .Select(m => m.UserId);
+        }
 
         public bool CheckIfUserIsAlreadyRatedThisMovie(int movieId, string userId)
             => this.dbContext.MovieUserStarRatings.Any(m => m.UserId == userId && m.MovieId == movieId);

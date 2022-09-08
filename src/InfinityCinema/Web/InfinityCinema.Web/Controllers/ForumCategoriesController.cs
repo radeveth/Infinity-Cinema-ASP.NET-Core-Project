@@ -1,33 +1,18 @@
 ﻿namespace InfinityCinema.Web.Controllers
 {
-    using System.Collections.Generic;
-
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService;
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models;
-    using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models.Enums;
     using InfinityCinema.Services.Data.ForumSystem.PostsService.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    public class ForumController : BaseController
+    public class ForumCategoriesController : BaseController
     {
         private readonly ICategoryService categoryService;
 
-        public ForumController(ICategoryService categoryService)
+        public ForumCategoriesController(ICategoryService categoryService)
         {
             this.categoryService = categoryService;
-        }
-
-        [HttpGet]
-        public IActionResult Index([FromQuery] CategorySorting sorting)
-        {
-            IEnumerable<IndexCategoryViewModel> categories = this.categoryService.GetAll<IndexCategoryViewModel>(sorting);
-            IndexAllCategoriesListingViewModel listingViewModel = new IndexAllCategoriesListingViewModel()
-            {
-                Categories = categories,
-                Sorting = sorting,
-            };
-            return this.View(listingViewModel);
         }
 
         [HttpGet]
@@ -50,7 +35,6 @@
         public IActionResult CreatePostForCategoryAsync(PostFormModel postFormModel)
         {
             return null;
-
         }
     }
 }

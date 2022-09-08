@@ -21,7 +21,7 @@
         [Route("all")]
         public ActionResult<IEnumerable<PlatformViewModel>> All(string searchName)
         {
-            return this.Json(this.platformService.All(searchName));
+            return this.Json(this.platformService.All<PlatformViewModel>(searchName));
         }
     }
 }

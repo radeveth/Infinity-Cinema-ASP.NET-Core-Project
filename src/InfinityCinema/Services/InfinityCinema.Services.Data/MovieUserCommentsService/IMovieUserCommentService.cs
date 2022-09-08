@@ -11,6 +11,6 @@
         Task CreateAsync(int movieId, int commentId);
 
         // Read
-        public IEnumerable<MovieCommentViewModel> GetCommentsForGivenMovie(int movieId);
+        public IEnumerable<T> GetCommentsForGivenMovie<T>(int movieId);
     }
 }

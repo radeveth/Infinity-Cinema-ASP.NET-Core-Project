@@ -8,9 +8,10 @@
     public interface IMovieCommentService
     {
         // Cread
-        Task<MovieCommentViewModel> CreateAsync(MovieCommentFormModel comment);
+        Task<T> CreateAsync<T>(MovieCommentFormModel comment);
 
         // Read
+        T GetViewModelById<T>(int id);
 
         // Update
         Task<int> IncreaseCommentLikesAsync(int commentId);

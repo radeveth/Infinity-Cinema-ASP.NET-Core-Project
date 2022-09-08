@@ -8,10 +8,10 @@
     public interface IGenreService
     {
         // Create
-        Task<GenreViewModel> CreateAsync(GenreFormModel genreFormModel);
+        Task<T> CreateAsync<T>(GenreFormModel genreFormModel);
 
         // Read
-        IEnumerable<GenreViewModel> All(string seacrhName);
+        IEnumerable<T> All<T>(string seacrhName);
 
         int GetGenreIdByGivenName(string genreName);
 
@@ -19,7 +19,7 @@
 
         IEnumerable<string> AllApplicationMovieGenres();
 
-        IEnumerable<GenreViewModel> GetGenresForParticularMovie(int movieId);
+        IEnumerable<T> GetGenresForParticularMovie<T>(int movieId);
 
         // Update
 

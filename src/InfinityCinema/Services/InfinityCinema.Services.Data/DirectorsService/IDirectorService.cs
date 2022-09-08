@@ -10,11 +10,9 @@
         Task<T> CreateAsync<T>(DirectorFormModel directorFormModel);
 
         // Read
-        string GetDirectorFullNameById(int id);
+        T GetViewModelByGivenFullName<T>(string fullName);
 
-        int GetDirectorIdByGivenFullName(string fullName);
-
-        DirectorViewModel GetDirectorForParticularMovie(int directorId);
+        public T GetViewModelById<T>(int id);
 
         // Update
         Task<bool> EditDirectorAsync(int directorId, DirectorFormModel directorFormModel);

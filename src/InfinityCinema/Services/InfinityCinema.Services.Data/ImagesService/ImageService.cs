@@ -7,6 +7,7 @@
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.ImagesService.Models;
+    using InfinityCinema.Services.Mapping;
 
     public class ImageService : IImageService
     {
@@ -18,7 +19,7 @@
         }
 
         // Create
-        public async Task<ImageViewModel> CreateAsync(ImageFormModel imageFormModel)
+        public async Task<T> CreateAsync<T>(ImageFormModel imageFormModel)
         {
             Image image = new Image()
             {
@@ -29,18 +30,22 @@
             await this.dbContext.AddAsync(image);
             await this.dbContext.SaveChangesAsync();
 
-            return new ImageViewModel()
-            {
-                Id = image.Id,
-                Url = image.Url,
-            };
+            return this.GetViewModelById<T>(image.Id);
         }
 
         // Read
         public IEnumerable<string> GetImagesForGivenMovie(int movieId)
             => this.dbContext
                 .Images
-                .Where(i => i.MovieId == movieId).Select(i => i.Url);
+                .Where(i => i.MovieId == movieId)
+                .Select(i => i.Url);
+
+        public T GetViewModelById<T>(int id)
+            => this.dbContext
+                .Images
+                .Where(i => i.Id == id)
+                .To<T>()
+                .FirstOrDefault();
 
         // Update
 

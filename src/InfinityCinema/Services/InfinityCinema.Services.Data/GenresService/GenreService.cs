@@ -7,6 +7,7 @@
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.GenresService.Models;
+    using InfinityCinema.Services.Mapping;
 
     public class GenreService : IGenreService
     {
@@ -18,7 +19,7 @@
         }
 
         // Create
-        public async Task<GenreViewModel> CreateAsync(GenreFormModel genreFormModel)
+        public async Task<T> CreateAsync<T>(GenreFormModel genreFormModel)
         {
             Genre genre = new Genre()
             {
@@ -29,33 +30,20 @@
             await this.dbContext.Genres.AddAsync(genre);
             await this.dbContext.SaveChangesAsync();
 
-            return new GenreViewModel()
-            {
-                Id = genre.Id,
-                Name = genre.Name,
-                ImageUrl = genre.ImageUrl,
-            };
+            return this.GetViewModelById<T>(genre.Id);
         }
 
         // Read
-        public IEnumerable<GenreViewModel> All(string searchName)
+        public IEnumerable<T> All<T>(string searchName)
         {
-            IEnumerable<GenreViewModel> genres = this.dbContext
-            .Genres
-            .Select(g => new GenreViewModel()
-            {
-                Id = g.Id,
-                Name = g.Name,
-                ImageUrl = g.ImageUrl,
-                Description = g.Description,
-            });
+            IQueryable<Genre> genres = this.dbContext.Genres;
 
             if (searchName != null)
             {
                 genres = genres.Where(g => g.Name.ToLower().Contains(searchName.ToLower()));
             }
 
-            return genres;
+            return genres.To<T>();
         }
 
         public int GetGenreIdByGivenName(string genreName)
@@ -79,16 +67,19 @@
         public IEnumerable<string> AllApplicationMovieGenres()
             => this.dbContext.Genres.Select(g => g.Name);
 
-        public IEnumerable<GenreViewModel> GetGenresForParticularMovie(int movieId)
+        public IEnumerable<T> GetGenresForParticularMovie<T>(int movieId)
             => this.dbContext
                 .MovieGenres
                 .Where(m => m.MovieId == movieId)
-                .Select(m => new GenreViewModel()
-                {
-                    Id = m.GenreId,
-                    Name = m.Genre.Name,
-                    ImageUrl = m.Genre.ImageUrl,
-                });
+                .Select(m => m.Genre)
+                .To<T>();
+
+        public T GetViewModelById<T>(int id)
+            => this.dbContext
+                .Directors
+                .Where(d => d.Id == id)
+                .To<T>()
+                .FirstOrDefault();
 
         // Update
 

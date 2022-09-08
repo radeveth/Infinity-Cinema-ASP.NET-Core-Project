@@ -34,7 +34,6 @@
         private readonly IMovieCommentService movieCommentService;
         private readonly IMovieUserCommentService movieUserCommentService;
 
-
         public MoviesController(IMovieService movieService, IGenreService genreService, IActorService actorService, IImageService imagesService, IPlatformService platformService, IMovieCommentService movieCommentService, IMovieUserCommentService movieUserCommentService)
         {
             this.movieService = movieService;
@@ -73,16 +72,9 @@
                 { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
             }
 
-            string message = await this.movieService.CreateMovieAsync(movieModel, this.User);
-            if (message != null)
-            {
-                return this.RedirectToAction(nameof(Index), "Home");
-            }
-            else
-            {
-                return this.View(new CreateMovieServiceModel()
-                { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
-            }
+            await this.movieService.CreateMovieAsync(movieModel, this.User);
+
+            return this.RedirectToAction(nameof(this.All), "Movies");
         }
 
         [HttpGet]
@@ -103,6 +95,7 @@
         public IActionResult Details(int id)
         {
             MovieDetailsServiceModel movie = this.movieService.Details(id);
+            this.ViewData["UserId"] = ClaimsPrincipalExtensions.GetId(this.User);
 
             return this.View(movie);
         }
@@ -125,7 +118,7 @@
 
             if (!string.IsNullOrEmpty(newCommentContent))
             {
-                MovieCommentViewModel commentViewModel = await this.movieCommentService.CreateAsync(new MovieCommentFormModel()
+                MovieCommentViewModel commentViewModel = await this.movieCommentService.CreateAsync<MovieCommentViewModel>(new MovieCommentFormModel()
                 {
                     Content = newCommentContent,
                     UserId = userId,
@@ -158,7 +151,7 @@
                     FullName = targetMovie.Director.FullName,
                     InformationUrl = targetMovie.Director.InformationLink,
                 },
-                TrailerPath = targetMovie.Trailer,
+                TrailerPath = targetMovie.TrailerPath,
                 DateOfReleased = targetMovie.DateOfReleased,
                 Resolution = targetMovie.Resolution,
                 Duration = targetMovie.Duration,

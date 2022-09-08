@@ -82,10 +82,11 @@
             return null;
         }
 
-        public IEnumerable<ActorViewModel> GetActorsForGivenMovie(int movieId)
+        public IEnumerable<T> GetActorsForGivenMovie<T>(int movieId)
             => this.dbContext.MovieActors
                 .Where(a => a.MovieId == movieId)
-                .To<ActorViewModel>();
+                .Select(m => m.Actor)
+                .To<T>();
 
         public T GetViewModelByIdAsync<T>(int id)
             => this.dbContext

@@ -8,10 +8,12 @@
     public interface IImageService
     {
         // Create
-        Task<ImageViewModel> CreateAsync(ImageFormModel imageFormModel);
+        Task<T> CreateAsync<T>(ImageFormModel imageFormModel);
 
         // Read
         IEnumerable<string> GetImagesForGivenMovie(int movieId);
+
+        T GetViewModelById<T>(int id);
 
         // Update
 

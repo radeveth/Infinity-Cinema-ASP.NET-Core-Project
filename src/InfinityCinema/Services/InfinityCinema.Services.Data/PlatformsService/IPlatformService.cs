@@ -8,14 +8,16 @@
     public interface IPlatformService
     {
         // Create
-        Task<PlatformViewModel> CreateAsync(PlatformFormModel platformFormModel);
+        Task<T> CreateAsync<T>(PlatformFormModel platformFormModel);
 
         // Read
-        IEnumerable<PlatformViewModel> All(string searchName);
+        IEnumerable<T> All<T>(string searchName = null);
 
-        PlatformViewModel GetPlatformByName(string platfrom);
+        T GetViewModelByName<T>(string platfrom);
 
-        IEnumerable<PlatformViewModel> GetPlatformsForGivenMovie(int movieId);
+        IEnumerable<T> GetPlatformsForGivenMovie<T>(int movieId);
+
+        T GetViewModelById<T>(int id);
 
         // Update
 

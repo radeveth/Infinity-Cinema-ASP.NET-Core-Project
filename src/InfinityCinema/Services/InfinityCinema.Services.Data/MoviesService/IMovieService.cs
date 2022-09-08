@@ -11,14 +11,16 @@
     public interface IMovieService
     {
         // Create
-        Task<Movie> CreateAsync(MovieFormModel movieFormModel, int dealerId, int countryId, string userId);
+        Task<T> CreateAsync<T>(MovieFormModel movieFormModel, int dealerId, int countryId, string userId);
 
-        Task<string> CreateMovieAsync(CreateMovieServiceModel movieModel, ClaimsPrincipal user);
+        Task CreateMovieAsync(CreateMovieServiceModel movieModel, ClaimsPrincipal user);
 
         // Read
         MovieDetailsServiceModel Details(int id);
 
-        Task<MovieFormModel> GetMovieById(int id);
+        T GetViewModelById<T>(int id);
+
+        Movie GetMovieById(int id);
 
         AllMoviesQueryModel All(string searchName, MovieSorting sorting, int currentPage, int moviesPerPage, string searchGenre);
 

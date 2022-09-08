@@ -8,6 +8,7 @@
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.ApplicationUsersService.Models;
     using InfinityCinema.Services.Data.MovieCommentsService.Models;
+    using InfinityCinema.Services.Mapping;
 
     public class MovieUserCommentService : IMovieUserCommentService
     {
@@ -18,6 +19,7 @@
             this.dbContext = dbContext;
         }
 
+        // Create
         public async Task CreateAsync(int movieId, int commentId)
         {
             await this.dbContext.MovieUserComments.AddAsync(new MovieUserComment()
@@ -29,25 +31,14 @@
             await this.dbContext.SaveChangesAsync();
         }
 
-        public IEnumerable<MovieCommentViewModel> GetCommentsForGivenMovie(int movieId)
-        {
-            return this.dbContext
+        // Read
+        // MovieCommentViewModel
+        public IEnumerable<T> GetCommentsForGivenMovie<T>(int movieId)
+            => this.dbContext
                     .MovieUserComments
                     .Where(m => m.MovieId == movieId)
                     .Select(m => m.MovieComment)
                     .AsQueryable()
-                    .Select(m => new MovieCommentViewModel()
-                    {
-                        Id = m.Id,
-                        Content = m.Content,
-                        Likes = m.Likes,
-                        Dislikes = m.Dislikes,
-                        User = new ApplicationUserViewModel()
-                        {
-                            Id = m.UserId,
-                            FullName = m.User.FullName,
-                        },
-                    });
-        }
+                    .To<T>();
     }
 }

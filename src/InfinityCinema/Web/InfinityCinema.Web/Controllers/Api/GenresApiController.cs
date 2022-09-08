@@ -21,7 +21,7 @@
         [Route("all")]
         public ActionResult<IEnumerable<GenreViewModel>> All(string searchName)
         {
-            return this.Json(this.genreService.All(searchName));
+            return this.Json(this.genreService.All<GenreViewModel>(searchName));
         }
     }
 }

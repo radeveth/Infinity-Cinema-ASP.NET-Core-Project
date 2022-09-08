@@ -1,6 +1,9 @@
 ﻿namespace InfinityCinema.Services.Data.LanguagesService.Models
 {
-    public class LanguageViewModel
+    using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Mapping;
+
+    public class LanguageViewModel : IMapFrom<Language>
     {
         public int Id { get; set; }
 

@@ -7,6 +7,7 @@
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.LanguagesService.Models;
+    using InfinityCinema.Services.Mapping;
 
     public class LanguageService : ILanguageService
     {
@@ -18,7 +19,7 @@
         }
 
         // Create
-        public async Task<LanguageViewModel> CreateAsync(string languageName)
+        public async Task<T> CreateAsync<T>(string languageName)
         {
             Language language = new Language()
             {
@@ -28,32 +29,26 @@
             await this.dbContext.Languages.AddAsync(language);
             await this.dbContext.SaveChangesAsync();
 
-            return new LanguageViewModel()
-            {
-                Id = language.Id,
-                Name = language.Name,
-            };
+            return this.GetViewModelById<T>(language.Id);
         }
 
         // Read
-        public LanguageViewModel GetLanguageByName(string languageName)
-        {
-            Language language = this.dbContext.Languages.FirstOrDefault(l => l.Name.ToLower() == languageName.ToLower());
-
-            if (language == null)
-            {
-                return null;
-            }
-
-            return new LanguageViewModel()
-            {
-                Id = language.Id,
-                Name = language.Name,
-            };
-        }
+        public T GetLanguageByName<T>(string languageName)
+            => this.dbContext
+                .Languages
+                .Where(l => l.Name.ToLower() == languageName.ToLower())
+                .To<T>()
+                .FirstOrDefault();
 
         public IEnumerable<string> GetLanguagesForParticularMovie(int movieId)
             => this.dbContext.MovieLanguages.Where(m => m.MovieId == movieId).Select(i => i.Language.Name);
+
+        public T GetViewModelById<T>(int id)
+            => this.dbContext
+                .Languages
+                .Where(i => i.Id == id)
+                .To<T>()
+                .FirstOrDefault();
 
         // Update
 

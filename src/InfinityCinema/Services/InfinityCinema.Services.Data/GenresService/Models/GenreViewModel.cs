@@ -1,6 +1,9 @@
 ﻿namespace InfinityCinema.Services.Data.GenresService.Models
 {
-    public class GenreViewModel
+    using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Mapping;
+
+    public class GenreViewModel : IMapFrom<Genre>
     {
         public int Id { get; set; }
 

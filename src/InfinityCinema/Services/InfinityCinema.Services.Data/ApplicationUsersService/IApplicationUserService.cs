@@ -1,8 +1,9 @@
 ﻿namespace InfinityCinema.Services.Data.ApplicationUsersService
 {
-    using InfinityCinema.Services.Data.ApplicationUsersService.Models;
-
+    using System.Collections.Generic;
     using System.Threading.Tasks;
+
+    using InfinityCinema.Services.Data.ApplicationUsersService.Models;
 
     public interface IApplicationUserService
     {
@@ -13,6 +14,10 @@
         Task RateMovie(int movieId, string userId, decimal rating);
 
         T GetViewModelById<T>(string id);
+
+        IEnumerable<string> GetUsersIdsThatAreCommentInGivenMovie(int movieId);
+
+        IEnumerable<string> GetUsersIdsThatAreSaveGivenMovie(int movieId);
 
         bool CheckIfUserIsAlreadyRatedThisMovie(int movieId, string userId);
     }

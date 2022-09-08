@@ -8,10 +8,12 @@
     public interface ILanguageService
     {
         // Create
-        Task<LanguageViewModel> CreateAsync(string languageName);
+        Task<T> CreateAsync<T>(string languageName);
 
         // Read
-        LanguageViewModel GetLanguageByName(string languageName);
+        T GetLanguageByName<T>(string languageName);
+
+        T GetViewModelById<T>(int id);
 
         IEnumerable<string> GetLanguagesForParticularMovie(int movieId);
 

@@ -7,6 +7,7 @@
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.PlatformsService.Models;
+    using InfinityCinema.Services.Mapping;
 
     public class PlatformService : IPlatformService
     {
@@ -18,7 +19,7 @@
         }
 
         // Create
-        public async Task<PlatformViewModel> CreateAsync(PlatformFormModel platformFormModel)
+        public async Task<T> CreateAsync<T>(PlatformFormModel platformFormModel)
         {
             Platform platform = new Platform()
             {
@@ -30,67 +31,46 @@
             await this.dbContext.AddAsync(platform);
             await this.dbContext.SaveChangesAsync();
 
-            return new PlatformViewModel()
-            {
-                Id = platform.Id,
-                Name = platform.Name,
-                Icon = platform.IconUrl,
-                SiteUrl = platform.PathUrl,
-            };
+            return this.GetViewModelById<T>(platform.Id);
         }
 
         // Read
-        public IEnumerable<PlatformViewModel> All(string searchName)
+        public IEnumerable<T> All<T>(string searchName = null)
         {
-            IEnumerable<PlatformViewModel> platforms = this.dbContext
-                .Platforms
-                .Select(p => new PlatformViewModel()
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Icon = p.IconUrl,
-                    SiteUrl = p.PathUrl,
-                });
+            IQueryable<Platform> platforms = this.dbContext.Platforms;
 
             if (searchName != null)
             {
                 platforms = platforms.Where(p => p.Name.ToLower().Contains(searchName.ToLower()));
             }
 
+            return platforms.To<T>();
+        }
+
+        public IEnumerable<T> GetPlatformsForGivenMovie<T>(int movieId)
+        {
+            IQueryable<Platform> platfromsForTargetMovie = this.dbContext.MoviePlatform
+                .Where(m => m.MovieId == movieId)
+                .Select(p => p.Platform);
+
+            IEnumerable<T> platforms = platfromsForTargetMovie.To<T>();
+
             return platforms;
         }
 
-        public IEnumerable<PlatformViewModel> GetPlatformsForGivenMovie(int movieId)
-        {
-            IQueryable<Platform> platfromsForTargetMovie = this.dbContext.MoviePlatform.Where(m => m.MovieId == movieId).Select(p => p.Platform);
+        public T GetViewModelByName<T>(string platfrom)
+            => this.dbContext
+                .Platforms
+                .Where(p => p.Name.ToLower() == platfrom.ToLower())
+                .To<T>()
+                .FirstOrDefault();
 
-            IEnumerable<PlatformViewModel> platforms = platfromsForTargetMovie.Select(p => new PlatformViewModel()
-            {
-                Name = p.Name,
-                Icon = p.IconUrl,
-                SiteUrl = p.PathUrl,
-            });
-
-            return platforms;
-        }
-
-        public PlatformViewModel GetPlatformByName(string platfrom)
-        {
-            Platform platform = this.dbContext.Platforms.FirstOrDefault(p => p.Name.ToLower() == platfrom.ToLower());
-
-            if (platform != null)
-            {
-                return new PlatformViewModel()
-                {
-                    Id = platform.Id,
-                    Name = platform.Name,
-                    Icon = platform.IconUrl,
-                    SiteUrl = platform.PathUrl,
-                };
-            }
-
-            return null;
-        }
+        public T GetViewModelById<T>(int id)
+            => this.dbContext
+                .Platforms
+                .Where(p => p.Id == id)
+                .To<T>()
+                .FirstOrDefault();
 
         // Update
 

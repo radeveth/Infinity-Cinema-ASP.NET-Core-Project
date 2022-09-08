@@ -15,7 +15,7 @@
 
         ActorViewModel GetActorByNames(string fullName);
 
-        IEnumerable<ActorViewModel> GetActorsForGivenMovie(int movieId);
+        IEnumerable<T> GetActorsForGivenMovie<T>(int movieId);
 
         T GetViewModelByIdAsync<T>(int id);
 

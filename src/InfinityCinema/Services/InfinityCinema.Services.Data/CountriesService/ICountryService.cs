@@ -8,7 +8,7 @@
     public interface ICountryService
     {
         // Create
-        Task<CountryViewModel> CreateAsync(string countryName);
+        Task<T> CreateAsync<T>(string countryName);
 
         string GenerateCountryAbbreviation(string countryName);
 

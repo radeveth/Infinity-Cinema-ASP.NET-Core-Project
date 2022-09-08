@@ -6,6 +6,7 @@
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.ApplicationUsersService;
+    using InfinityCinema.Services.Data.ApplicationUsersService.Models;
     using InfinityCinema.Services.Data.MovieCommentsService.Models;
 
     public class MovieCommentService : IMovieCommentService
@@ -37,7 +38,7 @@
             {
                 Id = movieComment.Id,
                 Content = movieComment.Content,
-                User = this.userService.GetUserById(movieComment.UserId),
+                User = this.userService.GetViewModelById<ApplicationUserViewModel>(movieComment.UserId),
             };
         }
 

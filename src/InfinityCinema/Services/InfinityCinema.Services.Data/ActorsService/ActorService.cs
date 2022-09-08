@@ -8,6 +8,7 @@
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.ActorsService.Models;
+    using InfinityCinema.Services.Mapping;
 
     public class ActorService : IActorService
     {
@@ -21,7 +22,7 @@
         }
 
         // Create
-        public async Task<ActorViewModel> CreateAsync(ActorFormModel actorFormModel)
+        public async Task<T> CreateAsync<T>(ActorFormModel actorFormModel)
         {
             // Get (split) first and last name of actor
             string[] actorNameParts = this.SplitActorFullName(actorFormModel.FullName);
@@ -41,27 +42,16 @@
             await this.dbContext.Actors.AddAsync(actor);
             await this.dbContext.SaveChangesAsync();
 
-            return new ActorViewModel()
-            {
-                Id = actor.Id,
-                FullName = actor.FirstName + " " + actor.LastName,
-                ImageUrl = actor.ImageUrl,
-                InformationLink = actor.InformationLink,
-            };
+            return this.GetViewModelByIdAsync<T>(actor.Id);
         }
 
         // Read
-        public IEnumerable<ActorViewModel> All(string searchName)
+        public IEnumerable<ActorViewModel> All(string searchName = null)
         {
             IEnumerable<ActorViewModel> actors = this.dbContext
                     .Actors
-                    .Select(a => new ActorViewModel()
-                    {
-                        Id = a.Id,
-                        FullName = a.FirstName + " " + a.LastName,
-                        ImageUrl = a.ImageUrl,
-                        InformationLink = a.InformationLink,
-                    });
+                     .To<ActorViewModel>();
+
             if (searchName != null)
             {
                 actors = actors.Where(a => a.FullName.ToLower().Contains(searchName.ToLower()));
@@ -86,30 +76,23 @@
             // Return the actor view model
             if (actor != null)
             {
-                return new ActorViewModel()
-                {
-                    Id = actor.Id,
-                    FullName = actor.FirstName + " " + actor.LastName,
-                    ImageUrl = actor.ImageUrl,
-                    InformationLink = actor.InformationLink,
-                };
+                return this.GetViewModelByIdAsync<ActorViewModel>(actor.Id);
             }
 
             return null;
         }
 
         public IEnumerable<ActorViewModel> GetActorsForGivenMovie(int movieId)
-        {
-            IQueryable<Actor> actorsFromTargetMovie = this.dbContext.MovieActors.Where(a => a.MovieId == movieId).Select(m => m.Actor);
+            => this.dbContext.MovieActors
+                .Where(a => a.MovieId == movieId)
+                .To<ActorViewModel>();
 
-            IEnumerable<ActorViewModel> actors = actorsFromTargetMovie.Select(a => new ActorViewModel()
-            {
-                FullName = a.FirstName + " " + a.LastName,
-                ImageUrl = a.ImageUrl,
-            });
-
-            return actors;
-        }
+        public T GetViewModelByIdAsync<T>(int id)
+            => this.dbContext
+                .Actors
+                .Where(a => a.Id == id)
+                .To<T>()
+                .FirstOrDefault();
 
         // Update
 

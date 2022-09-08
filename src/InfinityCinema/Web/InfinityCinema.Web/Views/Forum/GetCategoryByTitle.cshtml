@@ -1,0 +1,70 @@
+﻿@model CategoryViewModel
+
+@{
+    ViewData["Title"] = @Model.Title + "- Posts";
+}
+
+<div class="container-fluid mt-100">
+    @if (Model.Posts.Any())
+    {
+        <br />
+        <br />
+        <div class="mt-5">
+            <center>
+                <h2>No posts are created for this category</h2>
+                <div class="row mt-4">
+                    <center>
+                        <button asp-area="" asp-controller="Forum" asp-action="CreatePostForCategoryAsync" asp-route-Id="@Model.Id" class="btn btn-warning col-5">Create first post for this category</button>
+                    </center>
+                </div>
+            </center>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var post in Model.Posts)
+            {
+                <div class="col-md-12">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <div class="media flex-wrap w-100 align-items-center">
+                                <img src="https://i.imgur.com/iNmBizf.jpg" class="d-block ui-w-40 rounded-circle" alt="">
+                                <div class="media-body ml-3">
+                                    <a href="javascript:void(0)" data-abc="true">@post.User.Name</a>
+                                    <div class="text-muted small">@post.PastDays</div>
+                                </div>
+                                <div class="text-muted small ml-3">
+                                    <div>Member since <strong>@post.User.CreatedOn</strong></div>
+                                    <div><strong>@post.User.PostsCount</strong> posts</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                @post.Content
+                            </p>
+                            <p>
+                        </div>
+                        <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
+                            <div class="px-4 pt-3"> <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> <i class="fas fa-comment"></i>&nbsp; <span class="align-middle">@post.CommentsCount</span> </a> </div>
+                            <div class="px-4 pt-3"> <button asp-area="" asp-controller="Forum" asp-action="ReplayOnCategoryPostAsync" asp-route-CategoryId="@Model.Id" asp-route-PostId="@post.Id" type="button" class="btn btn-warning"><i class="ion ion-md-create"></i>Reply</button> </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="row mt-5 mb-5">
+            <center>
+                <button asp-area="" asp-controller="Forum" asp-action="CreatePostForCategoryAsync" asp-route-Id="@Model.Id" class="btn btn-warning col-2 float-end">Create post</button>
+            </center>
+        </div>
+    }
+</div>

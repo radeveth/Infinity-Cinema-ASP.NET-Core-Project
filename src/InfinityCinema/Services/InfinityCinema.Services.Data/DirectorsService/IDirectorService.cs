@@ -7,7 +7,7 @@
     public interface IDirectorService
     {
         // Create
-        Task<DirectorViewModel> CreateAsync(DirectorFormModel directorFormModel);
+        Task<T> CreateAsync<T>(DirectorFormModel directorFormModel);
 
         // Read
         string GetDirectorFullNameById(int id);

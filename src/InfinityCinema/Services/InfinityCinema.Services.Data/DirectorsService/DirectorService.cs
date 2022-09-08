@@ -7,6 +7,7 @@
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.DirectorsService.Models;
+    using InfinityCinema.Services.Mapping;
 
     public class DirectorService : IDirectorService
     {
@@ -20,7 +21,7 @@
         }
 
         // Create
-        public async Task<DirectorViewModel> CreateAsync(DirectorFormModel directorFormModel)
+        public async Task<T> CreateAsync<T>(DirectorFormModel directorFormModel)
         {
             string[] givenDirectorNames = this.SplitDirectorFullName(directorFormModel.FullName);
 
@@ -37,12 +38,7 @@
             await this.dbContext.AddAsync(director);
             await this.dbContext.SaveChangesAsync();
 
-            return new DirectorViewModel()
-            {
-                Id = director.Id,
-                FullName = director.FirstName + " " + director.LastName,
-                InformationLink = director.InformationUrl,
-            };
+            return this.GetViewModelById<T>(director.Id);
         }
 
         // Read
@@ -70,6 +66,13 @@
 
             return director.Id;
         }
+
+        public T GetViewModelById<T>(int id)
+            => this.dbContext
+                .Directors
+                .Where(d => d.Id == id)
+                .To<T>()
+                .FirstOrDefault();
 
         public DirectorViewModel GetDirectorForParticularMovie(int directorId)
             => this.dbContext

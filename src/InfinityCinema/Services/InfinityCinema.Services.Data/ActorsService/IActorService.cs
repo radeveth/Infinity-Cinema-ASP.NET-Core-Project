@@ -8,14 +8,16 @@
     public interface IActorService
     {
         // Create
-        Task<ActorViewModel> CreateAsync(ActorFormModel actorFormModel);
+        Task<T> CreateAsync<T>(ActorFormModel actorFormModel);
 
         // Read
-        IEnumerable<ActorViewModel> All(string searchName);
+        IEnumerable<ActorViewModel> All(string searchName = null);
 
         ActorViewModel GetActorByNames(string fullName);
 
         IEnumerable<ActorViewModel> GetActorsForGivenMovie(int movieId);
+
+        T GetViewModelByIdAsync<T>(int id);
 
         // Update
 

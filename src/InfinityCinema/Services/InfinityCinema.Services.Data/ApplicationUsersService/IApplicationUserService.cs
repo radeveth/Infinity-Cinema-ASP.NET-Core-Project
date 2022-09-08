@@ -12,7 +12,7 @@
 
         Task RateMovie(int movieId, string userId, decimal rating);
 
-        ApplicationUserViewModel GetUserById(string userId);
+        T GetViewModelById<T>(string id);
 
         bool CheckIfUserIsAlreadyRatedThisMovie(int movieId, string userId);
     }

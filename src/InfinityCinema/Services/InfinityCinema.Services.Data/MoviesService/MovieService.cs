@@ -171,7 +171,7 @@
 
                 if (actor == null)
                 {
-                    actor = await this.actorService.CreateAsync(actorFormModel);
+                    actor = await this.actorService.CreateAsync<ActorViewModel>(actorFormModel);
                 }
 
                 actorsIds.Add(actor.Id);
@@ -202,52 +202,55 @@
         // Read
         public MovieDetailsServiceModel Details(int id)
         {
-            Movie movie = this.dbContext.Movies.Find(id);
+            var movie = this.dbContext.Movies.AsQueryable();
+
+            Movie a = this.movieRepository.All()
+                .Where(m => m.Id == id).FirstOrDefault();
 
             IEnumerable<string> images = this.imageService.GetImagesForGivenMovie(id);
             IEnumerable<ActorViewModel> actors = this.actorService.GetActorsForGivenMovie(id);
             IEnumerable<GenreViewModel> genres = this.genreService.GetGenresForParticularMovie(id);
             IEnumerable<string> languages = this.languageService.GetLanguagesForParticularMovie(id);
             IEnumerable<PlatformViewModel> platforms = this.platformService.GetPlatformsForGivenMovie(id);
-            DirectorViewModel director = this.directorService.GetDirectorForParticularMovie(movie.DirectorId);
-            IEnumerable<string> applicationUsersId = this.dbContext.ApplicationUserMovies.Where(a => a.MovieId == id).Select(a => a.UserId);
+            //DirectorViewModel director = this.directorService.GetDirectorForParticularMovie(movie.DirectorId);
+            IEnumerable<string> applicationUsersId = a.ApplicationUserMovies.Where(a => a.MovieId == id).Select(a => a.UserId);
             IEnumerable<MovieCommentViewModel> comments = this.movieUserCommentService.GetCommentsForGivenMovie(id).OrderByDescending(c => c.Id);
 
-            string country = this.countryService.GetCountryNameById(movie.CountryId);
+            //string country = this.countryService.GetCountryNameById(movie.CountryId);
 
-            IQueryable<MovieListingViewModel> upNextMovies = this.dbContext.Movies
-                .Where(m => m.Id != movie.Id)
-                .Take(8)
-                .Select(m => new MovieListingViewModel()
-                {
-                    Id = m.Id,
-                    Name = m.Name,
-                    Duration = m.Duration,
-                    ImageUrl = m.Images.First().Url,
-                    Genres = m.MovieGenres.Select(m => m.Genre.Name),
-                    StarRating = m.MovieUserStarRatings.Count != 0 ? m.MovieUserStarRatings.Sum(r => r.Rate) / m.MovieUserStarRatings.Count : -1,
-                });
-
-            return new MovieDetailsServiceModel()
-            {
-                Id = movie.Id,
-                Genres = genres,
-                Images = images,
-                Actors = actors,
-                Name = movie.Name,
-                Countruy = country,
-                Director = director,
-                Comments = comments,
-                Platforms = platforms,
-                Languages = languages,
-                Duration = movie.Duration,
-                UpNextMovies = upNextMovies,
-                Trailer = movie.TrailerPath,
-                Resolution = movie.Resolution,
-                Description = movie.Description,
-                DateOfReleased = movie.DateOfReleased,
-                ApplicationUsersId = applicationUsersId,
-            };
+            //IQueryable<MovieListingViewModel> upNextMovies = this.dbContext.Movies
+            //    .Where(m => m.Id != movie.Id)
+            //    .Take(8)
+            //    .Select(m => new MovieListingViewModel()
+            //    {
+            //        Id = m.Id,
+            //        Name = m.Name,
+            //        Duration = m.Duration,
+            //        ImageUrl = m.Images.First().Url,
+            //        Genres = m.MovieGenres.Select(m => m.Genre.Name),
+            //        StarRating = m.MovieUserStarRatings.Count != 0 ? m.MovieUserStarRatings.Sum(r => r.Rate) / m.MovieUserStarRatings.Count : -1,
+            //    });
+            return null;
+            //return new MovieDetailsServiceModel()
+            //{
+            //    Id = movie.Id,
+            //    Genres = genres,
+            //    Images = images,
+            //    Actors = actors,
+            //    Name = movie.Name,
+            //    Countruy = country,
+            //    Director = director,
+            //    Comments = comments,
+            //    Platforms = platforms,
+            //    Languages = languages,
+            //    Duration = movie.Duration,
+            //    UpNextMovies = upNextMovies,
+            //    Trailer = movie.TrailerPath,
+            //    Resolution = movie.Resolution,
+            //    Description = movie.Description,
+            //    DateOfReleased = movie.DateOfReleased,
+            //    ApplicationUsersId = applicationUsersId,
+            //};
         }
 
         public async Task<MovieFormModel> GetMovieById(int id)

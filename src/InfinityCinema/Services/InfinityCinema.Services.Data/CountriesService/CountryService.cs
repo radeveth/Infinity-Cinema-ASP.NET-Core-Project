@@ -7,7 +7,7 @@
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
-    using InfinityCinema.Services.Data.CountriesService.Models;
+    using InfinityCinema.Services.Mapping;
 
     public class CountryService : ICountryService
     {
@@ -20,7 +20,7 @@
         }
 
         // Create
-        public async Task<CountryViewModel> CreateAsync(string countryName)
+        public async Task<T> CreateAsync<T>(string countryName)
         {
             // Create country
             Country country = new Country()
@@ -33,12 +33,7 @@
             await this.dbContext.Countries.AddAsync(country);
             await this.dbContext.SaveChangesAsync();
 
-            return new CountryViewModel()
-            {
-                Id = country.Id,
-                Name = country.Name,
-                Abbreviation = country.Abbreviation,
-            };
+            return this.GetViewModelById<T>(country.Id);
         }
 
         public string GenerateCountryAbbreviation(string countryName)
@@ -95,6 +90,13 @@
             return country.Name;
         }
 
+        public T GetViewModelById<T>(int id)
+            => this.dbContext
+                .Countries
+                .Where(c => c.Id == id)
+                .To<T>()
+                .FirstOrDefault();
+
         // Update
         public async Task<bool> EditCountryAsync(int countryId, string countryName)
         {
@@ -120,6 +122,5 @@
         // Useful methods
         public bool CheckIfCountryExist(string countryName)
             => this.dbContext.Countries.Any(c => c.Name.Replace(" ", string.Empty).ToLower() == countryName.Replace(" ", string.Empty).ToLower());
-
     }
 }

@@ -1,6 +1,9 @@
 ﻿namespace InfinityCinema.Services.Data.CountriesService.Models
 {
-    public class CountryViewModel
+    using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Mapping;
+
+    public class CountryViewModel : IMapFrom<Country>
     {
         public int Id { get; set; }
 

@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using InfinityCinema.Data;
     using InfinityCinema.Data.Common.Repositories;
     using InfinityCinema.Data.Models.ForumSystem;
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models.Enums;
@@ -10,16 +11,17 @@
 
     public class CategoryService : ICategoryService
     {
-        private readonly IDeletableEntityRepository<Category> cattegoryRepository;
+        private readonly InfinityCinemaDbContext dbContext;
 
-        public CategoryService(IDeletableEntityRepository<Category> cattegoryRepository)
+        public CategoryService(IDeletableEntityRepository<Category> categoryRepository, InfinityCinemaDbContext dbContext)
         {
-            this.cattegoryRepository = cattegoryRepository;
+            this.dbContext = dbContext;
         }
 
+        // Read
         public IEnumerable<T> GetAll<T>(CategorySorting categorySorting = CategorySorting.MostPopular)
         {
-            IQueryable<Category> categoriesQuery = this.cattegoryRepository.All();
+            IQueryable<Category> categoriesQuery = this.dbContext.Categories;
 
             // Default sort is by most popular
             categoriesQuery = categorySorting switch
@@ -34,6 +36,15 @@
             };
 
             return categoriesQuery.To<T>().ToList();
+        }
+
+        public T GetCategoryByTitle<T>(string title)
+        {
+            T category = this.dbContext.Categories
+                .Where(c => c.Title == title)
+                .To<T>().FirstOrDefault();
+
+            return category;
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿namespace InfinityCinema.Services.Data.MoviesService.Models
 {
+    using System.Linq;
+
     using AutoMapper;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Mapping;
-
-    using System.Linq;
 
     public class MovieHomeViewModel : IMapFrom<Movie>, IHaveCustomMappings
     {

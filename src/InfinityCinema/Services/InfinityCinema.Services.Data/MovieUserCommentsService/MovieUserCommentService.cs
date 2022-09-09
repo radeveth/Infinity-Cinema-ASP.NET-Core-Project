@@ -6,8 +6,6 @@
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
-    using InfinityCinema.Services.Data.ApplicationUsersService.Models;
-    using InfinityCinema.Services.Data.MovieCommentsService.Models;
     using InfinityCinema.Services.Mapping;
 
     public class MovieUserCommentService : IMovieUserCommentService

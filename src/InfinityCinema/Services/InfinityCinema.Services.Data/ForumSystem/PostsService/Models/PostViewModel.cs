@@ -1,12 +1,12 @@
-﻿namespace InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models
+﻿namespace InfinityCinema.Services.Data.ForumSystem.PostsService.Models
 {
+    using System;
+
     using AutoMapper;
     using InfinityCinema.Data.Models.ForumSystem;
     using InfinityCinema.Services.Mapping;
 
-    using System;
-
-    public class PostInCategoryViewModel : IMapFrom<Post>, IHaveCustomMappings
+    public class PostViewModel : IMapFrom<Post>, IHaveCustomMappings
     {
         public int Id { get; set; }
 
@@ -22,7 +22,7 @@
 
         public void CreateMappings(IProfileExpression configuration)
         {
-            configuration.CreateMap<Post, PostInCategoryViewModel>()
+            configuration.CreateMap<Post, PostViewModel>()
                 .ForMember(x => x.PastDays, y => y.MapFrom(s => $"{(DateTime.UtcNow - s.CreatedOn).Days}"));
         }
     }

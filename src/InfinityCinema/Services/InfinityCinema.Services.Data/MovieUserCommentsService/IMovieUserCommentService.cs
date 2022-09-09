@@ -3,8 +3,6 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using InfinityCinema.Services.Data.MovieCommentsService.Models;
-
     public interface IMovieUserCommentService
     {
         // Create

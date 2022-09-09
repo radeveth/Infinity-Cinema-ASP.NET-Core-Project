@@ -3,8 +3,6 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using InfinityCinema.Services.Data.LanguagesService.Models;
-
     public interface ILanguageService
     {
         // Create

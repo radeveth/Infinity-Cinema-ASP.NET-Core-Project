@@ -2,12 +2,10 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net.Http.Headers;
     using System.Threading.Tasks;
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
-    using InfinityCinema.Services.Data.ApplicationUsersService.Models;
     using InfinityCinema.Services.Mapping;
 
     public class ApplicationUserService : IApplicationUserService

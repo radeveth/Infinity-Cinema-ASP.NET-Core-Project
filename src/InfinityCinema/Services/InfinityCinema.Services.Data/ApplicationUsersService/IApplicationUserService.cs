@@ -3,8 +3,6 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using InfinityCinema.Services.Data.ApplicationUsersService.Models;
-
     public interface IApplicationUserService
     {
         Task<bool> SaveMovieToWatchLaterAsync(int movieId, string userId);

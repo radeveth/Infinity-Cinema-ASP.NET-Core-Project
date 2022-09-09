@@ -1,0 +1,17 @@
+﻿@model CommentFormModel
+
+@{
+    ViewData["Title"] = "Replay on post";
+}
+
+<div class="mt-5"></div>
+
+<form method="post" class="mt-5 fw-bold">
+    <div class="form-outline mb-4">
+        <label asp-for="Content" class="form-label"></label>
+        <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Content" class="small text-danger"></span>
+    </div>
+
+    <input type="submit" class="btn btn-warning rounded-pill mt-4 col-2" value="Create">
+</form>

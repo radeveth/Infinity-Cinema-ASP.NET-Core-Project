@@ -46,5 +46,12 @@
 
             return category;
         }
+
+        public T GetViewModelById<T>(int id)
+            => this.dbContext
+                .Categories
+                .Where(c => c.Id == id)
+                .To<T>()
+                .FirstOrDefault();
     }
 }

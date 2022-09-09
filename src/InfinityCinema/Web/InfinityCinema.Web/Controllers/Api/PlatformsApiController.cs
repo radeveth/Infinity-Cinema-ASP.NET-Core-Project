@@ -1,10 +1,10 @@
 ﻿namespace InfinityCinema.Web.Controllers.Api
 {
+    using System.Collections.Generic;
+
     using InfinityCinema.Services.Data.PlatformsService;
     using InfinityCinema.Services.Data.PlatformsService.Models;
     using Microsoft.AspNetCore.Mvc;
-
-    using System.Collections.Generic;
 
     [ApiController]
     [Route("/api/platforms/")]

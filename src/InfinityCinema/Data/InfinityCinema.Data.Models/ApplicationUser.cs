@@ -4,7 +4,6 @@ namespace InfinityCinema.Data.Models
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Reflection.PortableExecutable;
 
     using InfinityCinema.Data.Common.Models;
     using InfinityCinema.Data.Models.Enums;

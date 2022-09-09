@@ -1,10 +1,10 @@
 ﻿namespace InfinityCinema.Web.Controllers.Api
 {
+    using System.Collections.Generic;
+
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.GenresService.Models;
     using Microsoft.AspNetCore.Mvc;
-
-    using System.Collections.Generic;
 
     [ApiController]
     [Route("/api/genres/")]

@@ -13,6 +13,8 @@ namespace InfinityCinema.Web
     using InfinityCinema.Services.Data.CountriesService;
     using InfinityCinema.Services.Data.DirectorsService;
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService;
+    using InfinityCinema.Services.Data.ForumSystem.CommentsService;
+    using InfinityCinema.Services.Data.ForumSystem.PostsService;
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.LanguagesService;
@@ -91,6 +93,8 @@ namespace InfinityCinema.Web
             services.AddTransient<IMovieUserCommentService, MovieUserCommentService>();
 
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IPostService, PostService>();
+            services.AddTransient<ICommentService, CommentService>();
         }
 
         private static void Configure(WebApplication app)

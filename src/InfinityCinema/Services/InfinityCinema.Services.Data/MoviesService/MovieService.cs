@@ -31,7 +31,6 @@
     using InfinityCinema.Services.Data.PlatformsService.Models;
     using InfinityCinema.Services.Mapping;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
 
     public class MovieService : IMovieService
     {

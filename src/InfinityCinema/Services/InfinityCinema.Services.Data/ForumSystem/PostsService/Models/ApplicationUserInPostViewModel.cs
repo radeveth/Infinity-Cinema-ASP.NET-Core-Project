@@ -1,13 +1,12 @@
-﻿namespace InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models
+﻿namespace InfinityCinema.Services.Data.ForumSystem.PostsService.Models
 {
     using AutoMapper;
     using InfinityCinema.Data.Models;
-    using InfinityCinema.Data.Models.ForumSystem;
     using InfinityCinema.Services.Mapping;
 
     public class ApplicationUserInPostViewModel : IMapFrom<ApplicationUser>, IHaveCustomMappings
     {
-        public string Name { get; set; }
+        public string FullName { get; set; }
 
         public string CreatedOn { get; set; }
 

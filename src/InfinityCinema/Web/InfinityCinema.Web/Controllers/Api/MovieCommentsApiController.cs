@@ -3,7 +3,6 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Services.Data.MovieCommentsService;
-    using InfinityCinema.Web.Infrastructure;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]

@@ -3,17 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
 
-    using AutoMapper;
-    using InfinityCinema.Data.Models;
     using InfinityCinema.Data.Models.Enums;
     using InfinityCinema.Services.Data.ActorsService.Models;
     using InfinityCinema.Services.Data.DirectorsService.Models;
     using InfinityCinema.Services.Data.GenresService.Models;
     using InfinityCinema.Services.Data.MovieCommentsService.Models;
     using InfinityCinema.Services.Data.PlatformsService.Models;
-    using InfinityCinema.Services.Mapping;
 
     using static InfinityCinema.Data.Common.DataValidation.CommentValidation;
 

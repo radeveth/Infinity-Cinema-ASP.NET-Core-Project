@@ -4,8 +4,10 @@
     ViewData["Title"] = @Model.Title + "- Posts";
 }
 
+<div class="mt-5"></div>
+
 <div class="container-fluid mt-100">
-    @if (Model.Posts.Any())
+    @if (!Model.Posts.Any())
     {
         <br />
         <br />
@@ -14,7 +16,7 @@
                 <h2>No posts are created for this category</h2>
                 <div class="row mt-4">
                     <center>
-                        <button asp-area="" asp-controller="Forum" asp-action="CreatePostForCategoryAsync" asp-route-Id="@Model.Id" class="btn btn-warning col-5">Create first post for this category</button>
+                        <button asp-area="" asp-controller="Forum" asp-action="CreatePostForCategoryAsync" asp-route-CategoryId="@Model.Id" class="btn btn-warning col-5">Create first post for this category</button>
                     </center>
                 </div>
             </center>
@@ -37,7 +39,7 @@
                             <div class="media flex-wrap w-100 align-items-center">
                                 <img src="https://i.imgur.com/iNmBizf.jpg" class="d-block ui-w-40 rounded-circle" alt="">
                                 <div class="media-body ml-3">
-                                    <a href="javascript:void(0)" data-abc="true">@post.User.Name</a>
+                                    <a href="javascript:void(0)" data-abc="true">@post.User.FullName</a>
                                     <div class="text-muted small">@post.PastDays</div>
                                 </div>
                                 <div class="text-muted small ml-3">
@@ -54,7 +56,7 @@
                         </div>
                         <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
                             <div class="px-4 pt-3"> <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> <i class="fas fa-comment"></i>&nbsp; <span class="align-middle">@post.CommentsCount</span> </a> </div>
-                            <div class="px-4 pt-3"> <button asp-area="" asp-controller="Forum" asp-action="ReplayOnCategoryPostAsync" asp-route-CategoryId="@Model.Id" asp-route-PostId="@post.Id" type="button" class="btn btn-warning"><i class="ion ion-md-create"></i>Reply</button> </div>
+                            <div class="px-4 pt-3"> <a asp-area="" asp-controller="ForumPosts" asp-action="ReplayWithCommentOnCategoryPost" asp-route-PostId="@post.Id" type="button" class="btn btn-warning"><i class="ion ion-md-create"></i>Reply</a> </div>
                         </div>
                     </div>
                 </div>
@@ -63,7 +65,7 @@
 
         <div class="row mt-5 mb-5">
             <center>
-                <button asp-area="" asp-controller="Forum" asp-action="CreatePostForCategoryAsync" asp-route-Id="@Model.Id" class="btn btn-warning col-2 float-end">Create post</button>
+                <a asp-area="" asp-controller="ForumCategories" asp-action="CreatePostForCategory" asp-route-CategoryId="@Model.Id" class="btn btn-warning col-2 float-end">Create post</a>
             </center>
         </div>
     }

@@ -1,0 +1,27 @@
+﻿@model PostFormModel
+
+@{
+    ViewData["Title"] = @ViewData["CategoryTitle"] + "Create Post";
+}
+
+<div class="mt-5"></div>
+
+<div class="mb-3"><center><h1>Create Post for @ViewData["CategoryTitle"] category</h1></center></div>
+
+<form method="post" class="mt-5 fw-bold">
+    <div class="col-3 mb-4">
+        <div class="form-outline">
+            <label asp-for="Title" class="form-label"></label>
+            <input asp-for="Title" type="text" class="form-control" />
+            <span asp-validation-for="Title" class="small text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-outline mb-4">
+        <label asp-for="Content" class="form-label"></label>
+        <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Content" class="small text-danger"></span>
+    </div>
+
+    <input type="submit" class="btn btn-warning rounded-pill mt-4 col-2" value="Create">
+</form>

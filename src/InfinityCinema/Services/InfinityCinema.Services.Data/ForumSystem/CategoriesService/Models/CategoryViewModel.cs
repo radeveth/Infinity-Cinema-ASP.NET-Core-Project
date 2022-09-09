@@ -3,6 +3,7 @@
     using System.Collections.Generic;
 
     using InfinityCinema.Data.Models.ForumSystem;
+    using InfinityCinema.Services.Data.ForumSystem.PostsService.Models;
     using InfinityCinema.Services.Mapping;
 
     public class CategoryViewModel : IMapFrom<Category>
@@ -15,6 +16,6 @@
 
         public string ImageUrl { get; set; }
 
-        public IEnumerable<PostInCategoryViewModel> Posts { get; set; }
+        public IEnumerable<PostViewModel> Posts { get; set; }
     }
 }

@@ -1,0 +1,44 @@
+﻿namespace InfinityCinema.Services.Data.ForumSystem.CommentsService
+{
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using InfinityCinema.Data;
+    using InfinityCinema.Data.Models.ForumSystem;
+    using InfinityCinema.Services.Data.ForumSystem.CommentsService.Models;
+    using InfinityCinema.Services.Mapping;
+
+    public class CommentService : ICommentService
+    {
+        private readonly InfinityCinemaDbContext dbContext;
+
+        public CommentService(InfinityCinemaDbContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+
+        // Create
+        public async Task<T> CreateAsync<T>(CommentFormModel commentFormModel)
+        {
+            Comment comment = new Comment()
+            {
+                Content = commentFormModel.Content,
+                PostId = commentFormModel.PostId,
+                UserId = commentFormModel.UserId,
+            };
+
+            await this.dbContext.Comments.AddAsync(comment);
+            await this.dbContext.SaveChangesAsync();
+
+            return this.GetViewModelById<T>(comment.Id);
+        }
+
+        // Read
+        public T GetViewModelById<T>(int id)
+            => this.dbContext
+                .Comments
+                .Where(c => c.Id == id)
+                .To<T>()
+                .FirstOrDefault();
+    }
+}

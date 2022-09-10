@@ -2,15 +2,18 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using AutoMapper;
     using Ganss.XSS;
+    using InfinityCinema.Data.Models.Enums;
     using InfinityCinema.Data.Models.ForumSystem;
     using InfinityCinema.Services.Data.ForumSystem.CommentsService.Models;
     using InfinityCinema.Services.Mapping;
 
     public class PostViewModel : IMapFrom<Post>, IHaveCustomMappings
     {
+
         public int Id { get; set; }
 
         public string Title { get; set; }
@@ -25,6 +28,10 @@
 
         public IEnumerable<CommentViewModel> Comments { get; set; }
 
+        public int Likes { get; set; }
+
+        public int Dislikes { get; set; }
+
         public ApplicationUserInPostViewModel User { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
@@ -36,6 +43,10 @@
                         : (DateTime.UtcNow.Subtract(s.CreatedOn).Hours != 0
                             ? $"{DateTime.UtcNow.Subtract(s.CreatedOn).Hours} hours ago"
                             : $"{DateTime.UtcNow.Subtract(s.CreatedOn).Minutes} minutes ago"))}".ToString()));
+
+            configuration.CreateMap<Post, PostViewModel>()
+                .ForMember(x => x.Likes, y => y.MapFrom(s => s.Votes.Where(x => x.Type == VoteType.Like).Count()))
+                .ForMember(x => x.Likes, y => y.MapFrom(s => s.Votes.Where(x => x.Type == VoteType.Dislike).Count()));
         }
     }
 }

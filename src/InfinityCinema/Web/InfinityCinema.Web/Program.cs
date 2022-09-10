@@ -15,6 +15,7 @@ namespace InfinityCinema.Web
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService;
     using InfinityCinema.Services.Data.ForumSystem.CommentsService;
     using InfinityCinema.Services.Data.ForumSystem.PostsService;
+    using InfinityCinema.Services.Data.ForumSystem.VotesService;
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.LanguagesService;
@@ -95,6 +96,7 @@ namespace InfinityCinema.Web
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IPostService, PostService>();
             services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<IVoteService, VoteService>();
         }
 
         private static void Configure(WebApplication app)

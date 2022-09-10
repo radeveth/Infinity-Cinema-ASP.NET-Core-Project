@@ -45,6 +45,7 @@
         }
 
         [HttpGet]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public IActionResult Create()
         {
@@ -55,6 +56,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> CreateAsync(CreateMovieServiceModel movieModel)
         {
@@ -101,6 +103,7 @@
 
         [HttpPost]
         [Authorize]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DetailsAsync(int id, string newCommentContent)
         {
             string userId = ClaimsPrincipalExtensions.GetId(this.User);

@@ -13,6 +13,7 @@
         public Post()
         {
             this.Comments = new HashSet<Comment>();
+            this.Votes = new HashSet<Vote>();
         }
 
         [Required]
@@ -35,5 +36,7 @@
         public virtual Category Category { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
+
+        public virtual ICollection<Vote> Votes { get; set; }
     }
 }

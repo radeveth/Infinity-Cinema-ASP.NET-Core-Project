@@ -51,8 +51,19 @@
                                         }
                                         <div><strong>@post.User.PostsCount</strong> @text</div>
                                     </div>
+                                    <div class="float-end">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <span onclick="Vote(@post.Id, true)" role="button"><i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
+                                            <p id="post-likes-@(post.Id.ToString())" class="small text-muted mb-0">@post.Likes</p>
+                                            
+                                            <div style="margin-left:8px"></div>
+                                            <span onclick="Vote(@post.Id, true)" role="button"><i class="far fa-thumbs-down mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
+                                            <p id="post-dislikes-@(post.Id.ToString())" class="small text-muted mb-0">@post.Dislikes</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            <hr style="margin-left:14px; margin-right:14px;">
                             <div class="card-body">
                                 <h5 class="mb-4">
                                     @post.Title
@@ -172,6 +183,27 @@
 
             createCommentFormContainerElement.classList.remove('d-none');
             viewCommentsButtonElement.classList.add('d-none');
+        }
+    </script>
+
+    <script>
+        function Vote(postId, isLikeVote) {
+            let jsonData = { 'voteFormModel' : { 
+                                'postId' : postId, 
+                                'isLikeVote' : isLikeVote 
+                }
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/api/ForumVotesApi/Vote",
+                data: JSON.stringify(jsonData),
+                dataType: "text",
+                success: function (data) {
+                    $("#post-likes-" + postId).textContent = data.Likes;
+                    $("#post-dislikes-" + postId).textContent = data.Dislikes;
+                        }
+            });
         }
     </script>
 

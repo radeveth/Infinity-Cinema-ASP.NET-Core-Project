@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.ForumSystem.CommentsService
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -40,5 +41,11 @@
                 .Where(c => c.Id == id)
                 .To<T>()
                 .FirstOrDefault();
+
+        public IEnumerable<T> GetAllForParticluarPost<T>(int postId)
+            => this.dbContext
+                .Comments
+                .Where(c => c.PostId == postId)
+                .To<T>();
     }
 }

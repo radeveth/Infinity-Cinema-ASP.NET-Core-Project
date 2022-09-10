@@ -19,7 +19,7 @@
 
         [HttpGet]
         [Authorize]
-        public IActionResult ReplayWithCommentOnCategoryPost(int categoryId, int postId)
+        public IActionResult ReplayWithCommentOnCategoryPost(int postId)
         {
             return this.View(new CommentFormModel());
         }
@@ -31,10 +31,10 @@
             commentFormModel.PostId = postId;
             commentFormModel.UserId = ClaimsPrincipalExtensions.GetId(this.User);
 
-            if (!this.ModelState.IsValid)
-            {
-                return this.View(commentFormModel);
-            }
+            //if (!this.ModelState.IsValid)
+            //{
+            //    return this.View(commentFormModel);
+            //}
 
             await this.commentService.CreateAsync<CommentFormModel>(commentFormModel);
 

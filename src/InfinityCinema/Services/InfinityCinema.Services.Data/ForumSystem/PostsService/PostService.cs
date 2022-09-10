@@ -22,7 +22,7 @@
             Post post = new Post()
             {
                 Title = postFormModel.Title,
-                Content = postFormModel.Title,
+                Content = postFormModel.Content,
                 UserId = postFormModel.UserId,
                 CategoryId = postFormModel.CategoryId,
             };

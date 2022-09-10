@@ -299,7 +299,6 @@
     </script>
 
     <script>
-
         function IncreaseCommentLikes(commentId) {
             $.get('/api/moviecomments/increaselikes/?commentId=' + commentId, (data) => {
                 let initialCommentContainerElement = document.querySelector('#comment' + commentId + '-likes-counter');

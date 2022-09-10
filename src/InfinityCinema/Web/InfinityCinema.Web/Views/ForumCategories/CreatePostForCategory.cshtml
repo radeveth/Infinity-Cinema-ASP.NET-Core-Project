@@ -19,9 +19,18 @@
 
     <div class="form-outline mb-4">
         <label asp-for="Content" class="form-label"></label>
-        <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+        <textarea id="mytextarea" asp-for="Content" class="form-control" rows="4"></textarea>
         <span asp-validation-for="Content" class="small text-danger"></span>
     </div>
 
     <input type="submit" class="btn btn-warning rounded-pill mt-4 col-2" value="Create">
 </form>
+
+@section Scripts {
+    <script src="/js//js//tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#mytextarea'
+        });
+    </script>
+}

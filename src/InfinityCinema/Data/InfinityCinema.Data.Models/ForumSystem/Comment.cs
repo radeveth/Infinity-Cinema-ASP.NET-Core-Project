@@ -24,5 +24,10 @@
         public string UserId { get; set; }
 
         public ApplicationUser User { get; set; }
+
+        [ForeignKey(nameof(Comment))]
+        public int? ParentId { get; set; }
+
+        public virtual Comment Parent { get; set; }
     }
 }

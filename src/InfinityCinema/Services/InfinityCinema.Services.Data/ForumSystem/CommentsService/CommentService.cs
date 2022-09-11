@@ -25,6 +25,7 @@
             {
                 Content = commentFormModel.Content,
                 PostId = commentFormModel.PostId,
+                ParentId = commentFormModel.ParentId,
                 UserId = commentFormModel.UserId,
             };
 

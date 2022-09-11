@@ -41,7 +41,7 @@
             Vote vote = this.dbContext
                 .Votes.FirstOrDefault(v => v.PostId == voteFormModel.PostId && v.UserId == voteFormModel.UserId);
 
-            if (vote != null)
+            if (vote == null)
             {
                 vote = await this.CreateAsync<Vote>(new VoteFormModel()
                 {
@@ -68,11 +68,11 @@
                 .Where(v => v.PostId == postId)
                 .Sum(V => (int)V.Type);
 
-        public PostVotesViewModel GetVotesForGivenPost(int postId)
+        public VotesResponseModel GetVotesForGivenPost(int postId)
         {
             IEnumerable<Vote> votes = this.dbContext.Votes.Where(v => v.PostId == postId);
 
-            return new PostVotesViewModel()
+            return new VotesResponseModel()
             {
                 Likes = votes.Where(v => v.Type == VoteType.Like).Count(),
                 Dislikes = votes.Where(v => v.Type == VoteType.Dislike).Count(),

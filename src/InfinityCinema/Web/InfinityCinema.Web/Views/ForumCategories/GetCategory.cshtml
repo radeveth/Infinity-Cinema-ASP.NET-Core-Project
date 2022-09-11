@@ -2,9 +2,11 @@
 
 @{
     ViewData["Title"] = @Model.Category.Title + "- Posts";
+
+    int maxPage = (int)Math.Ceiling((double)Model.TotalPostsForCategory / CategoryServiceModel.PostsPerPage);
 }
 
-<div class="mt-5"></div>
+<div class="mt-4"></div>
 
 <div class="container-fluid mt-100">
     @if (!Model.Category.Posts.Any())
@@ -30,6 +32,28 @@
     }
     else
     {
+        <form method="get">
+            <div class="row mb-5">
+                <div class="form-group offset-4 col-3">
+                    <label asp-for="CategoryId" class="form-label d-none"></label>
+                    <input asp-for="CategoryId" class="form-control d-none">
+
+                    <label asp-for="PostsSorting" class="form-label d-none"></label>
+                    <select asp-for="PostsSorting" class="form-control border-warning">
+                        <option disabled>Order by...</option>
+                        <option value="0">Ascending</option>
+                        <option value="1">Descending</option>
+                        <option value="2">Newest</option>
+                        <option value="3">Oldest</option>
+                        <option value="4">Most Popular</option>
+                        <option value="5">Most Unpopular</option>
+                    </select>
+                </div>
+
+                <input type="submit" class="btn btn-warning col-1" style="background-color:aliceblue;" value="Search">
+            </div>
+        </form>
+
         <div class="row">
             @foreach (var post in Model.Category.Posts)
             {
@@ -41,23 +65,24 @@
                                     <img src="https://i.imgur.com/iNmBizf.jpg" class="d-block ui-w-40 rounded-circle" alt="">
                                     <div class="media-body ml-3 mt-2">
                                         <h6>@post.User.FullName</h6>
-                                        <div class="text-muted small">@post.PastTime</div>
+                                        <div class="text-muted small">@(post.PastTime)</div>
 
                                     </div>
                                     <div class="text-muted small ml-3">
-                                        <div>Member since <strong>@post.User.CreatedOn</strong></div>
+                                        <div>Member since <strong><time datetime="@post.User.CreatedOn.ToString("O")"></time></strong></div>
                                         @{
                                             string text = post.User.PostsCount != 1 ? "posts" : "post";
                                         }
                                         <div><strong>@post.User.PostsCount</strong> @text</div>
                                     </div>
                                     <div class="float-end">
+                                        <form id="votesForm" method="post"></form>
                                         <div class="d-flex flex-row align-items-center">
                                             <span onclick="Vote(@post.Id, true)" role="button"><i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
                                             <p id="post-likes-@(post.Id.ToString())" class="small text-muted mb-0">@post.Likes</p>
-                                            
+
                                             <div style="margin-left:8px"></div>
-                                            <span onclick="Vote(@post.Id, true)" role="button"><i class="far fa-thumbs-down mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
+                                            <span onclick="Vote(@post.Id, false)" role="button"><i class="far fa-thumbs-down mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
                                             <p id="post-dislikes-@(post.Id.ToString())" class="small text-muted mb-0">@post.Dislikes</p>
                                         </div>
                                     </div>
@@ -68,12 +93,12 @@
                                 <h5 class="mb-4">
                                     @post.Title
                                 </h5>
-                                <a href="#" id="view-more-btn-@(post.Id.ToString())" onclick="ViewMoreFromPost(@post.Id)" class="pe-auto">View more</a>
+                                <a id="view-more-btn-@(post.Id.ToString())" onclick="ViewMoreFromPost(@post.Id)" class="pe-auto">View more</a>
                                 <div id="post-content-@(post.Id.ToString())" class="d-none">
                                     <p>
                                         @Html.Raw(post.SanitizedContent)
                                     </p>
-                                    <a href="#" id="hide-btn-@(post.Id.ToString())" onclick="HidePostContent(@post.Id)" class="pe-auto">Hide</a>
+                                    <a id="hide-btn-@(post.Id.ToString())" onclick="HidePostContent(@post.Id)" class="pe-auto">Hide</a>
                                 </div>
                             </div>
                             <div id="view-comments-@(post.Id.ToString())-btn" class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
@@ -83,7 +108,9 @@
                             <div class="container d-none mb-4" id="create-comment-for-post-@(post.Id.ToString())">
                                 <hr>
                                 <center><h6 class="mt-4">Add a comment...</h6></center>
-                                <form asp-route-CategoryId="@Model.Category.Id" asp-route-PostId="@post.Id" method="post" class="mt-5 fw-bold">
+                                <form asp-route-CategoryId="@Model.CategoryId" method="post" class="mt-5 fw-bold">
+                                    <input asp-for="Comment.PostId" class="form-control d-none" value="@post.Id">
+
                                     <div class="form-outline mb-4">
                                         @*<label asp-for="Comment.Content" class="form-label"></label>*@
                                         <textarea id="mytextarea" asp-for="Comment.Content" class="form-control" rows="4"></textarea>
@@ -91,7 +118,7 @@
                                     </div>
 
                                     <div class="row mt-4">
-                                        <a asp-area="" asp-controller="ForumCategories" asp-action="GetCategory" asp-route-Id="@Model.Category.Id" class="btn btn-danger rounded-pill col-2">Discard</a>
+                                        <a asp-area="" asp-controller="ForumCategories" asp-action="GetCategory" asp-route-CategoryId="@Model.Category.Id" class="btn btn-danger rounded-pill col-2">Discard</a>
                                         <input type="submit" class="btn btn-warning rounded-pill offset-8 col-2" value="Create">
                                     </div>
                                 </form>
@@ -132,10 +159,20 @@
             }
         </div>
 
-        <div class="row mt-5 mb-5">
+
+        <div class="row mt-5 mb-4">
             <center>
-                <a asp-area="" asp-controller="ForumCategories" asp-action="CreatePostForCategory" asp-route-CategoryId="@Model.Category.Id" class="btn btn-warning col-2 float-end">Create post</a>
+                <a asp-area="" asp-controller="ForumCategories" asp-action="CreatePostForCategory" asp-route-CategoryId="@Model.Category.Id" class="btn btn-warning col-3 float-end">Create post for this category</a>
             </center>
+        </div>
+        <hr>
+        <div class="row mt-3 mb-3">
+            <div class="offset-5 col-sm-1 col-md-1">
+                <a asp-area="" asp-controller="ForumCategories" asp-action="GetCategory" asp-route-CategoryId="@Model.Category.Id" asp-route-CurrentPage="@(Model.CurrentPage - 1 < 1 ? 1 : Model.CurrentPage - 1)" asp-route-Sorting="@Model.PostsSorting" type="submit" class="btn btn-warning rounded-pill float-start">&lt;&lt;</a>
+            </div>
+            <div class="col-sm-1 col-md-1">
+                <a asp-area="" asp-controller="ForumCategories" asp-action="GetCategory" asp-route-CategoryId="@Model.Category.Id" asp-route-CurrentPage="@((Model.CurrentPage + 1 > maxPage ? maxPage : Model.CurrentPage + 1))" asp-route-Sorting="@Model.PostsSorting" type="submit" class="btn btn-warning rounded-pill float-end">>></a>
+            </div>
         </div>
     }
 </div>
@@ -188,21 +225,29 @@
 
     <script>
         function Vote(postId, isLikeVote) {
-            let jsonData = { 'voteFormModel' : { 
-                                'postId' : postId, 
-                                'isLikeVote' : isLikeVote 
-                }
-            };
+            // Why with POST Request do not work? - Idk
+            // let token = $("#votesForm input[name=__RequestVerificationToken]").val();
+            // let json = { postId: postId, isLikeVote: isLikeVote };
 
-            $.ajax({
-                type: "POST",
-                url: "/api/ForumVotesApi/Vote",
-                data: JSON.stringify(jsonData),
-                dataType: "text",
-                success: function (data) {
-                    $("#post-likes-" + postId).textContent = data.Likes;
-                    $("#post-dislikes-" + postId).textContent = data.Dislikes;
-                        }
+            //$.ajax({
+            //    url: "/api/forumvotesapi",
+            //    type: "POST",
+            //    data: JSON.stringify(json),
+            //    contentType: "application/json; charset=utf-8",
+            //    dataType: "json",
+            //    headers: { 'X-CSRF-TOKEN': token },
+            //    success: function (data) {
+            //        likesPElement.textContent = data.likes;
+            //        dislikesPElement.textContent = data.dislikes;
+            //    }
+            //});
+
+            $.get('/api/forumvotesapi/vote?postId=' + postId + '&isLikeVote=' + isLikeVote, (data) => {
+                let likesPElement = document.querySelector('#post-likes-' + postId);
+                let dislikesPElement = document.querySelector('#post-dislikes-' + postId);
+
+                likesPElement.textContent = data.likes;
+                dislikesPElement.textContent = data.dislikes;
             });
         }
     </script>

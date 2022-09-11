@@ -35,6 +35,13 @@
         "dist/jquery.validate.unobtrusive.js",
         "dist/jquery.validate.unobtrusive.min.js"
       ]
+    },
+    {
+      "library": "moment@2.29.4",
+      "destination": "wwwroot/lib/moment/",
+      "files": [
+        "min/moment-with-locales.min.js"
+      ]
     }
   ]
 }

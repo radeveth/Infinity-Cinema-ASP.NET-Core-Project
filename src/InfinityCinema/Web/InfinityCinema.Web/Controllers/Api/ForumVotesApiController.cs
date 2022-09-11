@@ -1,7 +1,7 @@
 ﻿namespace InfinityCinema.Web.Controllers.Api
 {
     using System.Threading.Tasks;
-
+    using InfinityCinema.Services.Data.ForumSystem.PostsService;
     using InfinityCinema.Services.Data.ForumSystem.PostsService.Models;
     using InfinityCinema.Services.Data.ForumSystem.VotesService;
     using InfinityCinema.Services.Data.ForumSystem.VotesService.Models;
@@ -10,25 +10,44 @@
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
-    [Route("/api/[controller]")]
+    [Route("/api/forumvotesapi/")]
     public class ForumVotesApiController : ControllerBase
     {
         private readonly IVoteService voteService;
+        private readonly IPostService postService;
 
-        public ForumVotesApiController(IVoteService voteService)
+        public ForumVotesApiController(IVoteService voteService, IPostService postService)
         {
             this.voteService = voteService;
+            this.postService = postService;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize]
-        [Route("[action]")]
-        public async Task<ActionResult<PostVotesViewModel>> Vote(VoteFormModel voteFormModel, int postId)
+        [Route("vote")]
+        public async Task<ActionResult<VotesResponseModel>> Vote(int postId, bool isLikeVote)
         {
-            voteFormModel.UserId = ClaimsPrincipalExtensions.GetId(this.User);
+            if (!this.postService.IfPostExist(postId))
+            {
+                return this.BadRequest();
+            }
+
+            if (isLikeVote != true && isLikeVote != false)
+            {
+                return this.BadRequest();
+            }
+
+            VoteFormModel voteFormModel = new VoteFormModel()
+            {
+                PostId = postId,
+                UserId = ClaimsPrincipalExtensions.GetId(this.User),
+                IsLikeVote = isLikeVote,
+            };
+
             await this.voteService.VoteAsync(voteFormModel);
 
-            return this.voteService.GetVotesForGivenPost(postId);
+            VotesResponseModel response = this.voteService.GetVotesForGivenPost(postId);
+            return response;
         }
     }
 }

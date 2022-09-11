@@ -17,6 +17,7 @@
             this.dbContext = dbContext;
         }
 
+        // Create
         public async Task<T> CreateAsync<T>(PostFormModel postFormModel)
         {
             Post post = new Post()
@@ -33,11 +34,15 @@
             return this.GetViewModelById<T>(post.Id);
         }
 
+        // Read
         public T GetViewModelById<T>(int id)
             => this.dbContext
                 .Posts
                 .Where(p => p.Id == id)
                 .To<T>()
                 .FirstOrDefault();
+
+        public bool IfPostExist(int postId)
+            => this.dbContext.Posts.Any(p => p.Id == postId);
     }
 }

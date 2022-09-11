@@ -4,6 +4,7 @@
 
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService;
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models;
+    using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models.Enums;
     using InfinityCinema.Services.Data.ForumSystem.CommentsService;
     using InfinityCinema.Services.Data.ForumSystem.CommentsService.Models;
     using InfinityCinema.Services.Data.ForumSystem.PostsService;
@@ -26,32 +27,28 @@
         }
 
         [HttpGet]
-        public IActionResult GetCategory(int id)
+        public IActionResult GetCategory([FromQuery] CategoryServiceModel categoryService)
         {
-            CategoryViewModel category = this.categoryService.GetViewModelById<CategoryViewModel>(id);
+            CategoryServiceModel categoryServiceResult = this.categoryService.ViewCategory(categoryService.CategoryId, categoryService.CurrentPage, categoryService.PostsSorting);
 
-            return this.View(new CategoryServiceModel()
-            {
-                Category = category,
-            });
+            return this.View(categoryServiceResult);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> GetCategoryAsync(CategoryServiceModel categoryServiceModel, int categoryId, int postId)
+        public async Task<IActionResult> GetCategoryAsync(CommentFormModel comment, int categoryId)
         {
-            categoryServiceModel.Comment.PostId = postId;
-            categoryServiceModel.Comment.UserId = ClaimsPrincipalExtensions.GetId(this.User);
+            comment.UserId = ClaimsPrincipalExtensions.GetId(this.User);
 
             // !!!
-            if (!this.ModelState.IsValid)
-            {
-                return this.View(categoryServiceModel);
-            }
+            //if (!this.ModelState.IsValid)
+            //{
+            //    return this.View(categoryServiceModel);
+            //}
 
-            await this.commentService.CreateAsync<CommentFormModel>(categoryServiceModel.Comment);
+            await this.commentService.CreateAsync<CommentViewModel>(comment);
 
-            return this.RedirectToAction(nameof(this.GetCategory), "ForumCategories", new { id = categoryId });
+            return this.RedirectToAction(nameof(this.GetCategory), "ForumCategories", new { categoryId = categoryId });
         }
 
         [HttpGet]

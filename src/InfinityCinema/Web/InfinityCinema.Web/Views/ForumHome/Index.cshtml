@@ -18,8 +18,8 @@
                 <option value="1">Descending</option>
                 <option value="2">Newest</option>
                 <option value="3">Oldest</option>
-                <option value="4">MostPopular</option>
-                <option value="5">MostUnpopular</option>
+                <option value="4">Most Popular</option>
+                <option value="5">Most Unpopular</option>
             </select>
         </div>
 
@@ -42,7 +42,7 @@
                             </div>
                         </center>
                         <div class="card-body">
-                            <a asp-area="" asp-controller="ForumCategories" asp-action="GetCategory" asp-route-Id="@category.Id" class="btn btn-outline-warning rounded-pill offset-3 col-6">@category.Title</a>
+                            <a asp-area="" asp-controller="ForumCategories" asp-action="GetCategory" asp-route-CategoryId="@category.Id" class="btn btn-outline-warning rounded-pill offset-3 col-6">@category.Title</a>
                         </div>
                     </div>
                 </div>

@@ -24,6 +24,8 @@
 
         public string PastTime { get; set; }
 
+        public DateTime CreatedOn { get; set; }
+
         public int CommentsCount { get; set; }
 
         public IEnumerable<CommentViewModel> Comments { get; set; }
@@ -46,7 +48,7 @@
 
             configuration.CreateMap<Post, PostViewModel>()
                 .ForMember(x => x.Likes, y => y.MapFrom(s => s.Votes.Where(x => x.Type == VoteType.Like).Count()))
-                .ForMember(x => x.Likes, y => y.MapFrom(s => s.Votes.Where(x => x.Type == VoteType.Dislike).Count()));
+                .ForMember(x => x.Dislikes, y => y.MapFrom(s => s.Votes.Where(x => x.Type == VoteType.Dislike).Count()));
         }
     }
 }

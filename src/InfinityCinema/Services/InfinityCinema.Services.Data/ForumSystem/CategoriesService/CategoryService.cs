@@ -2,11 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Runtime.ConstrainedExecution;
     using InfinityCinema.Data;
     using InfinityCinema.Data.Common.Repositories;
     using InfinityCinema.Data.Models.ForumSystem;
+    using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models;
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models.Enums;
+    using InfinityCinema.Services.Data.ForumSystem.CommentsService.Models;
     using InfinityCinema.Services.Mapping;
 
     public class CategoryService : ICategoryService
@@ -36,6 +38,37 @@
             };
 
             return categoriesQuery.To<T>().ToList();
+        }
+
+        public CategoryServiceModel ViewCategory(int categoryId, int currentPage = 1, CategorySorting sorting = CategorySorting.Newest, int postsPerPage = CategoryServiceModel.PostsPerPage)
+        {
+            CategoryViewModel category = this.GetViewModelById<CategoryViewModel>(categoryId);
+            int totalPostsForCategory = category.Posts.Count();
+
+            category.Posts = sorting switch
+            {
+                CategorySorting.Ascending => category.Posts.OrderBy(c => c.Title),
+                CategorySorting.Descending => category.Posts.OrderByDescending(c => c.Title),
+                CategorySorting.Newest => category.Posts.OrderByDescending(p => p.CreatedOn),
+                CategorySorting.Oldest => category.Posts.OrderBy(p => p.CreatedOn),
+                CategorySorting.MostPopular => category.Posts.OrderByDescending(c => c.Likes),
+                CategorySorting.MostUnpopular => category.Posts.OrderBy(c => c.Dislikes),
+                _ => category.Posts.OrderByDescending(c => c.Id),
+            };
+
+            category.Posts = category.Posts
+                .Skip((currentPage - 1) * postsPerPage)
+                .Take(postsPerPage)
+                .ToList();
+
+            return new CategoryServiceModel()
+            {
+                CategoryId = categoryId,
+                Category = category,
+                CurrentPage = currentPage,
+                TotalPostsForCategory = totalPostsForCategory,
+                Comment = new CommentFormModel(),
+            };
         }
 
         public T GetCategoryByTitle<T>(string title)

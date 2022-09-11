@@ -18,7 +18,7 @@
 
         int GetVotes(int postId);
 
-        PostVotesViewModel GetVotesForGivenPost(int postId);
+        VotesResponseModel GetVotesForGivenPost(int postId);
 
         // Update
         // Delete

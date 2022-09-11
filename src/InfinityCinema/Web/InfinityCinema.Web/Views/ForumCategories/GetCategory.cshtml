@@ -65,11 +65,20 @@
                                     <img src="https://i.imgur.com/iNmBizf.jpg" class="d-block ui-w-40 rounded-circle" alt="">
                                     <div class="media-body ml-3 mt-2">
                                         <h6>@post.User.FullName</h6>
-                                        <div class="text-muted small">@(post.PastTime)</div>
+                                        @{
+                                            var pastTime = DateTime.UtcNow.Subtract(post.CreatedOn);
+
+                                            var pastTimeToVisualizate = pastTime.Days == 1
+                                            ? $"{pastTime.Days} day ago" : pastTime.Days != 0 ? $"{pastTime.Days} days ago"
+                                            : pastTime.Hours == 1 ? $"{pastTime.Hours} hour ago" : pastTime.Hours != 0 ? $"{pastTime.Hours} hours ago"
+                                            : pastTime.Minutes == 1 ? $"{pastTime.Minutes} minute ago" : pastTime.Minutes != 0 ? $"{pastTime.Minutes} minutes ago" 
+                                            : $"{pastTime.Seconds} seconds ago";
+                                        }
+                                        <div>@pastTimeToVisualizate</div>
 
                                     </div>
                                     <div class="text-muted small ml-3">
-                                        <div>Member since <strong><time datetime="@post.User.CreatedOn.ToString("O")"></time></strong></div>
+                                        <div>Member since: <time datetime="@post.User.CreatedOn.ToString("O")"></time></div>
                                         @{
                                             string text = post.User.PostsCount != 1 ? "posts" : "post";
                                         }
@@ -135,7 +144,7 @@
                                                 {
                                                     <div class="card mb-3">
                                                         <div class="card-body">
-                                                            <p>@comment.SanitizedContent</p>
+                                                            <p>@Html.Raw(comment.SanitizedContent)</p>
 
                                                             <div class="d-flex justify-content-between">
                                                                 <div class="d-flex flex-row align-items-center">

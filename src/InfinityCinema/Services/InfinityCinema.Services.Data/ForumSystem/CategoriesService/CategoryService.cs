@@ -56,10 +56,10 @@
                 _ => category.Posts.OrderByDescending(c => c.Id),
             };
 
-            category.Posts = category.Posts
-                .Skip((currentPage - 1) * postsPerPage)
-                .Take(postsPerPage)
-                .ToList();
+            //category.Posts = category.Posts
+            //    .Skip((currentPage - 1) * postsPerPage)
+            //    .Take(postsPerPage)
+            //    .ToList();
 
             return new CategoryServiceModel()
             {

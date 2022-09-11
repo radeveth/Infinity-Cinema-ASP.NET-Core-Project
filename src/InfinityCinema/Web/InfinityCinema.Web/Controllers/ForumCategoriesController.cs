@@ -74,7 +74,7 @@
 
             await this.postService.CreateAsync<PostViewModel>(postFormModel);
 
-            return this.RedirectToAction(nameof(this.GetCategory), "ForumCategories", new { id = categoryId });
+            return this.RedirectToAction(nameof(this.GetCategory), "ForumCategories", new { categoryId = categoryId });
         }
     }
 }

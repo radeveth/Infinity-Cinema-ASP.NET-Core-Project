@@ -21,6 +21,8 @@
         VotesResponseModel GetVotesForGivenPost(int postId);
 
         // Update
+
         // Delete
+        Task DeleteAsync(int voteId);
     }
 }

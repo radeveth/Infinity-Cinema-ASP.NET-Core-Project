@@ -78,5 +78,17 @@
                 Dislikes = votes.Where(v => v.Type == VoteType.Dislike).Count(),
             };
         }
+
+        // Delete
+        public async Task DeleteAsync(int voteId)
+        {
+            Vote vote = this.dbContext.Votes.Where(v => v.Id == voteId).FirstOrDefault();
+
+            if (vote != null)
+            {
+                this.dbContext.Remove(vote);
+                await this.dbContext.SaveChangesAsync();
+            }
+        }
     }
 }

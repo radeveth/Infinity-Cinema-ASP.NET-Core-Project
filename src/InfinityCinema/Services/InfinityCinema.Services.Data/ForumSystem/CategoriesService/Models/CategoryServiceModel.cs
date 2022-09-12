@@ -16,7 +16,5 @@
         public CategorySorting PostsSorting { get; set; } = CategorySorting.Newest;
 
         public CategoryViewModel Category { get; set; }
-
-        public CommentFormModel Comment { get; set; }
     }
 }

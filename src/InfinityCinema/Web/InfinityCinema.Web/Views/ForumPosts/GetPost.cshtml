@@ -1,0 +1,162 @@
+﻿@model PostServiceModel
+
+@{
+    ViewData["Title"] = $"Post - {Model.Post.Title}";
+
+    void DisplayComments(int? parentId)
+    {
+        IEnumerable<CommentViewModel> comments = Model.Post.Comments.Where(p => p.ParentId == parentId);
+
+        if (!comments.Any())
+        {
+            return;
+        }
+
+        foreach (var comment in comments)
+        {
+            <div class="mb-3 bg-white border border-dark">
+                <div class="card-body">
+                    <p>@Html.Raw(comment.SanitizedContent)</p>
+
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex flex-row align-items-center">
+                            <i class='fas fa-user-alt'></i>
+                            <p class="small mb-0 ms-2">@comment.User.FullName</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <button id="view-child-comments-btn" style="margin-left:16px" class="badge badge-warning d-inline-flex align-items-center align-middle" onclick="ViewChildComments(@comment.Id)">&nbsp;&nbsp;&nbsp;<i class="fas fa-comment"></i>&nbsp;&nbsp;&nbsp;</button>
+                        <button id="hide-child-comments-btn" style="margin-left:16px" class="badge badge-warning d-inline-flex align-items-center align-middle d-none" onclick="HideChildComments(@comment.Id)">&nbsp;&nbsp;&nbsp;<i class="fas fa-comment"></i>&nbsp;&nbsp;&nbsp;</button>
+                        <hr style="margin-left:13px; width:51px; margin-top:3px">
+                    </div>
+                    <div class="offset-8 col-1"> <a onclick="CreateComment(@comment.Id)" class="btn btn-warning">Replay</a> </div>
+                </div>
+                <div id="child-comments-for-@(comment.Id.ToString())" class="col-11 d-none" style="margin-left:31px; margin-right:31px;">
+                    @{
+                        DisplayComments(comment.Id);
+                    }
+                </div>
+            </div>
+        }
+    }
+}
+
+<div class="mt-5"></div>
+
+<div class="row d-flex justify-content-center">
+    <div class="col-md-10 col-lg-9">
+        <div class="bg-white">
+            <div class="card-body p-4">
+                @Html.Raw(@Model.Post.SanitizedContent)
+            </div>
+        </div>
+    </div>
+</div>
+<div id="comments" class="mb-4">
+    <hr class="mt-5 mb-4">
+    <div class="mb-4">
+        <center>
+            <h1>Comments</h1>
+        </center>
+    </div>
+    @if (Model.Post.Comments.Any())
+    {
+        <form method="get">
+            <div class="row mb-5">
+                <div class="form-group offset-4 col-3">
+                    <input name="PostId" class="form-control d-none" value="@Model.Post.Id">
+
+                    <label asp-for="CommentsSorting" class="form-label d-none"></label>
+                    <select asp-for="CommentsSorting" class="form-control border-warning">
+                        <option disabled>Order by...</option>
+                        <option value="0">Newest</option>
+                        <option value="1">Oldest</option>
+                    </select>
+                </div>
+
+                <input asp-fragment="comments" type="submit" class="btn btn-warning col-1" style="background-color:aliceblue;" value="Search">
+            </div>
+        </form>
+    }
+    @{
+        DisplayComments(null);
+    }
+    <hr class="mt-5 mb-4">
+    <button class="btn btn-warning offset-10 col-2" onclick="CreateComment(null)">Add comment for post</button>
+</div>
+
+<div class="container mb-4 d-none" id="create-comment-for-comment">
+    <hr>
+    <center><h4 class="mt-5">Replay...</h4></center>
+    <form asp-area="" asp-controller="ForumComments" asp-action="Create" method="post" class="mt-5 fw-bold">
+        <input asp-for="Comment.PostId" class="form-control d-none" value="@Model.Post.Id">
+        <input id="comment-Parent-id" asp-for="Comment.ParentId" class="form-control d-none" value="0" />
+        <label></label>
+
+        <div class="form-outline mb-4">
+            <textarea asp-for="Comment.Content" id="mytextarea" class="form-control" rows="2"></textarea>
+            <span asp-validation-for="Comment.Content" class="small text-danger"></span>
+        </div>
+
+        <div class="row mt-4">
+            <a asp-area="" asp-controller="ForumPosts" asp-action="GetPost" asp-route-PostId="@Model.Post.Id" class="btn btn-danger rounded-pill col-2">Discard</a>
+            <input type="submit" class="btn btn-warning rounded-pill offset-8 col-2" value="Create">
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        function CreateComment(parentId) {
+            let createCommentFormElement = document.querySelector('#create-comment-for-comment');
+            $('#create-comment-for-comment form #comment-Parent-id').attr('value', parentId);
+
+            createCommentFormElement.classList.remove('d-none');
+
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#create-comment-for-comment").offset().top
+            }, 50);
+        };
+    </script>
+
+    <script>
+        function ViewComments() {
+            let commentsContainerElement = document.querySelector('#comments');
+
+            commentsContainerElement.classList.remove('d-none');
+        }
+    </script>
+
+    <script>
+
+        function ViewChildComments(parentId) {
+            let childComments = document.querySelector('#child-comments-for-' + parentId);
+            let viewChildCommentsBtnElement = document.querySelector('#view-child-comments-btn');
+            let hideChildCommentsBtnElement = document.querySelector('#hide-child-comments-btn');
+            childComments.classList.remove('d-none');
+
+            viewChildCommentsBtnElement.classList.add('d-none');
+            hideChildCommentsBtnElement.classList.remove('d-none');
+        };
+
+        function HideChildComments(parentId) {
+            let childComments = document.querySelector('#child-comments-for-' + parentId);
+            let viewChildCommentsBtnElement = document.querySelector('#view-child-comments-btn');
+            let hideChildCommentsBtnElement = document.querySelector('#hide-child-comments-btn');
+
+            childComments.classList.add('d-none');
+
+            viewChildCommentsBtnElement.classList.remove('d-none');
+            hideChildCommentsBtnElement.classList.add('d-none');
+        };
+    </script>
+
+    <script src="/js//js//tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#mytextarea'
+        });
+    </script>
+}

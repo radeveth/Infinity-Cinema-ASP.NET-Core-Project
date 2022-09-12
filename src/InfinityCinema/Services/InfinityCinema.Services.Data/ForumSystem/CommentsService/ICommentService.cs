@@ -16,6 +16,8 @@
         IEnumerable<T> GetAllForParticluarPost<T>(int postId);
 
         // Update
+
         // Delete
+        Task DeleteAsync(int commentId);
     }
 }

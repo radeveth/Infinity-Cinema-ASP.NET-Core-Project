@@ -9,6 +9,7 @@
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models;
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models.Enums;
     using InfinityCinema.Services.Data.ForumSystem.CommentsService.Models;
+    using InfinityCinema.Services.Data.ForumSystem.PostsService.Models;
     using InfinityCinema.Services.Mapping;
 
     public class CategoryService : ICategoryService
@@ -56,10 +57,11 @@
                 _ => category.Posts.OrderByDescending(c => c.Id),
             };
 
-            //category.Posts = category.Posts
-            //    .Skip((currentPage - 1) * postsPerPage)
-            //    .Take(postsPerPage)
-            //    .ToList();
+            List<PostViewModel> targetPosts = category.Posts
+                .Skip((currentPage - 1) * postsPerPage)
+                .Take(postsPerPage)
+                .ToList();
+            category.Posts = targetPosts;
 
             return new CategoryServiceModel()
             {
@@ -67,7 +69,6 @@
                 Category = category,
                 CurrentPage = currentPage,
                 TotalPostsForCategory = totalPostsForCategory,
-                Comment = new CommentFormModel(),
             };
         }
 

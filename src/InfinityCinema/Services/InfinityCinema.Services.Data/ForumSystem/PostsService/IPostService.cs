@@ -13,5 +13,8 @@
         T GetViewModelById<T>(int id);
 
         bool IfPostExist(int postId);
+
+        // Delete
+        Task DeleteAsync(int postId);
     }
 }

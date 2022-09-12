@@ -34,23 +34,6 @@
             return this.View(categoryServiceResult);
         }
 
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> GetCategoryAsync(CommentFormModel comment, int categoryId)
-        {
-            comment.UserId = ClaimsPrincipalExtensions.GetId(this.User);
-
-            // !!!
-            //if (!this.ModelState.IsValid)
-            //{
-            //    return this.View(categoryServiceModel);
-            //}
-
-            await this.commentService.CreateAsync<CommentViewModel>(comment);
-
-            return this.RedirectToAction(nameof(this.GetCategory), "ForumCategories", new { categoryId = categoryId });
-        }
-
         [HttpGet]
         [Authorize]
         public IActionResult CreatePostForCategory(int categoryId)

@@ -106,7 +106,7 @@
         public class ForumPostValidation
         {
             public const int TitleMaxLength = 100;
-            public const int ContentMaxLength = 1500;
+            public const int ContentMaxLength = 10000;
         }
 
         public class ForumCommentValidation

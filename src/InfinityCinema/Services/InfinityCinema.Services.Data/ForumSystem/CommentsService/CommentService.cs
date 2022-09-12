@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Data;
+    using InfinityCinema.Data.Common.Repositories;
     using InfinityCinema.Data.Models.ForumSystem;
     using InfinityCinema.Services.Data.ForumSystem.CommentsService.Models;
     using InfinityCinema.Services.Mapping;
@@ -12,10 +13,12 @@
     public class CommentService : ICommentService
     {
         private readonly InfinityCinemaDbContext dbContext;
+        private readonly IRepository<Comment> commentRepository;
 
-        public CommentService(InfinityCinemaDbContext dbContext)
+        public CommentService(InfinityCinemaDbContext dbContext, IRepository<Comment> commentRepository)
         {
             this.dbContext = dbContext;
+            this.commentRepository = commentRepository;
         }
 
         // Create
@@ -48,5 +51,27 @@
                 .Comments
                 .Where(c => c.PostId == postId)
                 .To<T>();
+
+        // Delete
+        public async Task DeleteAsync(int commentId)
+        {
+            Comment comment = await this.dbContext.Comments.FindAsync(commentId);
+
+            if (comment != null)
+            {
+                List<Comment> childComments = this.dbContext.Comments.Where(c => c.ParentId == comment.Id).ToList();
+
+                if (childComments.Any())
+                {
+                    foreach (var childComment in childComments)
+                    {
+                        await this.DeleteAsync(childComment.Id);
+                    }
+                }
+
+                this.dbContext.Comments.Remove(comment);
+                await this.dbContext.SaveChangesAsync();
+            }
+        }
     }
 }

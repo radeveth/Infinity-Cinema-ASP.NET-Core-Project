@@ -1,9 +1,21 @@
 ﻿@model CategoryServiceModel
 
+@inject UserManager<ApplicationUser> userManager;
+@inject SignInManager<ApplicationUser> signInManager;
+
 @{
     ViewData["Title"] = @Model.Category.Title + "- Posts";
 
     int maxPage = (int)Math.Ceiling((double)Model.TotalPostsForCategory / CategoryServiceModel.PostsPerPage);
+
+    bool isUserIsRegister = this.signInManager.IsSignedIn(this.User);
+    string currentUserId = string.Empty;
+
+    if (isUserIsRegister)
+    {
+        ApplicationUser currentUser = await this.userManager.GetUserAsync(this.User);
+        currentUserId = currentUser.Id;
+    }
 }
 
 <div class="mt-4"></div>
@@ -18,7 +30,7 @@
                 <h2>No posts are created for this category</h2>
                 <div class="row mt-4">
                     <center>
-                        <button asp-area="" asp-controller="Forum" asp-action="CreatePostForCategoryAsync" asp-route-CategoryId="@Model.Category.Id" class="btn btn-warning col-5">Create first post for this category</button>
+                        <a asp-area="" asp-controller="ForumCategories" asp-action="CreatePostForCategory" asp-route-CategoryId="@Model.Category.Id" class="btn btn-warning col-5">Create first post for this category</a>
                     </center>
                 </div>
             </center>
@@ -57,10 +69,18 @@
         <div class="row">
             @foreach (var post in Model.Category.Posts)
             {
+                List<CommentViewModel> comments = post.Comments.Where(c => c.ParentId == null).OrderByDescending(c => c.Id).Take(5).ToList();
+                
                 <div class="col-md-12">
                     <div class="card mb-4">
                         <div class="container">
                             <div class="card-header">
+                                @if (currentUserId == post.User.Id)
+                                {
+                                    <div class="float-end">
+                                        <a asp-area="" asp-controller="ForumPosts" asp-action="DeletePost" asp-route-PostId="@post.Id" asp-route-CategoryId="@Model.CategoryId" class="btn btn-danger">Delete</a>
+                                    </div>
+                                }
                                 <div class="media flex-wrap w-100 align-items-center">
                                     <img src="https://i.imgur.com/iNmBizf.jpg" class="d-block ui-w-40 rounded-circle" alt="">
                                     <div class="media-body ml-3 mt-2">
@@ -71,7 +91,7 @@
                                             var pastTimeToVisualizate = pastTime.Days == 1
                                             ? $"{pastTime.Days} day ago" : pastTime.Days != 0 ? $"{pastTime.Days} days ago"
                                             : pastTime.Hours == 1 ? $"{pastTime.Hours} hour ago" : pastTime.Hours != 0 ? $"{pastTime.Hours} hours ago"
-                                            : pastTime.Minutes == 1 ? $"{pastTime.Minutes} minute ago" : pastTime.Minutes != 0 ? $"{pastTime.Minutes} minutes ago" 
+                                            : pastTime.Minutes == 1 ? $"{pastTime.Minutes} minute ago" : pastTime.Minutes != 0 ? $"{pastTime.Minutes} minutes ago"
                                             : $"{pastTime.Seconds} seconds ago";
                                         }
                                         <div>@pastTimeToVisualizate</div>
@@ -102,47 +122,22 @@
                                 <h5 class="mb-4">
                                     @post.Title
                                 </h5>
-                                <a id="view-more-btn-@(post.Id.ToString())" onclick="ViewMoreFromPost(@post.Id)" class="pe-auto">View more</a>
-                                <div id="post-content-@(post.Id.ToString())" class="d-none">
-                                    <p>
-                                        @Html.Raw(post.SanitizedContent)
-                                    </p>
-                                    <a id="hide-btn-@(post.Id.ToString())" onclick="HidePostContent(@post.Id)" class="pe-auto">Hide</a>
-                                </div>
+                                <button class="badge badge-warning d-inline-flex align-items-center align-middle" onclick="ViewCommentsForPost(@post.Id)"><i class="fas fa-comment"></i>&nbsp;&nbsp; <span class="align-middle">Recent comments (@comments.Count)</span></button>
                             </div>
                             <div id="view-comments-@(post.Id.ToString())-btn" class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
-                                <button style="margin-left:20px;" class="badge badge-warning d-inline-flex align-items-center align-middle mb-3 mt-3" onclick="ViewCommentsForPost(@post.Id)"><i class="fas fa-comment"></i>&nbsp; <span class="align-middle">@post.CommentsCount</span></button>
-                                <div class="px-4 pt-3"> <a onclick="ReplayWithCommentOnCategoryPost(@post.Id)" class="btn btn-warning"><i class="ion ion-md-create"></i>Replay</a> </div>
-                            </div>
-                            <div class="container d-none mb-4" id="create-comment-for-post-@(post.Id.ToString())">
-                                <hr>
-                                <center><h6 class="mt-4">Add a comment...</h6></center>
-                                <form asp-route-CategoryId="@Model.CategoryId" method="post" class="mt-5 fw-bold">
-                                    <input asp-for="Comment.PostId" class="form-control d-none" value="@post.Id">
-
-                                    <div class="form-outline mb-4">
-                                        @*<label asp-for="Comment.Content" class="form-label"></label>*@
-                                        <textarea id="mytextarea" asp-for="Comment.Content" class="form-control" rows="4"></textarea>
-                                        <span asp-validation-for="Comment.Content" class="small text-danger"></span>
-                                    </div>
-
-                                    <div class="row mt-4">
-                                        <a asp-area="" asp-controller="ForumCategories" asp-action="GetCategory" asp-route-CategoryId="@Model.Category.Id" class="btn btn-danger rounded-pill col-2">Discard</a>
-                                        <input type="submit" class="btn btn-warning rounded-pill offset-8 col-2" value="Create">
-                                    </div>
-                                </form>
+                                <div class="px-4 pt-3"> <a asp-area="" asp-controller="ForumPosts" asp-action="GetPost" asp-route-PostId="@post.Id" class="btn btn-warning"><i class="ion ion-md-create"></i>View more</a> </div>
+                                <div class="px-4 pt-3"> <a asp-area="" asp-controller="ForumPosts" asp-action="GetPost" asp-route-PostId="@post.Id" asp-fragment="comments" class="btn btn-warning"><i class="ion ion-md-create"></i>Replay</a> </div>
                             </div>
                             <div id="comments-container-@(post.Id.ToString())" class="container d-none">
                                 <hr>
-                                <center><h5>Comments</h5></center>
+                                <center><h5>Recent Comments</h5></center>
                                 <div class="row d-flex justify-content-center">
                                     <div class="col-md-10 col-lg-9">
                                         <div style="background-color: #aliceblue;">
                                             <div class="card-body p-4">
-
-                                                @foreach (var comment in post.Comments)
+                                                @foreach (var comment in comments)
                                                 {
-                                                    <div class="card mb-3">
+                                                    <div class="mb-3 bg-white border border-dark">
                                                         <div class="card-body">
                                                             <p>@Html.Raw(comment.SanitizedContent)</p>
 
@@ -151,6 +146,7 @@
                                                                     <i class='fas fa-user-alt'></i>
                                                                     <p class="small mb-0 ms-2">@comment.User.FullName</p>
                                                                 </div>
+                                                                <button class="small mb-0 ms-2 btn btn-warning">Replay</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -171,7 +167,20 @@
 
         <div class="row mt-5 mb-4">
             <center>
-                <a asp-area="" asp-controller="ForumCategories" asp-action="CreatePostForCategory" asp-route-CategoryId="@Model.Category.Id" class="btn btn-warning col-3 float-end">Create post for this category</a>
+                @if (isUserIsRegister)
+                {
+                    <a asp-area="" asp-controller="ForumCategories" asp-action="CreatePostForCategory" asp-route-CategoryId="@Model.Category.Id" class="btn btn-warning col-3 float-end">Create post for this category</a>
+                }
+                else
+                {
+                    <button onclick="redirectUnsignedUpUser()" class="btn btn-warning col-3 float-end">Create post for this category</button>
+                    <div></div>
+                    <div class="row d-none" id="redirect-user-alert">
+                        <center>
+                            <a asp-area="Identity" asp-controller="Account" asp-action="Register" class="btn btn-danger">To create posts first should to register!</a>
+                        </center>
+                    </div>
+                }
             </center>
         </div>
         <hr>
@@ -188,23 +197,14 @@
 
 @section Scripts {
     <script>
+        function redirectUnsignedUpUser() {
+            let alertElement = document.querySelector('#redirect-user-alert');
 
-        function ViewMoreFromPost(postId) {
-            let viewMoreAHrefElement = document.querySelector('#view-more-btn-' + postId);
-            let postContentPElement = document.querySelector('#post-content-' + postId);
+            alertElement.classList.remove('d-none');
+        };
+    </script>
 
-            viewMoreAHrefElement.classList.add('d-none');
-            postContentPElement.classList.remove('d-none');
-        }
-
-        function HidePostContent(postId) {
-            let viewMoreAHrefElement = document.querySelector('#view-more-btn-' + postId);
-            let postContentPElement = document.querySelector('#post-content-' + postId);
-
-            viewMoreAHrefElement.classList.remove('d-none');
-            postContentPElement.classList.add('d-none');
-        }
-
+    <script>
         function ViewCommentsForPost(postId) {
             let viewCommentsButtonElement = document.querySelector('#view-comments-' + postId + '-btn');
             let commentsConatinerElement = document.querySelector('#comments-container-' + postId);
@@ -219,16 +219,6 @@
 
             viewCommentsButtonElement.classList.remove('d-none');
             commentsConatinerElement.classList.add('d-none');
-        }
-    </script>
-
-    <script>
-        function ReplayWithCommentOnCategoryPost(postId) {
-            let createCommentFormContainerElement = document.querySelector('#create-comment-for-post-' + postId);
-            let viewCommentsButtonElement = document.querySelector('#view-comments-' + postId + '-btn');
-
-            createCommentFormContainerElement.classList.remove('d-none');
-            viewCommentsButtonElement.classList.add('d-none');
         }
     </script>
 
@@ -260,6 +250,7 @@
             });
         }
     </script>
+
 
     <script src="/js//js//tinymce/tinymce.min.js" referrerpolicy="origin"></script>
     <script>

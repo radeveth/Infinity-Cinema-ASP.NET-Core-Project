@@ -34,10 +34,6 @@
 
     public class MovieService : IMovieService
     {
-        private readonly IDeletableEntityRepository<Movie> movieRepository;
-        private readonly IDeletableEntityRepository<MovieLanguage> movieLanguagesRepository;
-        private readonly IDeletableEntityRepository<MovieGenre> movieGenresRepository;
-
         private readonly InfinityCinemaDbContext dbContext;
         private readonly IDirectorService directorService;
         private readonly IImageService imageService;
@@ -61,9 +57,6 @@
             IPlatformService platformService,
             ILanguageService languageService,
             IGenreService genreService,
-            IDeletableEntityRepository<Movie> movieRepository,
-            IDeletableEntityRepository<MovieLanguage> movieLanguagesRepository,
-            IDeletableEntityRepository<MovieGenre> movieGenresRepository,
             IMovieCommentService movieCommentService,
             IMovieUserCommentService movieUserCommentService,
             IApplicationUserService applicationUserService)
@@ -77,9 +70,6 @@
             this.platformService = platformService;
             this.languageService = languageService;
             this.genreService = genreService;
-            this.movieRepository = movieRepository;
-            this.movieLanguagesRepository = movieLanguagesRepository;
-            this.movieGenresRepository = movieGenresRepository;
             this.movieCommentService = movieCommentService;
             this.movieUserCommentService = movieUserCommentService;
             this.applicationUserService = applicationUserService;

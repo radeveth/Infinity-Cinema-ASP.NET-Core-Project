@@ -38,104 +38,103 @@
 
         <div class="mb-5"></div>
     </div>
-    </div>
-    <div class="mt-5"></div>
-    <h3 class="mb-3"><img style="margin-left:2px; margin-bottom:5px;" width="30px" height="30px" src="https://cdn-icons-png.flaticon.com/512/6748/6748737.png"> Your Saved Movies</h3>
-    @if (ViewBag.IsUserIsSignedIn)
+</div>
+<div class="mt-5"></div>
+<h3 class="mb-3"><img style="margin-left:2px; margin-bottom:5px;" width="30px" height="30px" src="https://cdn-icons-png.flaticon.com/512/6748/6748737.png"> Your Saved Movies</h3>
+@if (ViewBag.IsUserIsSignedIn)
+{
+    @if (Model.SavdMoviesFromUser.Any())
     {
-        @if (Model.SavdMoviesFromUser.Any())
-        {
+        <div class="container">
             <div class="container">
                 <div class="container">
-                    <div class="container">
-                        @if (Model.SavdMoviesFromUser.Any())
+                    @if (Model.SavdMoviesFromUser.Any())
+                    {
+                        if (Model.SavdMoviesFromUser.Count() > 6)
                         {
-                            if (Model.SavdMoviesFromUser.Count() > 6)
-                            {
-                                <div class="owl-carousel owl-theme">
-                                    @foreach (var savedMovie in Model.SavdMoviesFromUser)
-                                    {
-                                        <div class="item">
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    <img class="card-img" src="@savedMovie.ImageUrl" alt="">
-                                                </div>
-                                                <div class="card-body">
-                                                    <span class="badge badge-warning">@(savedMovie.StarRating == -1 ? "No rating" : $"{savedMovie.StarRating:f2}/10 {Html.Raw("★")}")</span>
-                                                    <h5 class="card-title mt-2">@savedMovie.Name</h5>
-                                                </div>
-                                                <div class="card-footer">
-                                                    <form method="get">
-                                                        <button asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@savedMovie.MovieId" class="btn btn-outline-warning">Details</button>
-                                                    </form>
-                                                </div>
+                            <div class="owl-carousel owl-theme">
+                                @foreach (var savedMovie in Model.SavdMoviesFromUser)
+                                {
+                                    <div class="item">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <img class="card-img" src="@savedMovie.ImageUrl" alt="">
+                                            </div>
+                                            <div class="card-body">
+                                                <span class="badge badge-warning">@(savedMovie.StarRating == -1 ? "No rating" : $"{savedMovie.StarRating:f2}/10 {Html.Raw("★")}")</span>
+                                                <h5 class="card-title mt-2">@savedMovie.Name</h5>
+                                            </div>
+                                            <div class="card-footer">
+                                                <form method="get">
+                                                    <button asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@savedMovie.MovieId" class="btn btn-outline-warning">Details</button>
+                                                </form>
                                             </div>
                                         </div>
-                                    }
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="row">
-                                    @foreach (var savedMovie in Model.SavdMoviesFromUser)
-                                    {
-                                        <div class="col-2">
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    <img class="card-img" src="@savedMovie.ImageUrl" alt="">
-                                                </div>
-                                                <div class="card-body">
-                                                    <span class="badge badge-warning">@(savedMovie.StarRating == -1 ? "No rating" : $"{savedMovie.StarRating:f2}/10 {Html.Raw("★")}")</span>
-                                                    <h5 class="card-title mt-2">@savedMovie.Name</h5>
-                                                </div>
-                                                <div class="card-footer">
-                                                    <form method="get">
-                                                        <button asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@savedMovie.MovieId" class="btn btn-outline-warning">Details</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            }
+                                    </div>
+                                }
+                            </div>
                         }
-                    </div>
+                        else
+                        {
+                            <div class="row">
+                                @foreach (var savedMovie in Model.SavdMoviesFromUser)
+                                {
+                                    <div class="col-2">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <img class="card-img" src="@savedMovie.ImageUrl" alt="">
+                                            </div>
+                                            <div class="card-body">
+                                                <span class="badge badge-warning">@(savedMovie.StarRating == -1 ? "No rating" : $"{savedMovie.StarRating:f2}/10 {Html.Raw("★")}")</span>
+                                                <h5 class="card-title mt-2">@savedMovie.Name</h5>
+                                            </div>
+                                            <div class="card-footer">
+                                                <form method="get">
+                                                    <button asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@savedMovie.MovieId" class="btn btn-outline-warning">Details</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
                 </div>
             </div>
-        }
-        else
-        {
-            <div class="jumbotron">
-                <div class="mt-4"></div>
-                <div class="mt-2"></div>
-                <center>
-                    <h3>Your Watchlist is empty</h3>
-                </center>
-                <hr class="mt-4 offset-2 col-8">
-                <p class="lead">
-                    <div class="row">
-                        <a asp-area="" asp-controller="Movies" asp-action="All" asp-route-Sorting=0 class="btn btn-warning btn-lg offset-2 col-3" role="button">Browse Popular Movies</a>
-                        <a asp-area="" asp-controller="Genres" asp-action="All" class="btn btn-warning btn-lg offset-2 col-3" role="button">Browse By Genres</a>
-                    </div>
-                </p>
-            </div>
-        }
+        </div>
     }
     else
     {
         <div class="jumbotron">
+            <div class="mt-4"></div>
+            <div class="mt-2"></div>
             <center>
-                <div class="mt-4"></div>
-                <h1 class="display-6" style="margin-bottom:20px">Register to access your Watchlist</h1>
-                <h6>Save shows and movies to keep track of what you want to watch.</h6>
+                <h3>Your Watchlist is empty</h3>
             </center>
-            <hr class="my-4">
+            <hr class="mt-4 offset-2 col-8">
             <p class="lead">
                 <div class="row">
-                    <a asp-area="Identity" asp-controller="Account" asp-action="Register" class="btn btn-outline-warning btn-lg offset-4 col-2" role="button" style="margin-right:10px">Register</a>
-                    <a asp-area="Identity" asp-controller="Account" asp-action="Login" class="btn btn-outline-warning btn-lg col-2" role="button" style="margin-left:7px">Login</a>
+                    <a asp-area="" asp-controller="Movies" asp-action="All" asp-route-Sorting=0 class="btn btn-warning btn-lg offset-2 col-3" role="button">Browse Popular Movies</a>
+                    <a asp-area="" asp-controller="Genres" asp-action="All" class="btn btn-warning btn-lg offset-2 col-3" role="button">Browse By Genres</a>
                 </div>
             </p>
         </div>
     }
-</div>
+}
+else
+{
+    <div class="jumbotron">
+        <center>
+            <div class="mt-4"></div>
+            <h1 class="display-6" style="margin-bottom:20px">Register to access your Watchlist</h1>
+            <h6>Save shows and movies to keep track of what you want to watch.</h6>
+        </center>
+        <hr class="my-4">
+        <p class="lead">
+            <div class="row">
+                <a asp-area="Identity" asp-controller="Account" asp-action="Register" class="btn btn-outline-warning btn-lg offset-4 col-2" role="button" style="margin-right:10px">Register</a>
+                <a asp-area="Identity" asp-controller="Account" asp-action="Login" class="btn btn-outline-warning btn-lg col-2" role="button" style="margin-left:7px">Login</a>
+            </div>
+        </p>
+    </div>
+}

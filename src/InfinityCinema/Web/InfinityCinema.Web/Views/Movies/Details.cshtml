@@ -1,6 +1,7 @@
 ﻿@model MovieDetailsServiceModel
 
-@inject UserManager<ApplicationUser> UserManager;
+@inject UserManager<ApplicationUser> userManager;
+@inject SignInManager<ApplicationUser> signInManager;
 
 @{
     ViewData["Title"] = Model.Name;
@@ -8,10 +9,17 @@
     IEnumerable<GenreViewModel> genres = Model.Genres;
     int neededColumnsForGenres = genres.Count() + 1;
 
-    bool ifMovieIsAddedToWatchLater = Model.ApplicationUsersId.Any(a => a == ViewData["UserId"].ToString());
+    ApplicationUser currentUser = null;
+    string currentUserId = string.Empty;
+    bool? ifMovieIsAddedToWatchLater = null;
 
-    ApplicationUser user = await this.UserManager.GetUserAsync(this.User);
-    string userId = user.Id;
+    if (this.signInManager.IsSignedIn(this.User))
+    {
+        currentUser = await userManager.GetUserAsync(this.User);
+        currentUserId = currentUser.Id;
+        
+        ifMovieIsAddedToWatchLater = Model.ApplicationUsersId.Any(a => a == currentUserId);
+    }
 }
 
 <div class="container mt-4">
@@ -41,7 +49,6 @@
                 <div class="row">
                     <center style="margin-left:4px">
                         <span class="badge badge-warning col-2 float-start">Resolution: @Model.Resolution</span>
-                        @*<span class="badge badge-warning col-@neededColumnsForGenres" style="margin-left:15px; margin-right:15px;"><a id="link-href" asp-controller="Genres" asp-action="All" title="Explore all genres" class="text-warning">@string.Join(" | ", genres.Select(g => g.Name))</a></span>*@
                         <span class="badge badge-warning col-@neededColumnsForGenres" style="margin-left:15px; margin-right:15px;">@string.Join(" | ", genres.Select(g => g.Name))</span>
                         <span class="badge badge-warning col-2 float-end">Release date: @Model.DateOfReleased.Year</span>
                     </center>
@@ -141,9 +148,16 @@
             <div class="row mb-1"></div>
 
             <div class="row">
-                <button class="offset-2 col-3 btn btn-warning rounded-pill" id="rate-movie-btn">Rate this movie ★</button>
-                <button class="offset-2 col-3 btn btn-warning rounded-pill @(ifMovieIsAddedToWatchLater == true ? string.Empty : "d-none")" id="remove-from-watch-later-btn">Remove&nbsp;&nbsp<span class="text-danger">✖</span></button>
-                <button class="offset-2 col-3 btn btn-warning rounded-pill @(ifMovieIsAddedToWatchLater == true ? "d-none" : string.Empty)" id="save-to-watch-later-btn">Save to watch later&nbsp&nbsp<i class="fas fa-save"></i></button>
+                @if (this.signInManager.IsSignedIn(this.User))
+                {
+                    <button class="offset-2 col-3 btn btn-warning rounded-pill" id="rate-movie-btn">Rate this movie ★</button>
+                    <button class="offset-2 col-3 btn btn-warning rounded-pill @(ifMovieIsAddedToWatchLater == true ? string.Empty : "d-none")" id="remove-from-watch-later-btn">Remove&nbsp;&nbsp<span class="text-danger">✖</span></button>
+                    <button class="offset-2 col-3 btn btn-warning rounded-pill @(ifMovieIsAddedToWatchLater == true ? "d-none" : string.Empty)" id="save-to-watch-later-btn">Save to watch later&nbsp&nbsp<i class="fas fa-save"></i></button>
+                }
+                else
+                {
+                    <a asp-area="Identity" asp-controller="Account" asp-action="Register" class="offset-3 col-6 btn btn-warning rounded-pill">Register to rate and saving movies for watch later &nbsp;&reg;</a>
+                }
             </div>
         </div>
 
@@ -171,7 +185,7 @@
 
     <div>
         <center>
-            <h3 class="text-center">Comments</h3>
+            <h3 class="text-center">Comments for Movie</h3>
         </center>
         @if (Model.Comments.Any())
         {

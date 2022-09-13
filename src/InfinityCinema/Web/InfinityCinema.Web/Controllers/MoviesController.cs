@@ -45,7 +45,6 @@
         }
 
         [HttpGet]
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public IActionResult Create()
         {
@@ -56,7 +55,6 @@
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> CreateAsync(CreateMovieServiceModel movieModel)
         {
@@ -96,14 +94,12 @@
         public IActionResult Details(int id)
         {
             MovieDetailsServiceModel movie = this.movieService.Details(id);
-            this.ViewData["UserId"] = ClaimsPrincipalExtensions.GetId(this.User);
 
             return this.View(movie);
         }
 
         [HttpPost]
         [Authorize]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DetailsAsync(int id, string newCommentContent)
         {
             string userId = ClaimsPrincipalExtensions.GetId(this.User);

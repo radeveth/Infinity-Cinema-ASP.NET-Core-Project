@@ -15,11 +15,12 @@
                         <img src="@movie.ImageUrl" class="card-img-top h-100" alt="">
                     </div>
                     <div class="single-right col-5">
-                        <div class="card-body mt-4">
-                            <h5 class="offset-2 col-8">@movie.Name</h5>
-                            <hr style="margin-right:28px">
-                            <h6 class="card-text offset-3 col-6">@(string.Join(", ", movie.Genres))</h6>
-                            <a asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.MovieId" class="offset-8 col-4 btn btn-warning mt-5">Details</a>
+                        <a asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.MovieId" class="float-end btn btn-warning" style="margin-top:10px; margin-right:10px">Details</a>
+                        <div class="card-body mt-5">
+                            <div class="mt-2"></div>
+                            <center><h5>@movie.Name</h5></center>
+                            <hr class="offset-1 col-10">
+                            <center><h6 class="card-text">@(string.Join(", ", movie.Genres))</h6></center>
                         </div>
                     </div>
                 </div>
@@ -46,15 +47,15 @@
                 </div>
             </p>
         </div>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
     }
 </div>

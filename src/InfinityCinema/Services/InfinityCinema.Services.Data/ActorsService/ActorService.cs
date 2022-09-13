@@ -45,6 +45,14 @@
             return this.GetViewModelByIdAsync<T>(actor.Id);
         }
 
+        public async Task CreateRowForMappingTableMovieActorsAsync(int movieId, int actorId)
+        {
+            MovieActor movieActor = new MovieActor() { MovieId = movieId, ActorId = actorId };
+
+            await this.dbContext.MovieActors.AddAsync(movieActor);
+            await this.dbContext.SaveChangesAsync();
+        }
+
         // Read
         public IEnumerable<ActorViewModel> All(string searchName = null)
         {
@@ -103,6 +111,26 @@
             IQueryable<MovieActor> movieActors = this.dbContext.MovieActors.Where(m => m.MovieId == movieId);
 
             this.dbContext.MovieActors.RemoveRange(movieActors);
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task RemoveRelationBetweenMovieActorsAndActosTablesAsync(int actorId, int movieId)
+        {
+            foreach (var movieActor in this.dbContext.MovieActors.Where(m => m.MovieId == movieId && m.ActorId == actorId).ToList())
+            {
+                movieActor.IsDeleted = true;
+                movieActor.DeletedOn = DateTime.UtcNow;
+            }
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            Actor actor = await this.dbContext.Actors.FindAsync(id);
+
+            actor.IsDeleted = true;
+            actor.DeletedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();
         }
 

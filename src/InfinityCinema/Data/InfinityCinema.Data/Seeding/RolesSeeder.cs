@@ -52,9 +52,9 @@
 
                     await roleManager.CreateAsync(role);
 
-                    const string adminEmail = "infinitycinemaraadmin@gmail.com";
-                    const string adminPassword = "!RdIinfinityCcinemaAadmin0713!";
-                    const string adminFullName = "Radev Admin";
+                    const string adminEmail = "infinitycinemaapplicationadmin@gmail.com";
+                    const string adminPassword = "!RdIinfinityCinemaApplicationAdmin0713!";
+                    const string adminFullName = "Radev Administartor";
 
                     ApplicationUser user = new ApplicationUser
                     {

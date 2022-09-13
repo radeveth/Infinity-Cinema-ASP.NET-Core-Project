@@ -1,0 +1,95 @@
+﻿@model EditActorsServiceModel
+
+@{
+    ViewData["Title"] = $"Edit Actors";
+}
+
+<div class="mt-5">
+    <center>
+        <h1>Edit actors for @ViewBag.MovieName Movie</h1>
+    </center>
+</div>
+<hr class="mb-5 offset-2 col-8">
+
+@if (Model.ExistingActors.Any())
+{
+    <h4 class="mb-3">| Existing actors:</h4>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th scope="col"><center>Id</center></th>
+                <th scope="col"><center>Full Name</center></th>
+                <th scope="col"><center>Image</center></th>
+                <th scope="col"><center>Information Link</center></th>
+                <th scope="col"><center>Delete</center></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var actor in Model.ExistingActors)
+            {
+                <tr>
+                    <th scope="row">@actor.Id</th>
+                    <th scope="row">@actor.FullName</th>
+                    <td><img class="card-img-top" src="@actor.ImageUrl" style="width:100px; height:100px" alt="Actor image"></td>
+                    <td>@actor.InformationLink</td>
+                    <td><a asp-area="" asp-controller="Actors" asp-action="Delete" asp-route-ActorId="@actor.Id" asp-route-MovieId="@Model.MovieId" class="btn btn-danger mt-2">Delete</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="jumbotron">
+        <div class="mt-4"></div>
+        <i class="fa-empty-set"></i>
+        <div class="mt-2"></div>
+        <center>
+            <h1 class="display-6">There are no actors</h1>
+        </center>
+        <hr class="my-4">
+    </div>
+}
+
+<div class="row mt-5">
+    <a onclick="AddActor()" id="add-actor-btn" class="offset-4 col-4 btn btn-warning rounded-pill bold">Add new Actor for @ViewBag.MovieName</a>
+</div>
+
+<form asp-area="" asp-controller="Actors" asp-action="Create" method="post" id="actor-form" class="d-none mb-5">
+    <input name="MovieId" value="@Model.MovieId" class="d-none form-control">
+
+    <div class="form-group">
+        <label asp-for="NewActor.FullName"></label>
+        <input name="FullName" asp-for="NewActor.FullName" class="form-control border border-warning mt-2">
+        <span asp-validation-for="NewActor.FullName" class="small text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <label asp-for="NewActor.ImageUrl"></label>
+        <input name="ImageUrl" asp-for="NewActor.ImageUrl" class="form-control border border-warning mt-2">
+        <span asp-validation-for="NewActor.ImageUrl" class="small text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <label asp-for="NewActor.InformationLink"></label>
+        <input name="InformationLink" asp-for="NewActor.InformationLink" class="form-control border border-warning mt-2">
+        <span asp-validation-for="NewActor.InformationLink" class="small text-danger"></span>
+    </div>
+
+    <div class="row mt-4">
+        <a asp-area="" asp-controller="Movies" asp-action="EditIndex" asp-route-Id="@Model.MovieId" class="col-1 btn btn-warning rounded-pill">Back</a>
+        <input type="submit" class="offset-10 col-1 btn btn-warning rounded-pill" value="Add">
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        function AddActor() {
+            let formActorElement = document.querySelector('#actor-form');
+            let addActorButtonElement = document.querySelector('#add-actor-btn');
+
+            formActorElement.classList.remove('d-none')
+            addActorButtonElement.classList.add('d-none');
+        }
+    </script>
+}

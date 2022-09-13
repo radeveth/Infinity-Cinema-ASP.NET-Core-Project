@@ -2,10 +2,12 @@
 {
     using System.Collections.Generic;
 
-    public class EditActorsFormModel
+    public class EditActorsServiceModel
     {
+        public int MovieId { get; set; }
+
         public IEnumerable<ActorViewModel> ExistingActors { get; set; }
 
-        public IEnumerable<ActorFormModel> NewActors { get; set; }
+        public ActorFormModel NewActor { get; set; }
     }
 }

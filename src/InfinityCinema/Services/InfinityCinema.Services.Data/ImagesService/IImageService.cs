@@ -15,9 +15,13 @@
 
         T GetViewModelById<T>(int id);
 
+        IEnumerable<T> GetViewModelByMovieId<T>(int movieId);
+
         // Update
 
         // Delete
         Task DeleteImagesForParticularMovie(int movieId);
+
+        Task DeleteAsync(int id);
     }
 }

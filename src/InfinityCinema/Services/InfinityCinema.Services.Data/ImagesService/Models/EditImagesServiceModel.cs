@@ -6,8 +6,8 @@
     {
         public int MovieId { get; set; }
 
-        public IEnumerable<string> ExistingImages { get; set; }
+        public IEnumerable<ImageViewModel> ExistingImages { get; set; }
 
-        public IEnumerable<ImageFormModel> NewImages { get; set; }
+        public ImageFormModel NewImage { get; set; }
     }
 }

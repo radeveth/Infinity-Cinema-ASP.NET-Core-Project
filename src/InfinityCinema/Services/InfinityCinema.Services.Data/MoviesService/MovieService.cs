@@ -360,6 +360,9 @@
             };
         }
 
+        public bool CheckIfMovieWithGivenIdExist(int id)
+            => this.dbContext.Movies.Any(m => m.Id == id);
+
         // Update
         public async Task<bool> EditAsync(MovieFormModel movieForm, int id)
         {
@@ -505,9 +508,6 @@
             }
         }
 
-        public bool CheckIfMovieWithGivenIdExist(int id)
-            => this.dbContext.Movies.Any(m => m.Id == id);
-
         // Useful methods
         private async Task MatchLanguagesWithMovie(int movieId, IEnumerable<int> languagesIds)
         {
@@ -535,7 +535,7 @@
             await this.dbContext.SaveChangesAsync();
         }
 
-        private async Task MatchActorsWithMovie(int movieId, ICollection<int> actorsIds)
+        public async Task MatchActorsWithMovie(int movieId, ICollection<int> actorsIds)
         {
             ICollection<MovieActor> movieActors = new HashSet<MovieActor>();
 

@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Common;
+    using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.ActorsService;
     using InfinityCinema.Services.Data.ActorsService.Models;
     using InfinityCinema.Services.Data.DirectorsService.Models;
@@ -172,16 +173,42 @@
 
         [HttpGet]
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
-        public IActionResult EditMovieImages(int movieId)
+        public IActionResult EditMovieImages(EditImagesServiceModel imagesService)
         {
-            IEnumerable<string> existingImages = this.imagesService.GetImagesForGivenMovie(movieId).ToList();
-
-            this.ViewBag.MovieName = this.movieService.GetViewModelById<MovieListingViewModel>(movieId).Name;
+            this.ViewBag.MovieName = this.movieService.GetViewModelById<MovieListingViewModel>(imagesService.MovieId).Name;
             return this.View(new EditImagesServiceModel()
             {
-                MovieId = movieId,
-                ExistingImages = existingImages,
-                NewImages = new List<ImageFormModel>(),
+                MovieId = imagesService.MovieId,
+                ExistingImages = this.imagesService.GetViewModelByMovieId<ImageViewModel>(imagesService.MovieId),
+                NewImage = new ImageFormModel(),
+            });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        public IActionResult EditMovieActors(EditActorsServiceModel actorsService)
+        {
+            this.ViewBag.MovieName = this.movieService.GetViewModelById<MovieListingViewModel>(actorsService.MovieId).Name;
+
+            return this.View(new EditActorsServiceModel()
+            {
+                MovieId = actorsService.MovieId,
+                ExistingActors = this.actorService.GetActorsForGivenMovie<ActorViewModel>(actorsService.MovieId),
+                NewActor = new ActorFormModel(),
+            });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        public IActionResult EditMoviePlatforms(EditPlatformsServiceModel platformsService)
+        {
+            this.ViewBag.MovieName = this.movieService.GetViewModelById<MovieListingViewModel>(platformsService.MovieId).Name;
+
+            return this.View(new EditPlatformsServiceModel()
+            {
+                MovieId = platformsService.MovieId,
+                ExistingPlatforms = this.platformService.GetPlatformsForGivenMovie<PlatformViewModel>(platformsService.MovieId),
+                NewPlatform = new PlatformFormModel(),
             });
         }
 

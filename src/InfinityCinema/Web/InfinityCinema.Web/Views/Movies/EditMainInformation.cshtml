@@ -82,9 +82,10 @@
                         <span asp-validation-for="Director.InformationUrl" class="small text-danger"></span>
                     </div>
                 </div>
-
-                <input class="offset-6 col-3 btn btn-warning rounded-pill text-center mt-5 mb-4 d-grid gap-2 col-3 mx-auto" type="submit" value="Edit" id="edit-btn" />
-
+                <div class="row mt-5 mb-4">
+                    <a asp-area="" asp-controller="Movies" asp-action="EditIndex" asp-route-Id="@ViewBag.MovieId" class="col-1 btn btn-warning rounded-pill">Back</a>
+                    <input class="offset-9 col-2 btn btn-warning rounded-pill" type="submit" value="Edit" id="edit-btn" />
+                </div>
             </div>
         </div>
     </form>

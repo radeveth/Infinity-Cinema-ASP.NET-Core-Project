@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.PlatformsService
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -9,6 +10,8 @@
     {
         // Create
         Task<T> CreateAsync<T>(PlatformFormModel platformFormModel);
+
+        Task CreateRowForMappingTableMoviePlatformsAsync(int movieId, int platformId);
 
         // Read
         IEnumerable<T> All<T>(string searchName = null);
@@ -23,5 +26,9 @@
 
         // Delete
         Task DeletePlatformsForParticulatMovie(int movieId);
+
+        Task RemoveRelationBetweenMoviePlatformsAndPlatformsTablesAsync(int platformId, int movieId);
+
+        Task DeleteAsync(int id);
     }
 }

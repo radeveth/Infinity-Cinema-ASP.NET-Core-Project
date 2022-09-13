@@ -27,8 +27,6 @@
             {
                 Content = comment.Content,
                 UserId = comment.UserId,
-                Likes = 0,
-                Dislikes = 0,
             };
 
             await this.dbContext.MovieComments.AddAsync(movieComment);

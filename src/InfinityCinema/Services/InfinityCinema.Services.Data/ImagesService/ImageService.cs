@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.ImagesService
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -47,6 +48,12 @@
                 .To<T>()
                 .FirstOrDefault();
 
+        public IEnumerable<T> GetViewModelByMovieId<T>(int movieId)
+            => this.dbContext
+                .Images
+                .Where(i => i.MovieId == movieId)
+                .To<T>();
+
         // Update
 
         // Delete
@@ -55,6 +62,15 @@
             IQueryable<Image> images = this.dbContext.Images.Where(i => i.MovieId == movieId);
 
             this.dbContext.RemoveRange(images);
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            Image image = await this.dbContext.Images.FindAsync(id);
+
+            image.IsDeleted = true;
+            image.DeletedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();
         }
     }

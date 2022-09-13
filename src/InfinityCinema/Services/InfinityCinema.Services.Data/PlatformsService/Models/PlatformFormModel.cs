@@ -10,6 +10,8 @@
         private const string SitePathMaxLengthErrorMessage = "The Site Path cannot be more than {1} symbols.";
         private const string IconUrlMaxLengthErrorMessage = "The Image Url cannot be more than {1} symbols.";
 
+        public int MovieId { get; set; }
+
         [Required]
         [StringLength(NameMaxLength, MinimumLength = NameMinLength, ErrorMessage = NameErrorMessage)]
         public string Name { get; set; }

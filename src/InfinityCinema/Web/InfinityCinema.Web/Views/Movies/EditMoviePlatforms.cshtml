@@ -1,0 +1,94 @@
+﻿@model EditPlatformsServiceModel
+
+@{
+    ViewData["Title"] = $"Edit Actors";
+}
+
+<div class="mt-5">
+    <center>
+        <h1>Edit actors for @ViewBag.MovieName Movie</h1>
+    </center>
+</div>
+<hr class="mb-5 offset-2 col-8">
+
+@if (Model.ExistingPlatforms.Any())
+{
+    <h4 class="mb-3">| Existing platforms:</h4>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col"><center>Id</center></th>
+            <th scope="col"><center>Icon</center></th>
+            <th scope="col"><center>Name</center></th>
+            <th scope="col"><center>Site Path</center></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var platfrom in Model.ExistingPlatforms)
+        {
+            <tr>
+                <th scope="row">@platfrom.Id</th>
+                <td><img class="card-img-top" src="@platfrom.IconUrl" style="width:100px; height:150px" alt="Platform Icon"></td>
+                <th scope="row">@platfrom.Name</th>
+                <td>@platfrom.SiteUrl</td>
+                <td><center><a asp-area="" asp-controller="Platforms" asp-action="Delete" asp-route-PlatformId="@platfrom.Id" asp-route-MovieId="@Model.MovieId" class="btn btn-danger mt-2">Delete</a></center></td>
+            </tr>
+        }
+    </tbody>
+</table>
+}
+else
+{
+    <div class="jumbotron">
+        <div class="mt-4"></div>
+        <i class="fa-empty-set"></i>
+        <div class="mt-2"></div>
+        <center>
+            <h1 class="display-6">There are no actors</h1>
+        </center>
+        <hr class="my-4">
+    </div>
+}
+
+<div class="row mt-5">
+    <a onclick="AddPlatform()" id="add-platform-btn" class="offset-4 col-4 btn btn-warning rounded-pill bold">Add new Platform for @ViewBag.MovieName</a>
+</div>
+
+<form asp-area="" asp-controller="Platforms" asp-action="Create" method="post" id="platform-form" class="d-none mb-5">
+    <input name="MovieId" value="@Model.MovieId" class="d-none form-control">
+
+    <div class="form-group">
+        <label asp-for="NewPlatform.Name"></label>
+        <input name="Name" asp-for="NewPlatform.Name" class="form-control border border-warning mt-2">
+        <span asp-validation-for="NewPlatform.Name" class="small text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <label asp-for="NewPlatform.IconUrl"></label>
+        <input name="IconUrl" asp-for="NewPlatform.IconUrl" class="form-control border border-warning mt-2">
+        <span asp-validation-for="NewPlatform.IconUrl" class="small text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <label asp-for="NewPlatform.PathUrl"></label>
+        <input name="PathUrl" asp-for="NewPlatform.PathUrl" class="form-control border border-warning mt-2">
+        <span asp-validation-for="NewPlatform.PathUrl" class="small text-danger"></span>
+    </div>
+
+    <div class="row mt-4">
+        <a asp-area="" asp-controller="Movies" asp-action="EditIndex" asp-route-Id="@Model.MovieId" class="col-1 btn btn-warning rounded-pill">Back</a>
+        <input type="submit" class="offset-10 col-1 btn btn-warning rounded-pill" value="Add">
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        function AddPlatform() {
+            let formPlatformElement = document.querySelector('#platform-form');
+            let addPlatformButtonElement = document.querySelector('#add-platform-btn');
+
+            formPlatformElement.classList.remove('d-none')
+            addPlatformButtonElement.classList.add('d-none');
+        }
+    </script>
+}

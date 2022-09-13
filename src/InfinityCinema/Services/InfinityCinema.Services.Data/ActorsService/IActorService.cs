@@ -10,6 +10,8 @@
         // Create
         Task<T> CreateAsync<T>(ActorFormModel actorFormModel);
 
+        Task CreateRowForMappingTableMovieActorsAsync(int movieId, int actorId);
+
         // Read
         IEnumerable<ActorViewModel> All(string searchName = null);
 
@@ -23,5 +25,9 @@
 
         // Delete
         Task DeleteActorsForParticularMovie(int movieId);
+
+        Task RemoveRelationBetweenMovieActorsAndActosTablesAsync(int actorId, int movieId);
+
+        Task DeleteAsync(int id);
     }
 }

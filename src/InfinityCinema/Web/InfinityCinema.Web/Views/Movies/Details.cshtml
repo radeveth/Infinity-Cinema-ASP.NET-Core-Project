@@ -254,6 +254,13 @@
     <br />
     <center class="mb-3"><a asp-controller="Movies" asp-action="All" class="btn btn-warning rounded-pill">Explore More</a></center>
     <br />
+    @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+    {
+        <hr >
+        <a asp-area="" asp-controller="Movies" asp-action="EditIndex" asp-route-id="@Model.Id" class="btn btn-outline-warning offset-2 col-3">Edit @Model.Name</a>
+        <a asp-area="" asp-controller="Movies" asp-action="DeleteConfirmation" asp-route-id="@Model.Id" class="btn btn-outline-danger offset-2 col-3" id="delete-movie-btn">Delete @Model.Name</a>
+    }
+    <div class="row"></div>
 </div>
 
 @section Scripts {

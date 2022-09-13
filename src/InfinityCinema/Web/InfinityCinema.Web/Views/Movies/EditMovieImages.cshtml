@@ -5,48 +5,78 @@
 }
 
 
-<div class="mt-5 mb-5">
+<div class="mt-5">
     <center>
         <h1>Edit images for @ViewBag.MovieName Movie</h1>
     </center>
 </div>
+<hr class="mb-5 offset-2 col-8">
 
-<h4 class="offset-2">| Existing images</h4>
-@foreach (var existingImage in Model.ExistingImages)
+@if (Model.ExistingImages.Any())
 {
-    <div class="bg bg-white mt-3 offset-2 col-8">
-        <div class="row">
-            <div class="single-left col-3">
-                <img src="@existingImage" class="card-img-top h-100" alt="">
-            </div>
-            <div class="single-right col-9">
-                <center><a class="btn btn-danger mt-2">Delete</a></center>
-            </div>
-        </div>
+    <h4 class="mb-3">| Existing images:</h4>
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#&nbsp;&nbsp;</th>
+                <th scope="col"><center>Image</center></th>
+                <th scope="col"><center>Url</center></th>
+                <th scope="col"><center>Delete</center></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var image in Model.ExistingImages)
+            {
+                <tr>
+                    <th scope="row">@image.Id</th>
+                    <td><img class="card-img-top" src="@image.Url" style="width:100px; height:100px" alt="Movie Image"></td>
+                    <td>@image.Url</td>
+                    <td><a asp-area="" asp-controller="Images" asp-action="Delete" asp-route-ImageId="@image.Id" asp-route-MovieId="@Model.MovieId" class="btn btn-danger mt-2">Delete</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="jumbotron">
+        <div class="mt-4"></div>
+        <i class="fa-empty-set"></i>
+        <div class="mt-2"></div>
+        <center>
+            <h1 class="display-6">There are no actors</h1>
+        </center>
+        <hr class="my-4">
     </div>
 }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Image</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int counter = 1;
+<div class="row mt-5">
+    <a onclick="AddImage()" id="add-image-btn" class="offset-4 col-4 btn btn-warning rounded-pill bold">Add new Image for @ViewBag.MovieName</a>
+</div>
+
+<form asp-area="" asp-controller="Images" asp-action="Create" method="post" id="image-form" class="d-none mb-5">
+    <div class="form-group">
+        <input name="MovieId" value="@Model.MovieId" class="d-none form-control">
+
+        <label asp-for="NewImage.ImageUrl"></label>
+        <input name="ImageUrl" asp-for="NewImage.ImageUrl" class="form-control border border-warning mt-2">
+        <span asp-validation-for="NewImage.ImageUrl" class="small text-danger"></span>
+    </div>
+
+    <div class="row mt-4">
+        <a asp-area="" asp-controller="Movies" asp-action="EditIndex" asp-route-Id="@Model.MovieId" class="col-1 btn btn-warning rounded-pill">Back</a>
+        <input type="submit" class="offset-10 col-1 btn btn-warning rounded-pill" value="Add">
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        function AddImage() {
+            let formImageElement = document.querySelector('#image-form');
+            let addImageButtonElement = document.querySelector('#add-image-btn');
+
+            formImageElement.classList.remove('d-none')
+            addImageButtonElement.classList.add('d-none');
         }
-        @foreach (var item in Model.ExistingImages)
-        {
-            <tr>
-                <th scope="row">@(counter++)</th>
-                <td><img src="item" width="200px" height="200px"></td>
-                <td>the Bird</td>
-                <td></td>
-            </tr>
-        }
-    </tbody>
-</table>
+    </script>
+}

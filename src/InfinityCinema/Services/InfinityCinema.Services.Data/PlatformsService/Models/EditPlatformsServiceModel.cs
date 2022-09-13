@@ -2,10 +2,12 @@
 {
     using System.Collections.Generic;
 
-    public class EditPlatformsFormModel
+    public class EditPlatformsServiceModel
     {
+        public int MovieId { get; set; }
+
         public IEnumerable<PlatformViewModel> ExistingPlatforms { get; set; }
 
-        public IEnumerable<PlatformFormModel> NewPlatforms { get; set; }
+        public PlatformFormModel NewPlatform { get; set; }
     }
 }

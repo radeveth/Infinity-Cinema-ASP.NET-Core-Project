@@ -6,11 +6,12 @@
 
     public class PlatformViewModel : IMapFrom<Platform>, IHaveCustomMappings
     {
+
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public string Icon { get; set; }
+        public string IconUrl { get; set; }
 
         public string SiteUrl { get; set; }
 

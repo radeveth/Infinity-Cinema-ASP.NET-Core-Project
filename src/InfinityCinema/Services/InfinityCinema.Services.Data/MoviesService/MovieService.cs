@@ -332,106 +332,177 @@
                 .Select(a => a.Movie)
                 .To<UserSavedMovieViewModel>();
 
-        // Update
-        public async Task<bool> EditAsync(EditMovieServiceModel movieModel)
+        public MovieFormModel GetMovieFormModel(int id)
         {
-            try
+            MovieDetailsServiceModel targetMovie = this.Details(id);
+
+            return new MovieFormModel()
             {
-                Movie movie = this.dbContext
-                .Movies
-                .FirstOrDefault(m => m.Id == movieModel.MovieId);
-
-                MovieFormModel newMovieData = movieModel.OverallMovieInformation;
-
-                movie.Name = newMovieData.Name;
-                movie.DateOfReleased = newMovieData.DateOfReleased;
-                movie.Resolution = newMovieData.Resolution;
-                movie.Description = newMovieData.Description;
-                movie.TrailerPath = newMovieData.TrailerPath;
-                movie.Duration = newMovieData.Duration;
-
-                DirectorViewModel director = this.directorService.GetViewModelByGivenFullName<DirectorViewModel>(newMovieData.Director.FullName);
-
-                if (director == null)
+                Name = targetMovie.Name,
+                Genres = targetMovie.Genres.Select(g => new GenreFormModel()
                 {
-                    director = await this.directorService.CreateAsync<DirectorViewModel>(newMovieData.Director);
+                    Id = g.Id,
+                    Name = g.Name,
+                    ImageUrl = g.ImageUrl,
+                }),
+                Description = targetMovie.Description,
+                Director = new DirectorFormModel()
+                {
+                    FullName = targetMovie.Director.FullName,
+                    InformationUrl = targetMovie.Director.InformationLink,
+                },
+                TrailerPath = targetMovie.TrailerPath,
+                DateOfReleased = targetMovie.DateOfReleased,
+                Resolution = targetMovie.Resolution,
+                Duration = targetMovie.Duration,
+                Language = string.Join(", ", targetMovie.Languages),
+                Country = targetMovie.Countruy,
+            };
+        }
+
+        // Update
+        public async Task<bool> EditAsync(MovieFormModel movieForm, int id)
+        {
+            Movie movie = await this.dbContext.Movies.FindAsync(id);
+
+            if (movie == null)
+            {
+                return false;
+            }
+
+            movie.Name = movieForm.Name;
+            movie.Description = movieForm.Description;
+            movie.TrailerPath = movieForm.TrailerPath;
+            movie.DateOfReleased = movieForm.DateOfReleased;
+            movie.Resolution = movieForm.Resolution;
+            movie.Duration = movieForm.Duration;
+
+            // Get Director Id
+            DirectorFormModel directorFormModel = movieForm.Director;
+            DirectorViewModel director = this.directorService
+                .GetViewModelByGivenFullName<DirectorViewModel>(directorFormModel.FullName);
+
+            if (director == null)
+            {
+                director = await this.directorService.CreateAsync<DirectorViewModel>(directorFormModel);
+            }
+
+            int directorId = this.directorService.GetViewModelByGivenFullName<DirectorViewModel>(directorFormModel.FullName).Id;
+            movie.DirectorId = directorId;
+
+            foreach (var genre in this.dbContext.MovieGenres.Where(m => m.MovieId == id).ToList())
+            {
+                genre.IsDeleted = true;
+                genre.DeletedOn = DateTime.UtcNow;
+            }
+
+            await this.dbContext.SaveChangesAsync();
+
+            await this.MatchGenresWithMovie(id, movieForm.GenresId.ToList());
+
+            foreach (var language in this.dbContext.MovieLanguages.Where(m => m.MovieId == id).ToList())
+            {
+                language.IsDeleted = true;
+                language.DeletedOn = DateTime.UtcNow;
+            }
+
+            await this.dbContext.SaveChangesAsync();
+
+            // Create Language
+            string[] languagesName = movieForm.Language
+                .Split(", ", StringSplitOptions.RemoveEmptyEntries)
+                .ToArray();
+            ICollection<int> languagesIds = new List<int>();
+            foreach (string languageName in languagesName)
+            {
+                LanguageViewModel language = this.languageService.GetLanguageByName<LanguageViewModel>(languageName);
+
+                if (language == null)
+                {
+                    language = await this.languageService.CreateAsync<LanguageViewModel>(languageName);
                 }
 
-                int directorId = this.directorService.GetViewModelByGivenFullName<DirectorViewModel>(newMovieData.Director.FullName).Id;
-
-                await this.directorService.EditDirectorAsync(directorId, newMovieData.Director);
-
-                movie.DirectorId = directorId;
-
-                // When edit movie country create new country
-                Country country = this.countryService.GetCountryByName(newMovieData.Country);
-                if (country == null)
-                {
-                    await this.countryService.CreateAsync<CountryViewModel>(newMovieData.Country);
-                    int countryId = this.countryService.GetCountryIdByGivenName(newMovieData.Country);
-                    movie.CountryId = countryId;
-                }
+                languagesIds.Add(language.Id);
             }
-            catch (Exception)
+
+            await this.MatchLanguagesWithMovie(id, languagesIds.ToList());
+
+            string countryName = movieForm.Country;
+            if (!this.countryService.CheckIfCountryExist(countryName))
             {
-                throw new InvalidOperationException();
+                await this.countryService.CreateAsync<CountryViewModel>(countryName);
             }
+
+            int countryId = this.countryService.GetCountryIdByGivenName(countryName);
+            movie.CountryId = countryId;
+
+            await this.dbContext.SaveChangesAsync();
 
             return true;
         }
 
         // Delete
-        public async Task<bool> DeleteAsync(DeleteMovieServiceModel deleteMovieServiceModel)
+        public async Task DeleteAsync(DeleteMovieServiceModel deleteMovieServiceModel)
         {
             int movieId = deleteMovieServiceModel.Id;
 
             try
             {
-                IEnumerable<MovieLanguage> movieLanguages = this.dbContext.MovieLanguages.Where(m => m.MovieId == movieId);
+                IEnumerable<MovieLanguage> movieLanguages = this.dbContext.MovieLanguages.Where(m => m.MovieId == movieId).ToList();
                 foreach (MovieLanguage movieLanguage in movieLanguages)
                 {
                     movieLanguage.IsDeleted = true;
                     movieLanguage.DeletedOn = DateTime.UtcNow;
                 }
 
-                IEnumerable<MovieActor> movieActors = this.dbContext.MovieActors.Where(m => m.MovieId == movieId);
+                await this.dbContext.SaveChangesAsync();
+
+                IEnumerable<MovieActor> movieActors = this.dbContext.MovieActors.Where(m => m.MovieId == movieId).ToList();
                 foreach (MovieActor movieActor in movieActors)
                 {
                     movieActor.IsDeleted = true;
                     movieActor.DeletedOn = DateTime.UtcNow;
                 }
 
-                IEnumerable<MovieGenre> movieGenres = this.dbContext.MovieGenres.Where(m => m.MovieId == movieId);
+                await this.dbContext.SaveChangesAsync();
+
+                IEnumerable<MovieGenre> movieGenres = this.dbContext.MovieGenres.Where(m => m.MovieId == movieId).ToList();
                 foreach (MovieGenre movieGenre in movieGenres)
                 {
                     movieGenre.IsDeleted = true;
                     movieGenre.DeletedOn = DateTime.UtcNow;
                 }
 
-                IEnumerable<MoviePlatform> moviePlatforms = this.dbContext.MoviePlatform.Where(m => m.MovieId == movieId);
+                await this.dbContext.SaveChangesAsync();
+
+                IEnumerable<MoviePlatform> moviePlatforms = this.dbContext.MoviePlatform.Where(m => m.MovieId == movieId).ToList();
                 foreach (MoviePlatform moviePlatform in moviePlatforms)
                 {
                     moviePlatform.IsDeleted = true;
                     moviePlatform.DeletedOn = DateTime.UtcNow;
                 }
 
-                IEnumerable<Image> images = this.dbContext.Images.Where(m => m.MovieId == movieId);
+                await this.dbContext.SaveChangesAsync();
+
+                IEnumerable<Image> images = this.dbContext.Images.Where(m => m.MovieId == movieId).ToList();
                 foreach (Image image in images)
                 {
                     image.IsDeleted = true;
+                    image.DeletedOn = DateTime.UtcNow;
                 }
 
-                Movie movie = this.dbContext.Movies.FirstOrDefault(m => m.Id == movieId);
+                await this.dbContext.SaveChangesAsync();
+
+                Movie movie = await this.dbContext.Movies.FindAsync(movieId);
                 movie.IsDeleted = true;
                 movie.DeletedOn = DateTime.UtcNow;
+
+                await this.dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
                 throw new InvalidOperationException(ex.Message);
             }
-
-            await this.dbContext.SaveChangesAsync();
-            return true;
         }
 
         public bool CheckIfMovieWithGivenIdExist(int id)

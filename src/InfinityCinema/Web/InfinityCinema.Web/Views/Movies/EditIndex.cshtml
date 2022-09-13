@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Edit Movie";
+
+    int movieId = ViewBag.MovieId;
+}
+
+<br />
+
+<div class="container mt-5">
+    <div class="row mb-5">
+        <a asp-area="" asp-controller="Movies" asp-action="EditMainInformation" asp-route-id="@movieId" class="offset-2 col-8 btn btn-warning rounded-pill bold">Edit Main Movie Information</a>
+    </div>
+    <div class="row mb-5">
+        <a asp-area="" asp-controller="Movies" asp-action="EditMovieImages" asp-route-MovieId="@movieId" class="offset-2 col-8 btn btn-warning rounded-pill bold">Edit Movie Images</a>
+    </div>
+    <div class="row mb-5">
+        <a class="offset-2 col-8 btn btn-warning rounded-pill bold">Edit Movie Actors</a>
+    </div>
+    <div class="row mb-5">
+        <a class="offset-2 col-8 btn btn-warning rounded-pill bold">Edit Movie Platforms</a>
+    </div>
+</div>
+
+<br />

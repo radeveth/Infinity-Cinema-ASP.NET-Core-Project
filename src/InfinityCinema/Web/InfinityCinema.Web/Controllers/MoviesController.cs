@@ -130,59 +130,29 @@
 
         [HttpGet]
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
-        public IActionResult Edit(int id)
+        public IActionResult EditIndex(int id)
         {
-            MovieDetailsServiceModel targetMovie = this.movieService.Details(id);
+            this.ViewBag.MovieId = id;
 
-            MovieFormModel movieFormModel = new MovieFormModel()
-            {
-                Name = targetMovie.Name,
-                Genres = targetMovie.Genres.Select(g => new GenreFormModel()
-                {
-                    Id = g.Id,
-                    Name = g.Name,
-                    ImageUrl = g.ImageUrl,
-                }),
-                Description = targetMovie.Description,
-                Director = new DirectorFormModel()
-                {
-                    FullName = targetMovie.Director.FullName,
-                    InformationUrl = targetMovie.Director.InformationLink,
-                },
-                TrailerPath = targetMovie.TrailerPath,
-                DateOfReleased = targetMovie.DateOfReleased,
-                Resolution = targetMovie.Resolution,
-                Duration = targetMovie.Duration,
-                Language = string.Join(", ", targetMovie.Languages),
-                Country = targetMovie.Countruy,
-            };
+            return this.View();
+        }
 
-            EditMovieServiceModel editMovieServiceModel = new EditMovieServiceModel()
-            {
-                OverallMovieInformation = movieFormModel,
-                Actors = new EditActorsFormModel()
-                {
-                    ExistingActors = targetMovie.Actors,
-                },
-                Images = new EditImagesFormModel()
-                {
-                    ExistingImages = targetMovie.Images,
-                },
-                Platforms = new EditPlatformsFormModel()
-                {
-                    ExistingPlatforms = targetMovie.Platforms,
-                },
-            };
-            return this.View(editMovieServiceModel);
+        [HttpGet]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        public IActionResult EditMainInformation(int id)
+        {
+            this.ViewBag.MovieId = id;
+
+            return this.View(this.movieService.GetMovieFormModel(id));
         }
 
         [HttpPost]
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
-        public async Task<IActionResult> EditAsync(EditMovieServiceModel movieModel, int id)
+        public async Task<IActionResult> EditMainInformationAsync(MovieFormModel movie, int id)
         {
-            if (movieModel.OverallMovieInformation.GenresId != null)
+            if (movie.GenresId != null)
             {
-                IEnumerable<int> genresIds = movieModel.OverallMovieInformation.GenresId;
+                IEnumerable<int> genresIds = movie.GenresId;
 
                 if (!this.genreService.IsGenresExists(genresIds))
                 {
@@ -192,18 +162,27 @@
 
             if (!this.ModelState.IsValid)
             {
-                return this.View(movieModel);
+                return this.View(movie);
             }
 
-            movieModel.MovieId = id;
-            bool isSuccessfullEditing = await this.movieService.EditAsync(movieModel);
+            await this.movieService.EditAsync(movie, id);
 
-            if (!isSuccessfullEditing)
+            return this.RedirectToAction(nameof(this.EditIndex), "Movies", new { id = id });
+        }
+
+        [HttpGet]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
+        public IActionResult EditMovieImages(int movieId)
+        {
+            IEnumerable<string> existingImages = this.imagesService.GetImagesForGivenMovie(movieId).ToList();
+
+            this.ViewBag.MovieName = this.movieService.GetViewModelById<MovieListingViewModel>(movieId).Name;
+            return this.View(new EditImagesServiceModel()
             {
-                return this.View(movieModel);
-            }
-
-            return this.RedirectToAction(nameof(this.All), "Movies");
+                MovieId = movieId,
+                ExistingImages = existingImages,
+                NewImages = new List<ImageFormModel>(),
+            });
         }
 
         [HttpGet]

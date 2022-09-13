@@ -1,0 +1,52 @@
+﻿@model EditImagesServiceModel
+
+@{
+    ViewData["Title"] = $"Edit Images";
+}
+
+
+<div class="mt-5 mb-5">
+    <center>
+        <h1>Edit images for @ViewBag.MovieName Movie</h1>
+    </center>
+</div>
+
+<h4 class="offset-2">| Existing images</h4>
+@foreach (var existingImage in Model.ExistingImages)
+{
+    <div class="bg bg-white mt-3 offset-2 col-8">
+        <div class="row">
+            <div class="single-left col-3">
+                <img src="@existingImage" class="card-img-top h-100" alt="">
+            </div>
+            <div class="single-right col-9">
+                <center><a class="btn btn-danger mt-2">Delete</a></center>
+            </div>
+        </div>
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Image</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int counter = 1;
+        }
+        @foreach (var item in Model.ExistingImages)
+        {
+            <tr>
+                <th scope="row">@(counter++)</th>
+                <td><img src="item" width="200px" height="200px"></td>
+                <td>the Bird</td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>

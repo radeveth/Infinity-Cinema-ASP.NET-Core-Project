@@ -7,7 +7,7 @@
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.SettingsService;
     using InfinityCinema.Services.Data.SettingsService.Models;
-
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class SettingsController : BaseController
@@ -22,6 +22,8 @@
             this.repository = repository;
         }
 
+        [HttpGet]
+        [Authorize]
         public IActionResult Index()
         {
             var settings = this.settingsService.GetAll<SettingViewModel>();

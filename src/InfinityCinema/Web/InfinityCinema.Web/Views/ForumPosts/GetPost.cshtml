@@ -1,7 +1,20 @@
 ﻿@model PostServiceModel
 
+@inject UserManager<ApplicationUser> userManager;
+
+
 @{
     ViewData["Title"] = $"Post - {Model.Post.Title}";
+
+    string currentUserId = string.Empty;
+    ApplicationUser currentUser = null;
+    bool isAuthenticated = this.User.Identity.IsAuthenticated;
+
+    if (isAuthenticated)
+    {
+        currentUser = await this.userManager.GetUserAsync(this.User);
+        currentUserId = currentUser.Id;
+    }
 
     void DisplayComments(int? parentId)
     {
@@ -25,18 +38,30 @@
                         </div>
                     </div>
                 </div>
+                <div>
                 <div class="row">
                     <div class="col-3">
                         <button id="view-child-comments-btn" style="margin-left:16px" class="badge badge-warning d-inline-flex align-items-center align-middle" onclick="ViewChildComments(@comment.Id)">&nbsp;&nbsp;&nbsp;<i class="fas fa-comment"></i>&nbsp;&nbsp;&nbsp;</button>
                         <button id="hide-child-comments-btn" style="margin-left:16px" class="badge badge-warning d-inline-flex align-items-center align-middle d-none" onclick="HideChildComments(@comment.Id)">&nbsp;&nbsp;&nbsp;<i class="fas fa-comment"></i>&nbsp;&nbsp;&nbsp;</button>
                         <hr style="margin-left:13px; width:51px; margin-top:3px">
                     </div>
-                    <div class="offset-8 col-1"> <a onclick="CreateComment(@comment.Id)" class="btn btn-warning">Replay</a> </div>
-                </div>
-                <div id="child-comments-for-@(comment.Id.ToString())" class="col-11 d-none" style="margin-left:31px; margin-right:31px;">
-                    @{
-                        DisplayComments(comment.Id);
+                    @if (comment.User.Id == currentUserId || this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+                    {
+                            <div class="offset-7 col-1"><a onclick="CreateComment(@comment.Id)" class="btn btn-warning">Replay</a></div>
+                            <div class="col-1"> <a onclick="DeleteComment(@comment.Id)" class="btn btn-danger">Delete</a></div>
                     }
+                    else
+                    {
+                        <div class="offset-8 col-1"> <a onclick="CreateComment(@comment.Id)" class="btn btn-warning">Replay</a> </div>
+                    }
+                </div>
+                <div id="child-comments-for-@(comment.Id.ToString())" class="d-none" style="margin-left:10px; margin-right:10px;">
+                    <article>
+                        @{
+                            DisplayComments(comment.Id);
+                        }
+                    </article>
+                </div>
                 </div>
             </div>
         }
@@ -101,7 +126,7 @@
         </div>
 
         <div class="row mt-4">
-            <a asp-area="" asp-controller="ForumPosts" asp-action="GetPost" asp-route-PostId="@Model.Post.Id" class="btn btn-danger rounded-pill col-2">Discard</a>
+            <a asp-area="" asp-controller="ForumPosts" asp-action="GetPost" asp-route-PostId="@Model.Post.Id" asp-fragment="comments" class="btn btn-danger rounded-pill col-2">Discard</a>
             <input type="submit" class="btn btn-warning rounded-pill offset-8 col-2" value="Create">
         </div>
     </form>
@@ -126,6 +151,13 @@
             let commentsContainerElement = document.querySelector('#comments');
 
             commentsContainerElement.classList.remove('d-none');
+        }
+
+        function DeleteComment(commentId) {
+            $.get('/api/forumcommentsapi/delete?CommentId=' + commentId, (data) => {
+
+                alert(data + ' Please refresh the page.');
+            });
         }
     </script>
 

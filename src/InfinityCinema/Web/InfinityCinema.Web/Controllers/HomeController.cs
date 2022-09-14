@@ -21,6 +21,7 @@
             this.signInManager = signInManager;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             IndexViewModel indexViewModel;
@@ -49,6 +50,7 @@
             return this.View(indexViewModel);
         }
 
+        [HttpGet]
         public IActionResult Privacy()
         {
             return this.View();

@@ -14,6 +14,7 @@ namespace InfinityCinema.Web.Areas.Identity.Pages.Account
     using System.Threading.Tasks;
 
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Data.Models.Enums;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
@@ -105,8 +106,10 @@ namespace InfinityCinema.Web.Areas.Identity.Pages.Account
             [Display(Name = "Full Name")]
             [StringLength(ApplicationUserValidation.FullNameMaxLength)]
             public string FullName { get; set; }
-        }
 
+            [Required]
+            public Gender Gender { get; set; }
+        }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -123,6 +126,7 @@ namespace InfinityCinema.Web.Areas.Identity.Pages.Account
                 var user = this.CreateUser();
 
                 user.FullName = this.Input.FullName;
+                user.Gender = this.Input.Gender;
                 await this.userStore.SetUserNameAsync(user, this.Input.Email, CancellationToken.None);
                 await this.emailStore.SetEmailAsync(user, this.Input.Email, CancellationToken.None);
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);

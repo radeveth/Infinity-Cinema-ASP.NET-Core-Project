@@ -102,10 +102,7 @@
                                 <span class="badge badge-warning col-3" style="margin-left:15px">@(movie.StarRating == -1 ? "No rating" : $"{movie.StarRating:f2}/10.00 {Html.Raw("★")}")</span>
                                 <div class="card-body">
                                     <h4 class="card-title mt-2">@movie.Name</h4>
-                                    @foreach (var genre in movie.Genres)
-                                    {
-                                        <span class="card-text">@genre</span>
-                                    }
+                                    @(string.Join(", ", movie.Genres))
                                 </div>
                                 <span class="badge badge-warning offset-4 col-4">@movie.Duration</span>
                                 <div class="card-footer">

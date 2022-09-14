@@ -3,6 +3,8 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Services.Data.MovieCommentsService;
+    using InfinityCinema.Services.Data.MovieCommentsService.Models;
+    using InfinityCinema.Web.Infrastructure;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
@@ -17,17 +19,13 @@
         }
 
         [HttpGet]
-        [Route("increaselikes")]
-        public async Task<ActionResult<int>> IncreaseLikes(int commentId)
+        [Route("vote")]
+        public async Task<ActionResult<MovieCommentVotesResponseModel>> Vote(int commentId, bool isLikeVote)
         {
-            return await this.movieCommentService.IncreaseCommentLikesAsync(commentId);
-        }
+            string userId = ClaimsPrincipalExtensions.GetId(this.User);
 
-        [HttpGet]
-        [Route("increasedislikes")]
-        public async Task<ActionResult<int>> IncreaseDislikes(int commentId)
-        {
-            return await this.movieCommentService.IncreaseCommentDislikesAsync(commentId);
+            MovieCommentVotesResponseModel response = await this.movieCommentService.Vote(commentId, userId, isLikeVote);
+            return response;
         }
     }
 }

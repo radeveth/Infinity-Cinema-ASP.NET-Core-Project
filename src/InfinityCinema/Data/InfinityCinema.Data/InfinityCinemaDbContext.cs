@@ -45,6 +45,8 @@
 
         public DbSet<MovieComment> MovieComments { get; set; }
 
+        public DbSet<MovieCommentVote> MovieCommentVotes { get; set; }
+
         public DbSet<MovieGenre> MovieGenres { get; set; }
 
         public DbSet<MovieLanguage> MovieLanguages { get; set; }
@@ -97,6 +99,7 @@
             builder.ApplyConfiguration(new GenreConfiguration());
             builder.ApplyConfiguration(new LanguageConfiguration());
             builder.ApplyConfiguration(new MovieActorConfiguration());
+            builder.ApplyConfiguration(new MovieCommentVoteComfiguration());
             builder.ApplyConfiguration(new MovieConfiguration());
             builder.ApplyConfiguration(new MovieGenreConfiguration());
             builder.ApplyConfiguration(new MovieLanguageConfiguration());

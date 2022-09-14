@@ -144,7 +144,10 @@
         {
             this.ViewBag.MovieId = id;
 
-            return this.View(this.movieService.GetMovieFormModel(id));
+            MovieFormModel movieForm = this.movieService.GetMovieFormModel(id);
+            movieForm.Genres = this.genreService.GetMovieGenres();
+
+            return this.View(movieForm);
         }
 
         [HttpPost]

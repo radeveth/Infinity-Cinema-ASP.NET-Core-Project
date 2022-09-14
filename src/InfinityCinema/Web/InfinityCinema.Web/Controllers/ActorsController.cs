@@ -1,11 +1,13 @@
 ﻿namespace InfinityCinema.Web.Controllers
 {
     using System.Threading.Tasks;
-
+    using System.Web.Http;
+    using InfinityCinema.Common;
     using InfinityCinema.Services.Data.ActorsService;
     using InfinityCinema.Services.Data.ActorsService.Models;
     using InfinityCinema.Services.Data.MoviesService;
     using Microsoft.AspNetCore.Mvc;
+    using HttpPostAttribute = System.Web.Http.HttpPostAttribute;
 
     public class ActorsController : BaseController
     {
@@ -16,6 +18,7 @@
             this.actorService = actorService;
         }
 
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> DeleteAsync(int actorId, int movieId)
         {
             await this.actorService.RemoveRelationBetweenMovieActorsAndActosTablesAsync(actorId, movieId);
@@ -24,6 +27,8 @@
             return this.RedirectToAction("EditMovieActors", "Movies", new { movieId = movieId });
         }
 
+        [HttpPost]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> CreateAsync(ActorFormModel actorForm)
         {
             if (!this.ModelState.IsValid)

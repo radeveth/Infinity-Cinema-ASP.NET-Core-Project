@@ -13,9 +13,7 @@
         T GetViewModelById<T>(int id);
 
         // Update
-        Task<int> IncreaseCommentLikesAsync(int commentId);
-
-        Task<int> IncreaseCommentDislikesAsync(int commentId);
+        Task<MovieCommentVotesResponseModel> Vote(int commentId, string userId, bool isLikeVote);
 
         // Delete
     }

@@ -5,9 +5,12 @@
 
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Data.Models.Enums;
     using InfinityCinema.Services.Data.ApplicationUsersService;
+    using InfinityCinema.Services.Data.ForumSystem.VotesService.Models;
     using InfinityCinema.Services.Data.MovieCommentsService.Models;
     using InfinityCinema.Services.Mapping;
+    using Microsoft.EntityFrameworkCore;
 
     public class MovieCommentService : IMovieCommentService
     {
@@ -44,30 +47,31 @@
                 .FirstOrDefault();
 
         // Update
-        public async Task<int> IncreaseCommentLikesAsync(int commentId)
+        public async Task<MovieCommentVotesResponseModel> Vote(int commentId, string userId, bool isLikeVote)
         {
-            MovieComment movieComment = this.dbContext
-                .MovieComments
-                .FirstOrDefault(m => m.Id == commentId);
+            MovieCommentVote movieCommentVote = this.dbContext.MovieCommentVotes.Where(m => m.MovieCommentId == commentId && m.UserId == userId).FirstOrDefault();
 
-            movieComment.Likes++;
+            if (movieCommentVote == null)
+            {
+                movieCommentVote = new MovieCommentVote();
+                movieCommentVote = new MovieCommentVote()
+                {
+                    MovieCommentId = commentId,
+                    UserId = userId,
+                };
+                await this.dbContext.MovieCommentVotes.AddAsync(movieCommentVote);
+                await this.dbContext.SaveChangesAsync();
+            }
 
+            movieCommentVote.Vote = isLikeVote == true ? VoteType.Like : VoteType.Dislike;
             await this.dbContext.SaveChangesAsync();
 
-            return movieComment.Likes;
-        }
-
-        public async Task<int> IncreaseCommentDislikesAsync(int commentId)
-        {
-            MovieComment movieComment = this.dbContext
-                .MovieComments
-                .FirstOrDefault(m => m.Id == commentId);
-
-            movieComment.Dislikes++;
-
-            await this.dbContext.SaveChangesAsync();
-
-            return movieComment.Dislikes;
+            MovieCommentViewModel comment = this.GetViewModelById<MovieCommentViewModel>(commentId);
+            return new MovieCommentVotesResponseModel()
+            {
+                Likes = comment.Likes,
+                Dislikes = comment.Dislikes,
+            };
         }
     }
 }

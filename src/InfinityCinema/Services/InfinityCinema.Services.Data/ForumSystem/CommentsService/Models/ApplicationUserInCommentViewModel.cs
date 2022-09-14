@@ -7,6 +7,8 @@
 
     public class ApplicationUserInCommentViewModel : IMapFrom<ApplicationUser>
     {
+        public string Id { get; set; }
+
         public string FullName { get; set; }
 
         public DateTime CreatedOn { get; set; }

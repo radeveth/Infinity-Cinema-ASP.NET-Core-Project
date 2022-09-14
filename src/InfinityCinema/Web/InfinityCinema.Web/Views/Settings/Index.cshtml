@@ -4,11 +4,21 @@
     this.ViewData["Title"] = "Settings";
 }
 
-<h1>@this.ViewData["Title"]</h1>
+<div class="mt-5"></div>
 
-@foreach (var setting in this.Model.Settings)
-{
-    <div>@setting.Id: @setting.NameAndValue</div>
-}
+<center><h1>Random @this.ViewData["Title"] Page for Fun </h1></center>
 
-<a asp-action="InsertSetting" class="btn btn-primary">Insert new</a>
+<div class="mb-5"></div>
+
+<center>
+    @foreach (var setting in this.Model.Settings)
+    {
+        <div>@setting.Id: @setting.NameAndValue</div>
+    }
+
+    <div class="mt-4"></div>
+
+    <a asp-action="InsertSetting" class="btn btn-warning">Insert new</a>
+</center>
+
+<div class="mb-5"></div>

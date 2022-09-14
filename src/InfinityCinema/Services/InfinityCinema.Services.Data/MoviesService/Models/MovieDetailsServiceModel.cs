@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
+    using Ganss.XSS;
     using InfinityCinema.Data.Models.Enums;
     using InfinityCinema.Services.Data.ActorsService.Models;
     using InfinityCinema.Services.Data.DirectorsService.Models;
@@ -26,6 +27,8 @@
         public IEnumerable<GenreViewModel> Genres { get; set; }
 
         public string Description { get; set; }
+
+        public string SanitizedDescription => new HtmlSanitizer().Sanitize(this.Description);
 
         public string Duration { get; set; }
 

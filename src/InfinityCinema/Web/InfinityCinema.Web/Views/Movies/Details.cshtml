@@ -17,7 +17,7 @@
     {
         currentUser = await userManager.GetUserAsync(this.User);
         currentUserId = currentUser.Id;
-        
+
         ifMovieIsAddedToWatchLater = Model.ApplicationUsersId.Any(a => a == currentUserId);
     }
 }
@@ -60,7 +60,7 @@
             <div class="row mt-1"></div>
 
             <div class="alert alert-dismissible text-center offset-1 col-10" role="alert">
-                @Model.Description
+                @Html.Raw(Model.SanitizedDescription)
             </div>
 
             <hr class="offset-1 col-10">
@@ -108,18 +108,20 @@
             <div class="mb-5"></div>
 
             <h3>| Actors</h3>
-            @if (Model.Actors.Count() > 5)
+            @if (Model.Actors.Count() >= 5)
             {
                 <div class="owl-carousel owl-theme mt-3">
                     @foreach (var actor in Model.Actors)
                     {
-                        <div class="card" @*style="width:150px; height:330px"*@>
+                        <div class="item">
+                            <div class="card" @*style="width:150px; height:330px"*@>
                             <img class="card-img-top" src="@actor.ImageUrl" alt="Card image">
                             <div class="card-body">
                                 <center>
                                     <a href="@actor.InformationLink" class="card-title">@actor.FullName</a>
                                 </center>
                             </div>
+                        </div>
                         </div>
                     }
                 </div>
@@ -129,7 +131,7 @@
                 <div class="row">
                     @foreach (var actor in Model.Actors)
                     {
-                        <div class="col-3">
+                        <div class="col-3 mb-2">
                             <div class="card" @*style="width:150px; height:330px"*@>
                                 <img class="card-img-top" src="@actor.ImageUrl" alt="Card image">
                                 <div class="card-body">
@@ -206,19 +208,11 @@
                                                 <p class="small mb-0 ms-2">@comment.User.FullName</p>
                                             </div>
                                             <div id="comment@(comment.Id)-likes-counter" class="d-flex flex-row align-items-center">
-                                                <span role="button" onclick="IncreaseCommentLikes(@comment.Id)"><i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
-                                                <p id="comment@(comment.Id)-likes-counter" class="small text-muted mb-0">@comment.Likes</p>
+                                                <span role="button" onclick="VoteForMovieComment(@comment.Id, true)"><i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
+                                                <p id="comment-@(comment.Id)-likes" class="small text-muted mb-0">@comment.Likes</p>
                                                 <div style="margin-left:8px"></div>
-                                                <span role="button" onclick="IncreaseCommentDislikes(@comment.Id)"><i class="far fa-thumbs-down mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
-                                                <p id="comment@(comment.Id)-dislikes-counter" class="small text-muted mb-0">@comment.Dislikes</p>
-                                            </div>
-
-                                            <div id="comment@(comment.Id)-likes-counter-after-user-click" class="d-none d-flex flex-row align-items-center">
-                                                <span><i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
-                                                <p class="small text-muted mb-0">@comment.Likes</p>
-                                                <div style="margin-left:8px"></div>
-                                                <span><i class="far fa-thumbs-down mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
-                                                <p class="small text-muted mb-0">@comment.Dislikes</p>
+                                                <span role="button" onclick="VoteForMovieComment(@comment.Id, false)"><i class="far fa-thumbs-down mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i></span>
+                                                <p id="comment-@(comment.Id)-dislikes" class="small text-muted mb-0">@comment.Dislikes</p>
                                             </div>
                                         </div>
                                     </div>
@@ -256,7 +250,7 @@
     <br />
     @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
     {
-        <hr >
+        <hr>
         <a asp-area="" asp-controller="Movies" asp-action="EditIndex" asp-route-id="@Model.Id" class="btn btn-outline-warning offset-2 col-3">Edit @Model.Name</a>
         <a asp-area="" asp-controller="Movies" asp-action="DeleteConfirmation" asp-route-id="@Model.Id" class="btn btn-outline-danger offset-2 col-3" id="delete-movie-btn">Delete @Model.Name</a>
     }
@@ -320,31 +314,10 @@
     </script>
 
     <script>
-        function IncreaseCommentLikes(commentId) {
-            $.get('/api/moviecomments/increaselikes/?commentId=' + commentId, (data) => {
-                let initialCommentContainerElement = document.querySelector('#comment' + commentId + '-likes-counter');
-                let secondCommentContainerElement = document.querySelector('#comment' + commentId + '-likes-counter-after-user-click');
-                let commentLikesCountElement = document.querySelector('#comment' + commentId + '-likes-counter');
-
-                commentLikesCountElement.textContent = data;
-                initialCommentContainerElement.classList.add('d-none');
-
-                secondCommentContainerElement.children[1].textContent = data;
-                secondCommentContainerElement.classList.remove('d-none');
-            })
-        };
-
-        function IncreaseCommentDislikes(commentId) {
-            $.get('/api/moviecomments/increasedislikes/?commentId=' + commentId, (data) => {
-                let initialCommentContainerElement = document.querySelector('#comment' + commentId + '-likes-counter');
-                let secondCommentContainerElement = document.querySelector('#comment' + commentId + '-likes-counter-after-user-click');
-                let commentDislikesCountElement = document.querySelector('#comment' + commentId + '-dislikes-counter');
-
-                commentDislikesCountElement.textContent = data;
-                initialCommentContainerElement.classList.add('d-none');
-
-                secondCommentContainerElement.children[4].textContent = data;
-                secondCommentContainerElement.classList.remove('d-none');
+        function VoteForMovieComment(commentId, isLikeVote) {
+            $.get('/api/moviecomments/vote?CommentId='+commentId+'&IsLikeVote='+isLikeVote, (data) => {
+                $('#comment-' + commentId + '-likes').text(data.likes);
+                $('#comment-' + commentId + '-dislikes').text(data.dislikes);
             })
         };
     </script>

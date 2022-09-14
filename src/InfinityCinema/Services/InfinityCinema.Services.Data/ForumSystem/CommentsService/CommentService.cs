@@ -13,12 +13,10 @@
     public class CommentService : ICommentService
     {
         private readonly InfinityCinemaDbContext dbContext;
-        private readonly IRepository<Comment> commentRepository;
 
-        public CommentService(InfinityCinemaDbContext dbContext, IRepository<Comment> commentRepository)
+        public CommentService(InfinityCinemaDbContext dbContext)
         {
             this.dbContext = dbContext;
-            this.commentRepository = commentRepository;
         }
 
         // Create

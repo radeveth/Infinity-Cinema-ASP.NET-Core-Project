@@ -75,7 +75,7 @@
                     <div class="card mb-4">
                         <div class="container">
                             <div class="card-header">
-                                @if (currentUserId == post.User.Id)
+                                @if (currentUserId == post.User.Id || this.User.IsInRole(GlobalConstants.AdministratorRoleName))
                                 {
                                     <div class="float-end">
                                         <a asp-area="" asp-controller="ForumPosts" asp-action="DeletePost" asp-route-PostId="@post.Id" asp-route-CategoryId="@Model.CategoryId" class="btn btn-danger">Delete</a>

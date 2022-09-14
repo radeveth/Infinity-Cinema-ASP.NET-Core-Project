@@ -15,6 +15,7 @@
             this.genreService = genreService;
         }
 
+        [HttpGet]
         public IActionResult All(string searchName)
         {
             IEnumerable<GenreViewModel> genres = this.genreService.All<GenreViewModel>(searchName);

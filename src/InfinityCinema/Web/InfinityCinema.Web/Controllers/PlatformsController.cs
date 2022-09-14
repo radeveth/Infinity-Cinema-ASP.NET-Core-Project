@@ -17,6 +17,8 @@
             this.platformService = platformService;
         }
 
+        [HttpPost]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> DeleteAsync(int platformId, int movieId)
         {
             await this.platformService.RemoveRelationBetweenMoviePlatformsAndPlatformsTablesAsync(platformId, movieId);

@@ -16,7 +16,7 @@
                 return;
             }
 
-            var genres = new List<Genre>()
+            List<Genre> genres = new List<Genre>()
             {
                 new Genre() { Name = "Action", ImageUrl = "https://previews.123rf.com/images/pedrolieb/pedrolieb1210/pedrolieb121000023/16084899-clap-film-of-cinema-action-genre-clapperboard-text-illustration-.jpg?fj=1", Description = "Movies in the action genre are fast-paced and include a lot of action like fight scenes, chase scenes, and slow-motion shots. They can feature superheroes, martial arts, or exciting stunts. These high-octane films are more about the execution of the plot rather than the plot itself. Action movies are thrilling to watch and leave audience members on the edge of their seats. Cop movies, disaster films, and some spy films fall under the action category. James Cameron’s 1994 film True Lies about an American spy starring Arnold Schwarzenegger is an example of the genre. Learn how to write an action screenplay in our comprehensive guide here." },
                 new Genre() { Name = "Animation", ImageUrl = "https://www.hitechanimation.com/blog/wp-content/uploads/2018/02/mouse-hd-png1258.png", Description = "Animated film is a collection of illustrations that are photographed frame-by-frame and then played in a quick succession. Since its inception, animation has had a creative and imaginative tendency. Being able to bring animals and objects to life, this genre has catered towards fairy tales and children’s stories. However, animation has long been a genre enjoyed by all ages. As of recent, there has even been an influx of animation geared towards adults. Animation is commonly thought of as a technique, thus it’s ability to span over many different genres." },

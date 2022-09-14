@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -339,12 +340,6 @@
             return new MovieFormModel()
             {
                 Name = targetMovie.Name,
-                Genres = targetMovie.Genres.Select(g => new GenreFormModel()
-                {
-                    Id = g.Id,
-                    Name = g.Name,
-                    ImageUrl = g.ImageUrl,
-                }),
                 Description = targetMovie.Description,
                 Director = new DirectorFormModel()
                 {
@@ -395,18 +390,18 @@
 
             foreach (var genre in this.dbContext.MovieGenres.Where(m => m.MovieId == id).ToList())
             {
-                genre.IsDeleted = true;
-                genre.DeletedOn = DateTime.UtcNow;
+                this.dbContext.MovieGenres.Remove(genre);
             }
 
             await this.dbContext.SaveChangesAsync();
 
             await this.MatchGenresWithMovie(id, movieForm.GenresId.ToList());
 
+            await this.dbContext.SaveChangesAsync();
+
             foreach (var language in this.dbContext.MovieLanguages.Where(m => m.MovieId == id).ToList())
             {
-                language.IsDeleted = true;
-                language.DeletedOn = DateTime.UtcNow;
+                this.dbContext.MovieLanguages.Remove(language);
             }
 
             await this.dbContext.SaveChangesAsync();
@@ -511,9 +506,9 @@
         // Useful methods
         private async Task MatchLanguagesWithMovie(int movieId, IEnumerable<int> languagesIds)
         {
-            ICollection<MovieLanguage> movieLanguages = new HashSet<MovieLanguage>();
+            List<MovieLanguage> movieLanguages = new List<MovieLanguage>();
 
-            foreach (int languageId in languagesIds)
+            foreach (int languageId in languagesIds.ToList())
             {
                 movieLanguages.Add(new MovieLanguage() { MovieId = movieId, LanguageId = languageId });
             }
@@ -524,9 +519,9 @@
 
         private async Task MatchGenresWithMovie(int movieId, IEnumerable<int> genresIds)
         {
-            ICollection<MovieGenre> movieGenres = new HashSet<MovieGenre>();
+            List<MovieGenre> movieGenres = new List<MovieGenre>();
 
-            foreach (int genreId in genresIds)
+            foreach (int genreId in genresIds.ToList())
             {
                 movieGenres.Add(new MovieGenre() { MovieId = movieId, GenreId = genreId });
             }

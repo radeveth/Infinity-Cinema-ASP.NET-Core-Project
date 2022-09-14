@@ -13,15 +13,12 @@
         public MovieComment()
         {
             this.MovieUserComments = new HashSet<MovieUserComment>();
+            this.MovieCommentVotes = new HashSet<MovieCommentVote>();
         }
 
         [Required]
         [MaxLength(ContentMaxLength)]
         public string Content { get; set; }
-
-        public int Likes { get; set; }
-
-        public int Dislikes { get; set; }
 
         [ForeignKey(nameof(ApplicationUser))]
         public string UserId { get; set; }
@@ -29,5 +26,7 @@
         public virtual ApplicationUser User { get; set; }
 
         public ICollection<MovieUserComment> MovieUserComments { get; set; }
+
+        public ICollection<MovieCommentVote> MovieCommentVotes { get; set; }
     }
 }

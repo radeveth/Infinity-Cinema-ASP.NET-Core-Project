@@ -1,11 +1,14 @@
 ﻿namespace InfinityCinema.Web.Controllers
 {
     using System.Collections.Generic;
+    using System.Web.Http;
 
     using InfinityCinema.Services.Data.MoviesService;
     using InfinityCinema.Services.Data.MoviesService.Models;
     using InfinityCinema.Web.Infrastructure;
     using Microsoft.AspNetCore.Mvc;
+
+    using HttpGetAttribute = System.Web.Http.HttpGetAttribute;
 
     public class ApplicationUsersController : BaseController
     {
@@ -17,6 +20,7 @@
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult WatchList()
         {
             string userId = ClaimsPrincipalExtensions.GetId(this.User);

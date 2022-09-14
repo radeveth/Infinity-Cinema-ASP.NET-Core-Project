@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Data.Models;
-    using InfinityCinema.Services.Data.ImagesService.Models;
     using InfinityCinema.Services.Data.MoviesService.Enums;
     using InfinityCinema.Services.Data.MoviesService.Models;
 
@@ -30,6 +29,8 @@
         IEnumerable<UserSavedMovieViewModel> GetUserSavedMovies(string userId);
 
         MovieFormModel GetMovieFormModel(int id);
+
+        int GetMovieIdByName(string name);
 
         // Update
         Task<bool> EditAsync(MovieFormModel movieForm, int id);

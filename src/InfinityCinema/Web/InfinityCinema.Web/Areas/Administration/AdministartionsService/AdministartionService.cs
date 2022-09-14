@@ -14,9 +14,9 @@
             this.dbContext = dbContext;
         }
 
-        public ApplicationStatisticsViewModel ApplicationStatistics()
+        public AdministartionIndexViewModel ApplicationStatistics()
         {
-            return new ApplicationStatisticsViewModel()
+            return new AdministartionIndexViewModel()
             {
                 TotalMovies = this.dbContext.Movies.Count(),
                 TotalGenres = this.dbContext.Genres.Count(),

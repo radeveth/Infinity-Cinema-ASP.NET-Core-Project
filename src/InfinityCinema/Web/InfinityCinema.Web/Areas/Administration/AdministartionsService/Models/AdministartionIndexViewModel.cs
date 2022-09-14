@@ -1,6 +1,6 @@
 ﻿namespace InfinityCinema.Web.Areas.Administration.AdministartionsService.Models
 {
-    public class ApplicationStatisticsViewModel
+    public class AdministartionIndexViewModel
     {
         public int TotalMovies { get; set; }
 

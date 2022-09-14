@@ -3,6 +3,7 @@
 namespace InfinityCinema.Data.Migrations
 {
     using System;
+
     using Microsoft.EntityFrameworkCore.Migrations;
 
     public partial class VotesForMovieCommentsMappingTableAdded : Migration

@@ -4,6 +4,6 @@
 
     public interface IAdministartionService
     {
-        ApplicationStatisticsViewModel ApplicationStatistics();
+        AdministartionIndexViewModel ApplicationStatistics();
     }
 }

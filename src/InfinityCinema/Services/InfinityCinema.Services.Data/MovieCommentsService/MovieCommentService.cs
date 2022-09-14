@@ -7,10 +7,8 @@
     using InfinityCinema.Data.Models;
     using InfinityCinema.Data.Models.Enums;
     using InfinityCinema.Services.Data.ApplicationUsersService;
-    using InfinityCinema.Services.Data.ForumSystem.VotesService.Models;
     using InfinityCinema.Services.Data.MovieCommentsService.Models;
     using InfinityCinema.Services.Mapping;
-    using Microsoft.EntityFrameworkCore;
 
     public class MovieCommentService : IMovieCommentService
     {

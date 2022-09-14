@@ -13,7 +13,7 @@ namespace InfinityCinema.Data.Migrations
                 table: "Posts",
                 type: "nvarchar(max)",
                 nullable: false,
-                defaultValue: "",
+                defaultValue: string.Empty,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
                 oldMaxLength: 10000,

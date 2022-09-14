@@ -21,7 +21,7 @@
 
         [HttpGet]
         [Route("statistics")]
-        public ActionResult<ApplicationStatisticsViewModel> Statistics()
+        public ActionResult<AdministartionIndexViewModel> Statistics()
         {
             return this.Json(this.administartionService.ApplicationStatistics());
         }

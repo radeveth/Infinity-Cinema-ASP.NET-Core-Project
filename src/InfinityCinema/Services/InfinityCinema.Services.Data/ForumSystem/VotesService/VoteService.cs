@@ -1,6 +1,5 @@
 ﻿namespace InfinityCinema.Services.Data.ForumSystem.VotesService
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -8,7 +7,6 @@
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models.Enums;
     using InfinityCinema.Data.Models.ForumSystem;
-    using InfinityCinema.Services.Data.ForumSystem.PostsService.Models;
     using InfinityCinema.Services.Data.ForumSystem.VotesService.Models;
     using InfinityCinema.Services.Mapping;
 

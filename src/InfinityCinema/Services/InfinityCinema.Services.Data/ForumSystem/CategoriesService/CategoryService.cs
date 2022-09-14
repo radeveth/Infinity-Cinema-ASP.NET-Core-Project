@@ -2,13 +2,11 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.ConstrainedExecution;
     using InfinityCinema.Data;
     using InfinityCinema.Data.Common.Repositories;
     using InfinityCinema.Data.Models.ForumSystem;
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models;
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models.Enums;
-    using InfinityCinema.Services.Data.ForumSystem.CommentsService.Models;
     using InfinityCinema.Services.Data.ForumSystem.PostsService.Models;
     using InfinityCinema.Services.Mapping;
 

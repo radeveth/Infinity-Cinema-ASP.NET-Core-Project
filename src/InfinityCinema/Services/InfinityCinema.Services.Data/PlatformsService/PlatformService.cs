@@ -98,7 +98,9 @@
             {
                 moviePlatform.IsDeleted = true;
                 moviePlatform.DeletedOn = DateTime.UtcNow;
-            };
+            }
+
+;
 
             await this.dbContext.SaveChangesAsync();
         }

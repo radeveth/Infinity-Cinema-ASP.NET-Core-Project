@@ -1,7 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models
 {
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models.Enums;
-    using InfinityCinema.Services.Data.ForumSystem.CommentsService.Models;
 
     public class CategoryServiceModel
     {

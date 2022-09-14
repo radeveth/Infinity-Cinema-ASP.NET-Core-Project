@@ -184,6 +184,7 @@
             {
                 await dbContext.MovieActors.AddAsync(new MovieActor() { ActorId = actorId, MovieId = movie.Id, });
             }
+
             await dbContext.SaveChangesAsync();
 
             // Seeding Genres for movie
@@ -245,6 +246,7 @@
             {
                 await dbContext.MoviePlatform.AddAsync(new MoviePlatform() { MovieId = movie.Id, PlatformId = platformId });
             }
+
             await dbContext.SaveChangesAsync();
 
             // Seeding Lamguages for movie
@@ -277,6 +279,7 @@
             {
                 await dbContext.MovieLanguages.AddAsync(new MovieLanguage() { MovieId = movie.Id, LanguageId = languageId });
             }
+
             await dbContext.SaveChangesAsync();
         }
 

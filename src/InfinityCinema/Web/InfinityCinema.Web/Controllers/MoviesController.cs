@@ -5,12 +5,9 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Common;
-    using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.ActorsService;
     using InfinityCinema.Services.Data.ActorsService.Models;
-    using InfinityCinema.Services.Data.DirectorsService.Models;
     using InfinityCinema.Services.Data.GenresService;
-    using InfinityCinema.Services.Data.GenresService.Models;
     using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.ImagesService.Models;
     using InfinityCinema.Services.Data.MovieCommentsService;
@@ -92,8 +89,18 @@
         }
 
         [HttpGet]
-        public IActionResult Details(int id)
+        public IActionResult Details(int id, string name)
         {
+            if (!string.IsNullOrWhiteSpace(name) && id == 0)
+            {
+                id = this.movieService.GetMovieIdByName(name);
+
+                if (id == 0)
+                {
+                    return this.NotFound();
+                }
+            }
+
             MovieDetailsServiceModel movie = this.movieService.Details(id);
 
             return this.View(movie);
@@ -131,8 +138,18 @@
 
         [HttpGet]
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
-        public IActionResult EditIndex(int id)
+        public IActionResult EditIndex(int id, string name)
         {
+            if (!string.IsNullOrWhiteSpace(name) && id == 0)
+            {
+                id = this.movieService.GetMovieIdByName(name);
+
+                if (id == 0)
+                {
+                    return this.NotFound();
+                }
+            }
+
             this.ViewBag.MovieId = id;
 
             return this.View();
@@ -217,8 +234,18 @@
 
         [HttpGet]
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
-        public IActionResult DeleteConfirmation(int id)
+        public IActionResult DeleteConfirmation(int id, string name)
         {
+            if (!string.IsNullOrWhiteSpace(name) && id == 0)
+            {
+                id = this.movieService.GetMovieIdByName(name);
+
+                if (id == 0)
+                {
+                    return this.NotFound();
+                }
+            }
+
             DeleteMovieServiceModel deleteMovieServiceModel = new DeleteMovieServiceModel()
             {
                 Id = id,

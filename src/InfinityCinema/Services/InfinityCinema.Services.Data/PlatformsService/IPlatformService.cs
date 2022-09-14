@@ -1,6 +1,5 @@
 ﻿namespace InfinityCinema.Services.Data.PlatformsService
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 

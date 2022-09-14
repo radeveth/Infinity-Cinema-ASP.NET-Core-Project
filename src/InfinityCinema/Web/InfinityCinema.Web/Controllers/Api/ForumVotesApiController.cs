@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
     using InfinityCinema.Services.Data.ForumSystem.PostsService;
-    using InfinityCinema.Services.Data.ForumSystem.PostsService.Models;
     using InfinityCinema.Services.Data.ForumSystem.VotesService;
     using InfinityCinema.Services.Data.ForumSystem.VotesService.Models;
     using InfinityCinema.Web.Infrastructure;

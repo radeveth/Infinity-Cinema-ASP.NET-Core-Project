@@ -5,9 +5,7 @@
     using AutoMapper;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Data.Models.Enums;
-    using InfinityCinema.Data.Models.ForumSystem;
     using InfinityCinema.Services.Data.ApplicationUsersService.Models;
-    using InfinityCinema.Services.Data.ForumSystem.PostsService.Models;
     using InfinityCinema.Services.Mapping;
 
     public class MovieCommentViewModel : IMapFrom<MovieComment>, IHaveCustomMappings

@@ -1,10 +1,10 @@
-﻿@model ApplicationStatisticsViewModel
+﻿@model AdministartionIndexViewModel
 
 @{
     this.ViewData["Title"] = "Admin dashboard";
 }
 
-<div class="container">
+<div class="container mb-5">
     <center>
         <h1 class="text-center mt-5">@this.ViewData["Title"]</h1>
     </center>
@@ -20,21 +20,169 @@
         <hr class="my-4">
         <div class="mb-5"></div>
         <p class="lead">
-            <center>
-                <a asp-area="" asp-controller="Movies" asp-action="Create" class="btn btn-warning btn-lg" role="button">Create Movie</a>
-            </center>
-            @*<a asp-area="" asp-controller="Movies" asp-action="Edit" class="btn btn-warning btn-lg offset-2" role="button">Edit Movie</a>
-            <a asp-area="" asp-controller="Movies" asp-action="Delete" class="btn btn-warning btn-lg offset-2" role="button">Delete Movie</a>*@
+            <h4 class="mb-3">| Create:</h4>
+            <div class="row mb-4">
+                <a asp-area="Administration" asp-controller="Movies" asp-action="Create" class="btn btn-warning col-2 rounded-pill">Crate Movie</a>
+                <a asp-area="Administration" asp-controller="Actors" asp-action="Create" class="btn btn-warning offset-1 col-2 rounded-pill">Create Actor</a>
+                <a asp-area="Administration" asp-controller="Genres" asp-action="Create" class="btn btn-warning offset-1 col-2 rounded-pill">Create Genre</a>
+                <a asp-area="Administration" asp-controller="Images" asp-action="Create" class="btn btn-warning offset-1 col-2 rounded-pill">Create Image</a>
+            </div>
+            <div class="row mb-5">
+                <a asp-area="Administration" asp-controller="Directors" asp-action="Create" class="btn btn-warning col-2 rounded-pill">Create Director</a>
+                <a asp-area="Administration" asp-controller="Platforms" asp-action="Create" class="btn btn-warning offset-1 col-2 rounded-pill">Create Platform</a>
+                <a asp-area="Administration" asp-controller="Languages" asp-action="Create" class="btn btn-warning offset-1 col-2 rounded-pill">Create Language</a>
+                <a asp-area="Administration" asp-controller="Countries" asp-action="Create" class="btn btn-warning offset-1 col-2 rounded-pill">Create Country</a>
+            </div>
+        </p>
+        <p class="lead">
+            <h4 class="mb-3">| Read:</h4>
+            <div class="row mb-4">
+                <a asp-area="Administration" asp-controller="Movies" asp-action="Index" class="btn btn-warning col-2 rounded-pill">View All Movies</a>
+                <a asp-area="Administration" asp-controller="Actors" asp-action="Index" class="btn btn-warning offset-1 col-2 rounded-pill">View All Actors</a>
+                <a asp-area="Administration" asp-controller="Genres" asp-action="Index" class="btn btn-warning offset-1 col-2 rounded-pill">View All Genres</a>
+                <a asp-area="Administration" asp-controller="Images" asp-action="Index" class="btn btn-warning offset-1 col-2 rounded-pill">View All Images</a>
+            </div>
+            <div class="row mb-5">
+                <a asp-area="Administration" asp-controller="Directors" asp-action="Index" class="btn btn-warning col-2 rounded-pill">View All Directors</a>
+                <a asp-area="Administration" asp-controller="Platforms" asp-action="Index" class="btn btn-warning offset-1 col-2 rounded-pill">View All Platforms</a>
+                <a asp-area="Administration" asp-controller="Languages" asp-action="Index" class="btn btn-warning offset-1 col-2 rounded-pill">View All Languages</a>
+                <a asp-area="Administration" asp-controller="Countries" asp-action="Index" class="btn btn-warning offset-1 col-2 rounded-pill">View All Countries</a>
+            </div>
+        </p>
+        <p class="lead">
+            <h4 class="mb-3">| Update:</h4>
+            <div class="row mb-4">
+                <form asp-area="Administration" asp-controller="Movies" asp-action="Edit" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target movie Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Edit Movie">
+                </form>
+                <form asp-area="Administration" asp-controller="Actors" asp-action="Edit" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target actor Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Edit Actor">
+                </form>
+                <form asp-area="Administration" asp-controller="Genres" asp-action="Edit" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target genre Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Edit Genre">
+                </form>
+                <form asp-area="Administration" asp-controller="Images" asp-action="Edit" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target image Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Edit Image">
+                </form>
+                <form asp-area="Administration" asp-controller="Directors" asp-action="Edit" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target director Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Edit Director">
+                </form>
+                <form asp-area="Administration" asp-controller="Platforms" asp-action="Edit" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target platform Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Edit Platform">
+                </form>
+                <form asp-area="Administration" asp-controller="Languages" asp-action="Edit" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target language Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Edit Language">
+                </form>
+                <form asp-area="Administration" asp-controller="Countries" asp-action="Edit" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target country Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Edit Country">
+                </form>
+            </div>
+        </p>
+        <p class="lead">
+            <h4 class="mb-3">| Delete:</h4>
+            <div class="row mb-4">
+                <form asp-area="Administration" asp-controller="Movies" asp-action="Delete" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target movie Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Delete Movie">
+                </form>
+                <form asp-area="Administration" asp-controller="Actors" asp-action="Delete" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target actor Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Delete Actor">
+                </form>
+                <form asp-area="Administration" asp-controller="Genres" asp-action="Delete" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target genre Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Delete Genre">
+                </form>
+                <form asp-area="Administration" asp-controller="Images" asp-action="Delete" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target image Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Delete Image">
+                </form>
+                <form asp-area="Administration" asp-controller="Directors" asp-action="Delete" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target director Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Delete Director">
+                </form>
+                <form asp-area="Administration" asp-controller="Platforms" asp-action="Delete" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target platform Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Delete Platform">
+                </form>
+                <form asp-area="Administration" asp-controller="Languages" asp-action="Delete" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target language Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Delete Language">
+                </form>
+                <form asp-area="Administration" asp-controller="Countries" asp-action="Delete" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target country Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Delete Country">
+                </form>
+            </div>
         </p>
     </div>
+    <div class="mt-5">
+        <center><h3> Forum System for Application</h3></center>
+        <hr class="offset-2 col-8">
+        <p class="lead">
+            <h4 class="mb-3">| Create:</h4>
+            <div class="row mb-5">
+                <a asp-area="Administration" asp-controller="Posts" asp-action="Create" class="btn btn-warning col-2 rounded-pill">Post</a>
+                <a asp-area="Administration" asp-controller="Comments" asp-action="Create" class="btn btn-warning offset-1 col-2 rounded-pill">Create Comment</a>
+            </div>
+        </p>
+        <p class="lead">
+            <h4 class="mb-3">| Read:</h4>
+            <div class="row mb-5">
+                <a asp-area="Administration" asp-controller="Posts" asp-action="Index" class="btn btn-warning col-2 rounded-pill">Post</a>
+                <a asp-area="Administration" asp-controller="Comments" asp-action="Index" class="btn btn-warning offset-1 col-2 rounded-pill">Create Comment</a>
+            </div>
+        </p>
+        <p class="lead">
+            <h4 class="mb-3">| Update:</h4>
+            <div class="row mb-5">
+                <form asp-area="Administration" asp-controller="Posts" asp-action="Edit" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target post Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Edit Post">
+                </form>
+                <form asp-area="Administration" asp-controller="Comments" asp-action="Edit" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target comment Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Edit Comment">
+                </form>
+            </div>
+        </p>
+        <p class="lead">
+            <h4 class="mb-3">| Delete:</h4>
+            <div class="row mb-5">
+                <form asp-area="Administration" asp-controller="Posts" asp-action="Delete" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target post Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Delete Post">
+                </form>
+                <form asp-area="Administration" asp-controller="Comments" asp-action="Delete" method="get" class="mb-3">
+                    <input name="Id" type="number" placeholder="Enter target comment Id" class="col-2">
+                    <input type="submit" class="btn btn-warning col-2 rounded-pill" value="Delete Comment">
+                </form>
+            </div>
+        </p>
+    </div>
+    <div class="mt-5">
+        <hr>
+        <center><h3 class="mb-5">Custom administartion logic</h3></center>
+        <form asp-area="" asp-controller="Movies" asp-action="Details" method="get" class="mb-3">
+            <input name="Name" class="col-2 border-warning" type="text" placeholder="Serach movie by name">
+            <input type="submit" class="btn btn-warning btn-sm rounded-pill" style="margin-left:20px" value="Go">
+        </form>
+        <form asp-area="" asp-controller="Movies" asp-action="EditIndex" method="get" class="mb-3">
+            <input name="Name" class="col-2 border-warning" type="text" placeholder="Edit movie by name">
+            <input type="submit" class="btn btn-warning btn-sm rounded-pill" style="margin-left:20px" value="Go">
+        </form>
+        <form asp-area="" asp-controller="Movies" asp-action="DeleteConfirmation" method="get" class="mb-3">
+            <input name="Name" class="col-2 border-warning" type="text" placeholder="Delete movie by name">
+            <input type="submit" class="btn btn-warning btn-sm rounded-pill" style="margin-left:20px" value="Go">
+        </form>
+        <a asp-area="" asp-controller="Movies" asp-action="Create" class=" btn btn-warning btn-sum rounded-pill mb-1" role="button">Create Movie</a>
+    </div>
 </div>
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />

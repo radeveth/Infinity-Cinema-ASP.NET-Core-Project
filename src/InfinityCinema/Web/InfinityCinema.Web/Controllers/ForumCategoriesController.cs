@@ -4,9 +4,7 @@
 
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService;
     using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models;
-    using InfinityCinema.Services.Data.ForumSystem.CategoriesService.Models.Enums;
     using InfinityCinema.Services.Data.ForumSystem.CommentsService;
-    using InfinityCinema.Services.Data.ForumSystem.CommentsService.Models;
     using InfinityCinema.Services.Data.ForumSystem.PostsService;
     using InfinityCinema.Services.Data.ForumSystem.PostsService.Models;
     using InfinityCinema.Web.Infrastructure;

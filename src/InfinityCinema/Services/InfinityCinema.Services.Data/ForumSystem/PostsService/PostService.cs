@@ -5,7 +5,6 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Data;
-    using InfinityCinema.Data.Common.Repositories;
     using InfinityCinema.Data.Models.ForumSystem;
     using InfinityCinema.Services.Data.ForumSystem.CommentsService;
     using InfinityCinema.Services.Data.ForumSystem.PostsService.Models;

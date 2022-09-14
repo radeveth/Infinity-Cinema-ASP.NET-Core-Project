@@ -2,13 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
 
     using InfinityCinema.Data;
-    using InfinityCinema.Data.Common.Repositories;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.ActorsService;
     using InfinityCinema.Services.Data.ActorsService.Models;
@@ -357,6 +355,17 @@
 
         public bool CheckIfMovieWithGivenIdExist(int id)
             => this.dbContext.Movies.Any(m => m.Id == id);
+
+        public int GetMovieIdByName(string name)
+        {
+            int id = this.dbContext
+                .Movies
+                .Where(m => m.Name.ToLower() == name.ToLower())
+                .Select(m => m.Id)
+                .FirstOrDefault();
+
+            return id;
+        }
 
         // Update
         public async Task<bool> EditAsync(MovieFormModel movieForm, int id)

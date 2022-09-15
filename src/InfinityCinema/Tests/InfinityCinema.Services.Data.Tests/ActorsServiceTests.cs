@@ -19,14 +19,14 @@
             this.InitializeMapper();
         }
 
+        // Test #1
         [Fact]
-        public async Task CreateAsyncShouldTakeGivenFormModelAndCreateNewActorForDatabaseTest()
+        public async Task CreateAsyncShouldMapGivenActorFormModelToActorAndAddToDatabase()
         {
             // Arrange
-            DbContextOptionsBuilder<InfinityCinemaDbContext> optionsBuilder = new DbContextOptionsBuilder<InfinityCinemaDbContext>()
-                .UseInMemoryDatabase(databaseName: "ActorsTestDb");
-            InfinityCinemaDbContext dbContext = new InfinityCinemaDbContext(optionsBuilder.Options);
-            ActorService service = new ActorService(dbContext);
+            int expectedActorsInDatabaseCount = 1;
+            InfinityCinemaDbContext dbContext = new InfinityCinemaDbContext(this.PrepareOptionsForDbContext(1));
+            ActorService actorService = new ActorService(dbContext);
 
             ActorFormModel actorForm = new ActorFormModel()
             {
@@ -36,70 +36,159 @@
             };
 
             // Act
-            await service.CreateAsync<ActorViewModel>(actorForm);
-            int count = service.All().Count();
-            ActorViewModel actorViewModel = service.All().FirstOrDefault();
+            await actorService.CreateAsync<ActorViewModel>(actorForm);
+            int actualCountOfActorsInDatabase = actorService.All().Count();
 
             // Assert
-            Assert.Equal(1, count);
-            Assert.Equal(actorViewModel.FullName, dbContext.Actors.To<ActorViewModel>().FirstOrDefault().FullName);
-            Assert.Equal(actorViewModel.ImageUrl, dbContext.Actors.To<ActorViewModel>().FirstOrDefault().ImageUrl);
-            Assert.Equal(actorViewModel.InformationLink, dbContext.Actors.To<ActorViewModel>().FirstOrDefault().InformationLink);
+            Assert.Equal(expectedActorsInDatabaseCount, actualCountOfActorsInDatabase);
         }
 
+        // Test #2
         [Fact]
-        public async Task AllShouldReturnAllExistingActorsInDatabaseMappedToViewModel()
+        public async Task CreateAsyncShouldMapGivenActorFormModelToActorAndAddToDatabaseManyTimes()
         {
             // Arrange
-            DbContextOptionsBuilder<InfinityCinemaDbContext> optionsBuilder = new DbContextOptionsBuilder<InfinityCinemaDbContext>()
-                .UseInMemoryDatabase(databaseName: "ActorsTestDb");
-            InfinityCinemaDbContext dbContext = new InfinityCinemaDbContext(optionsBuilder.Options);
-            ActorService service = new ActorService(dbContext);
+            int expectedActorsInDatabaseCount = 5;
+            InfinityCinemaDbContext dbContext = new InfinityCinemaDbContext(this.PrepareOptionsForDbContext(2));
+            ActorService actorService = new ActorService(dbContext);
 
-            List<ActorFormModel> actorsForm = new List<ActorFormModel>()
-            {
-                new ActorFormModel()
-                {
-                    FullName = "Sylvester1 Stallone1",
-                    ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg1",
-                    InformationLink = "https://www.imdb.com/name/nm0000230/1",
-                },
-                new ActorFormModel()
-                {
-                    FullName = "Sylvester2 Stallone2",
-                    ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg2",
-                    InformationLink = "https://www.imdb.com/name/nm0000230/2",
-                },
-                new ActorFormModel()
-                {
-                    FullName = "Sylvester3 Stallone3",
-                    ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg3",
-                    InformationLink = "https://www.imdb.com/name/nm0000230/3",
-                },
-            };
-
-            foreach (var actorForm in actorsForm)
-            {
-                await service.CreateAsync<ActorViewModel>(actorForm);
-            }
+            List<ActorFormModel> actorsForm = this.SeedingInformationForActorFormModel();
 
             // Act
-            IEnumerable<ActorViewModel> actors = service.All();
+            foreach (var actorForm in actorsForm)
+            {
+                await actorService.CreateAsync<ActorViewModel>(actorForm);
+            }
+
+            int actualCountOfActorsInDatabase = actorService.All().Count();
 
             // Assert
-            Assert.Equal(dbContext.Actors.Count(), actors.Count());
-            Assert.Equal(dbContext.Actors.To<ActorViewModel>().ToString(), actors.ToString());
+            Assert.Equal(expectedActorsInDatabaseCount, actualCountOfActorsInDatabase);
         }
 
+        // Test #3
         [Fact]
-        public async Task GetActorByNamesShouldReturnViewModelForActorWithGivenExistingActorNamesInDatabase()
+        public async Task GetActorByNameShouldReturnActorViewModelWithGivenNameOfExistingActor()
         {
             // Arrange
-            DbContextOptionsBuilder<InfinityCinemaDbContext> optionsBuilder = new DbContextOptionsBuilder<InfinityCinemaDbContext>()
-                .UseInMemoryDatabase(databaseName: "ActorsTestDb");
-            InfinityCinemaDbContext dbContext = new InfinityCinemaDbContext(optionsBuilder.Options);
-            ActorService service = new ActorService(dbContext);
-            List<Actor> actors = new List<Actor>()
+            Actor targetActor = new Actor()
+            {
+                FirstName = "Sylvester1",
+                LastName = "Stallone1",
+                ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg1",
+                InformationLink = "https://www.imdb.com/name/nm0000230/1",
+            };
+            InfinityCinemaDbContext dbContext = new InfinityCinemaDbContext(this.PrepareOptionsForDbContext(3));
+            ActorService actorService = new ActorService(dbContext);
+
+            List<Actor> actors = this.SeedingInformationForActor();
+            await dbContext.Actors.AddRangeAsync(actors);
+            await dbContext.SaveChangesAsync();
+
+            // Act
+            ActorViewModel actorViewModel = actorService.GetActorByNames($"{targetActor.FirstName} {targetActor.LastName}");
+
+            // Assert
+            Assert.Equal($"{targetActor.FirstName} {targetActor.LastName}".ToString(), actorViewModel.FullName.ToString());
+            Assert.Equal(targetActor.ImageUrl, actorViewModel.ImageUrl);
+            Assert.Equal(targetActor.InformationLink, actorViewModel.InformationLink);
+        }
+
+        // Test #4
+        [Fact]
+        public async Task GetActorByNameShouldReturnNullIfThereAreNoFoundActorsByGivenName()
+        {
+            // Arrange
+            InfinityCinemaDbContext dbContext = new InfinityCinemaDbContext(this.PrepareOptionsForDbContext(4));
+            ActorService actorService = new ActorService(dbContext);
+
+            List<Actor> actors = this.SeedingInformationForActor();
+            await dbContext.Actors.AddRangeAsync(actors);
+            await dbContext.SaveChangesAsync();
+
+            // Act
+            ActorViewModel actorViewModel = actorService.GetActorByNames("NoExisting Actor");
+
+            // Assert
+            Assert.True(actorViewModel == null);
+        }
+
+        // Test #5
+        [Fact]
+        public async Task GetViewModelByIdAsyncShouldReturnGivenViewModelByGivenActorId()
+        {
+            // Arrange
+            Actor targetActor = new Actor()
+            {
+                FirstName = "Sylvester1",
+                LastName = "Stallone1",
+                ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg1",
+                InformationLink = "https://www.imdb.com/name/nm0000230/1",
+            };
+            InfinityCinemaDbContext dbContext = new InfinityCinemaDbContext(this.PrepareOptionsForDbContext(5));
+            ActorService actorService = new ActorService(dbContext);
+
+            List<Actor> actors = this.SeedingInformationForActor();
+            await dbContext.Actors.AddRangeAsync(actors);
+            await dbContext.SaveChangesAsync();
+
+            // Act
+            ActorViewModel actorViewModel = actorService.GetViewModelByIdAsync<ActorViewModel>(1);
+
+            // Assert
+            Assert.Equal($"{targetActor.FirstName} {targetActor.LastName}", actorViewModel.FullName);
+            Assert.Equal(targetActor.ImageUrl, actorViewModel.ImageUrl);
+            Assert.Equal(targetActor.InformationLink, actorViewModel.InformationLink);
+        }
+
+        // Test #6
+        [Fact]
+        public async Task GetViewModelByIdAsyncShouldReturnDefaultValueOfGenereicTypeIfGivenActorIdDoesNotExist()
+        {
+            // Arrange
+            InfinityCinemaDbContext dbContext = new InfinityCinemaDbContext(this.PrepareOptionsForDbContext(6));
+            ActorService actorService = new ActorService(dbContext);
+
+            List<Actor> actors = this.SeedingInformationForActor();
+            await dbContext.Actors.AddRangeAsync(actors);
+            await dbContext.SaveChangesAsync();
+
+            // Act
+            ActorViewModel actorViewModel = actorService.GetViewModelByIdAsync<ActorViewModel>(6);
+
+            // Assert
+            Assert.True(actorViewModel == null);
+        }
+
+        // Test #7
+        [Fact]
+        public async Task DeleteAsyncShouldWorkCorrectWithGivenExistingActorId()
+        {
+            // Arrange
+            InfinityCinemaDbContext dbContext = new InfinityCinemaDbContext(this.PrepareOptionsForDbContext(7));
+            ActorService actorService = new ActorService(dbContext);
+            List<Actor> actors = this.SeedingInformationForActor();
+
+            await dbContext.Actors.AddRangeAsync(actors);
+            await dbContext.SaveChangesAsync();
+
+            int expectedActorsCount = dbContext.Actors.Count() - 1;
+
+            // Act
+            await actorService.DeleteAsync(1);
+
+            // Assert
+            Assert.Equal(expectedActorsCount, dbContext.Actors.Count());
+
+            expectedActorsCount = dbContext.Actors.Count() - 1;
+            await actorService.DeleteAsync(2);
+
+            Assert.Equal(expectedActorsCount, dbContext.Actors.Count());
+        }
+
+        private List<Actor> SeedingInformationForActor()
+        {
+            return new List<Actor>()
             {
                 new Actor()
                 {
@@ -122,65 +211,64 @@
                     ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg3",
                     InformationLink = "https://www.imdb.com/name/nm0000230/3",
                 },
-            };
-
-            await dbContext.Actors.AddRangeAsync(actors);
-            await dbContext.SaveChangesAsync();
-
-            // Act
-            ActorViewModel targetActor = service.GetActorByNames($"{actors[0].FirstName} {actors[0].LastName}");
-
-            // Arrange
-            Assert.Equal(actors.Count(), dbContext.Actors.Count());
-            Assert.Equal(dbContext.Actors.To<ActorViewModel>().FirstOrDefault().ToString(), targetActor.ToString());
-        }
-
-        [Fact]
-        public async Task DeleteAsyncShouldDeleteActorWithGivenIdFromDatabase()
-        {
-            // Arrange
-            DbContextOptionsBuilder<InfinityCinemaDbContext> optionsBuilder = new DbContextOptionsBuilder<InfinityCinemaDbContext>()
-                .UseInMemoryDatabase(databaseName: "ActorsTestDb");
-            InfinityCinemaDbContext dbContext = new InfinityCinemaDbContext(optionsBuilder.Options);
-            ActorService service = new ActorService(dbContext);
-
-            Actor actorToDelete = new Actor()
-            {
-                FirstName = "Sylvester1",
-                LastName = "Stallone1",
-                ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg1",
-                InformationLink = "https://www.imdb.com/name/nm0000230/1",
-            };
-
-            List<Actor> actors = new List<Actor>()
-            {
-                actorToDelete,
                 new Actor()
                 {
-                    FirstName = "Sylvester2",
-                    LastName = "Stallone2",
+                    FirstName = "Sylvester4",
+                    LastName = "Stallone4",
+                    ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg4",
+                    InformationLink = "https://www.imdb.com/name/nm0000230/4",
+                },
+                new Actor()
+                {
+                    FirstName = "Sylvester5",
+                    LastName = "Stallone5",
+                    ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg5",
+                    InformationLink = "https://www.imdb.com/name/nm0000230/5",
+                },
+            };
+        }
+
+        private List<ActorFormModel> SeedingInformationForActorFormModel()
+        {
+            return new List<ActorFormModel>()
+            {
+                new ActorFormModel()
+                {
+                    FullName = "Sylvester1 Stallone1",
+                    ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg1",
+                    InformationLink = "https://www.imdb.com/name/nm0000230/1",
+                },
+                new ActorFormModel()
+                {
+                    FullName = "Sylvester2 Stallone2",
                     ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg2",
                     InformationLink = "https://www.imdb.com/name/nm0000230/2",
                 },
-                new Actor()
+                new ActorFormModel()
                 {
-                    FirstName = "Sylvester3",
-                    LastName = "Stallone3",
+                    FullName = "Sylvester3 Stallone3",
                     ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg3",
                     InformationLink = "https://www.imdb.com/name/nm0000230/3",
                 },
+                new ActorFormModel()
+                {
+                    FullName = "Sylvester4 Stallone4",
+                    ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg4",
+                    InformationLink = "https://www.imdb.com/name/nm0000230/4",
+                },
+                new ActorFormModel()
+                {
+                    FullName = "Sylvester5 Stallone5",
+                    ImageUrl = "https://m.media-amazon.com/images/M/MV5BMTQwMTk3NDU2OV5BMl5BanBnXkFtZTcwNTA3MTI0Mw@@._V1_UY317_CR6,0,214,317_AL_.jpg5",
+                    InformationLink = "https://www.imdb.com/name/nm0000230/5",
+                },
             };
+        }
 
-            await dbContext.Actors.AddRangeAsync(actors);
-            await dbContext.SaveChangesAsync();
-
-            // Act
-            await service.DeleteAsync(actorToDelete.Id);
-
-            // Assert
-            Assert.False(dbContext.Actors.Contains(actorToDelete));
-            Assert.False(actors.Count() == dbContext.Actors.Count());
-            Assert.True(actors.Count() - 1 == dbContext.Actors.Count());
+        private DbContextOptions<InfinityCinemaDbContext> PrepareOptionsForDbContext(int testCount)
+        {
+            return new DbContextOptionsBuilder<InfinityCinemaDbContext>()
+                .UseInMemoryDatabase(databaseName: $"ActorsTestDb{testCount}").Options;
         }
 
         private void InitializeMapper() => AutoMapperConfig.RegisterMappings(typeof(ActorViewModel).Assembly);

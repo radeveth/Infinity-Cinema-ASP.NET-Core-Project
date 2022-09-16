@@ -3,6 +3,7 @@
     using System.Diagnostics;
 
     using InfinityCinema.Data.Models;
+    using InfinityCinema.Services.Data.ApplicationUserMoviesService;
     using InfinityCinema.Services.Data.HomeService.Models;
     using InfinityCinema.Services.Data.MoviesService;
     using InfinityCinema.Web.Infrastructure;
@@ -13,12 +14,14 @@
     public class HomeController : BaseController
     {
         private readonly IMovieService movieService;
+        private readonly IApplicationUserMovieService applicationUserMovieService;
         private readonly SignInManager<ApplicationUser> signInManager;
 
-        public HomeController(IMovieService movieService, SignInManager<ApplicationUser> signInManager)
+        public HomeController(IMovieService movieService, SignInManager<ApplicationUser> signInManager, IApplicationUserMovieService applicationUserMovieService)
         {
             this.movieService = movieService;
             this.signInManager = signInManager;
+            this.applicationUserMovieService = applicationUserMovieService;
         }
 
         [HttpGet]
@@ -32,7 +35,7 @@
                 indexViewModel = new IndexViewModel()
                 {
                     TopThreeRatedMovies = this.movieService.GetTopThreeRatedMovies(),
-                    SavdMoviesFromUser = this.movieService.GetUserSavedMovies(userId),
+                    SavdMoviesFromUser = this.applicationUserMovieService.GetUserSavedMovies(userId),
                 };
 
                 this.ViewBag.IsUserIsSignedIn = true;

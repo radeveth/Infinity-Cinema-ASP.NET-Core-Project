@@ -9,6 +9,7 @@ namespace InfinityCinema.Web
     using InfinityCinema.Data.Repositories;
     using InfinityCinema.Data.Seeding;
     using InfinityCinema.Services.Data.ActorsService;
+    using InfinityCinema.Services.Data.ApplicationUserMoviesService;
     using InfinityCinema.Services.Data.ApplicationUsersService;
     using InfinityCinema.Services.Data.CountriesService;
     using InfinityCinema.Services.Data.DirectorsService;
@@ -19,9 +20,14 @@ namespace InfinityCinema.Web
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.LanguagesService;
+    using InfinityCinema.Services.Data.MovieActorsService;
     using InfinityCinema.Services.Data.MovieCommentsService;
+    using InfinityCinema.Services.Data.MovieGenresService;
+    using InfinityCinema.Services.Data.MovieLanguagesService;
+    using InfinityCinema.Services.Data.MoviePlatformsService;
     using InfinityCinema.Services.Data.MoviesService;
     using InfinityCinema.Services.Data.MovieUserCommentsService;
+    using InfinityCinema.Services.Data.MovieUserStarRatingsService;
     using InfinityCinema.Services.Data.PlatformsService;
     using InfinityCinema.Services.Data.SettingsService;
     using InfinityCinema.Services.Mapping;
@@ -82,25 +88,31 @@ namespace InfinityCinema.Web
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
-            services.AddTransient<IEmailSender, NullMessageSender>();
-            services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IGenreService, GenreService>();
-            services.AddTransient<IDirectorService, DirectorService>();
             services.AddTransient<IImageService, ImageService>();
-            services.AddTransient<ILanguageService, LanguageService>();
-            services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IMovieService, MovieService>();
             services.AddTransient<IActorService, ActorService>();
+            services.AddTransient<IEmailSender, NullMessageSender>();
+            services.AddTransient<ICountryService, CountryService>();
+            services.AddTransient<ISettingsService, SettingsService>();
+            services.AddTransient<IDirectorService, DirectorService>();
             services.AddTransient<IPlatformService, PlatformService>();
-            services.AddTransient<IApplicationUserService, ApplicationUserService>();
-            services.AddTransient<IAdministartionService, AdministartionService>();
+            services.AddTransient<ILanguageService, LanguageService>();
+            services.AddTransient<IMovieGenreService, MovieGenreService>();
+            services.AddTransient<IMovieActorService, MovieActorService>();
             services.AddTransient<IMovieCommentService, MovieCommentService>();
+            services.AddTransient<IMovieLanguageService, MovieLanguageService>();
+            services.AddTransient<IMoviePlatformService, MoviePlatformService>();
+            services.AddTransient<IAdministartionService, AdministartionService>();
+            services.AddTransient<IApplicationUserService, ApplicationUserService>();
             services.AddTransient<IMovieUserCommentService, MovieUserCommentService>();
+            services.AddTransient<IMovieUserStarRatingService, MovieUserStarRatingService>();
+            services.AddTransient<IApplicationUserMovieService, ApplicationUserMovieService>();
 
-            services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IPostService, PostService>();
-            services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IVoteService, VoteService>();
+            services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<ICategoryService, CategoryService>();
         }
 
         private static void Configure(WebApplication app)

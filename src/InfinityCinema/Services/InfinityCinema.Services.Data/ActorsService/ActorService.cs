@@ -90,12 +90,6 @@
             return null;
         }
 
-        public IEnumerable<T> GetActorsForGivenMovie<T>(int movieId)
-            => this.dbContext.MovieActors
-                .Where(a => a.MovieId == movieId)
-                .Select(m => m.Actor)
-                .To<T>();
-
         public T GetViewModelByIdAsync<T>(int id)
             => this.dbContext
                 .Actors
@@ -106,25 +100,6 @@
         // Update
 
         // Delete
-        public async Task DeleteActorsForParticularMovie(int movieId)
-        {
-            IQueryable<MovieActor> movieActors = this.dbContext.MovieActors.Where(m => m.MovieId == movieId);
-
-            this.dbContext.MovieActors.RemoveRange(movieActors);
-            await this.dbContext.SaveChangesAsync();
-        }
-
-        public async Task RemoveRelationBetweenMovieActorsAndActosTablesAsync(int actorId, int movieId)
-        {
-            foreach (var movieActor in this.dbContext.MovieActors.Where(m => m.MovieId == movieId && m.ActorId == actorId).ToList())
-            {
-                movieActor.IsDeleted = true;
-                movieActor.DeletedOn = DateTime.UtcNow;
-            }
-
-            await this.dbContext.SaveChangesAsync();
-        }
-
         public async Task DeleteAsync(int id)
         {
             Actor actor = await this.dbContext.Actors.FindAsync(id);

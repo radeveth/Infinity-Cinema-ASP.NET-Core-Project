@@ -1,4 +1,4 @@
-﻿namespace InfinityCinema.Services.Data.MoviesService.Models
+﻿namespace InfinityCinema.Services.Data.ApplicationUserMoviesService.Models
 {
     using System.Collections.Generic;
     using System.Linq;

@@ -19,12 +19,10 @@
 
         IEnumerable<string> AllApplicationMovieGenres();
 
-        IEnumerable<T> GetGenresForParticularMovie<T>(int movieId);
-
         // Update
 
         // Delete
-        Task DeleteGenresForParticularMovie(int movieId);
+        Task DeleteAsync(int id);
 
         bool IsGenresExists(IEnumerable<int> ids);
     }

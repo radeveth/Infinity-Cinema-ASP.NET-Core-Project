@@ -1,9 +1,10 @@
 ﻿namespace InfinityCinema.Services.Data.LanguagesService
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using AngleSharp.Html;
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Mapping;
@@ -39,9 +40,6 @@
                 .To<T>()
                 .FirstOrDefault();
 
-        public IEnumerable<string> GetLanguagesForParticularMovie(int movieId)
-            => this.dbContext.MovieLanguages.Where(m => m.MovieId == movieId).Select(i => i.Language.Name);
-
         public T GetViewModelById<T>(int id)
             => this.dbContext
                 .Languages
@@ -52,15 +50,14 @@
         // Update
 
         // Delete
-        public async Task DeleteLanguagesForParticularMovie(int movieId)
+        public async Task DeleteAsync(int id)
         {
-            IQueryable<MovieLanguage> movieLanguages = this.dbContext.MovieLanguages.Where(m => m.MovieId == movieId);
+            Language language = await this.dbContext.Languages.FindAsync(id);
 
-            if (movieLanguages.Any())
-            {
-                this.dbContext.MovieLanguages.RemoveRange(movieLanguages);
-                await this.dbContext.SaveChangesAsync();
-            }
+            language.IsDeleted = true;
+            language.DeletedOn = DateTime.UtcNow;
+
+            await this.dbContext.SaveChangesAsync();
         }
 
         public bool IsLanguageExist(string languageName)

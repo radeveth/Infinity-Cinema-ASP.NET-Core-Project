@@ -21,8 +21,12 @@
     using InfinityCinema.Services.Data.ImagesService.Models;
     using InfinityCinema.Services.Data.LanguagesService;
     using InfinityCinema.Services.Data.LanguagesService.Models;
+    using InfinityCinema.Services.Data.MovieActorsService;
     using InfinityCinema.Services.Data.MovieCommentsService;
     using InfinityCinema.Services.Data.MovieCommentsService.Models;
+    using InfinityCinema.Services.Data.MovieGenresService;
+    using InfinityCinema.Services.Data.MovieLanguagesService;
+    using InfinityCinema.Services.Data.MoviePlatformsService;
     using InfinityCinema.Services.Data.MoviesService.Enums;
     using InfinityCinema.Services.Data.MoviesService.Models;
     using InfinityCinema.Services.Data.MovieUserCommentsService;
@@ -44,6 +48,10 @@
         private readonly IMovieCommentService movieCommentService;
         private readonly IMovieUserCommentService movieUserCommentService;
         private readonly IApplicationUserService applicationUserService;
+        private readonly IMovieActorService movieActorService;
+        private readonly IMovieGenreService movieGenreService;
+        private readonly IMovieLanguageService movieLanguageService;
+        private readonly IMoviePlatformService moviePlatformService;
 
         private readonly UserManager<ApplicationUser> userManager;
 
@@ -58,7 +66,11 @@
             IGenreService genreService,
             IMovieCommentService movieCommentService,
             IMovieUserCommentService movieUserCommentService,
-            IApplicationUserService applicationUserService)
+            IApplicationUserService applicationUserService,
+            IMovieActorService movieActorService,
+            IMovieGenreService movieGenreService,
+            IMovieLanguageService movieLanguageService,
+            IMoviePlatformService moviePlatformService)
         {
             this.dbContext = dbContext;
             this.directorService = directorService;
@@ -72,6 +84,10 @@
             this.movieCommentService = movieCommentService;
             this.movieUserCommentService = movieUserCommentService;
             this.applicationUserService = applicationUserService;
+            this.movieActorService = movieActorService;
+            this.movieGenreService = movieGenreService;
+            this.movieLanguageService = movieLanguageService;
+            this.moviePlatformService = moviePlatformService;
         }
 
         // Create
@@ -201,10 +217,10 @@
             Movie movie = this.GetMovieById(id);
 
             IEnumerable<string> images = this.imageService.GetImagesForGivenMovie(id);
-            IEnumerable<ActorViewModel> actors = this.actorService.GetActorsForGivenMovie<ActorViewModel>(id);
-            IEnumerable<GenreViewModel> genres = this.genreService.GetGenresForParticularMovie<GenreViewModel>(id);
-            IEnumerable<string> languages = this.languageService.GetLanguagesForParticularMovie(id);
-            IEnumerable<PlatformViewModel> platforms = this.platformService.GetPlatformsForGivenMovie<PlatformViewModel>(id);
+            IEnumerable<ActorViewModel> actors = this.movieActorService.GetActorsForGivenMovie<ActorViewModel>(id);
+            IEnumerable<GenreViewModel> genres = this.movieGenreService.GetGenresForParticularMovie<GenreViewModel>(id);
+            IEnumerable<string> languages = this.movieLanguageService.GetLanguagesForParticularMovie(id);
+            IEnumerable<PlatformViewModel> platforms = this.moviePlatformService.GetPlatformsForGivenMovie<PlatformViewModel>(id);
             DirectorViewModel director = this.directorService.GetViewModelById<DirectorViewModel>(movie.DirectorId);
             IEnumerable<string> applicationUsersId = this.applicationUserService.GetUsersIdsThatAreSaveGivenMovie(id);
             IEnumerable<MovieCommentViewModel> comments = this.movieUserCommentService
@@ -323,13 +339,6 @@
 
             return topThreeRatedMovies;
         }
-
-        public IEnumerable<UserSavedMovieViewModel> GetUserSavedMovies(string userId)
-            => this.dbContext
-                .ApplicationUserMovies
-                .Where(a => a.UserId == userId)
-                .Select(a => a.Movie)
-                .To<UserSavedMovieViewModel>();
 
         public MovieFormModel GetMovieFormModel(int id)
         {

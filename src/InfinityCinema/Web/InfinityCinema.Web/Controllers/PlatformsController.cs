@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
 
     using InfinityCinema.Common;
+    using InfinityCinema.Services.Data.MoviePlatformsService;
     using InfinityCinema.Services.Data.PlatformsService;
     using InfinityCinema.Services.Data.PlatformsService.Models;
     using Microsoft.AspNetCore.Authorization;
@@ -11,17 +12,19 @@
     public class PlatformsController : BaseController
     {
         private readonly IPlatformService platformService;
+        private readonly IMoviePlatformService moviePlatformService;
 
-        public PlatformsController(IPlatformService platformService)
+        public PlatformsController(IPlatformService platformService, IMoviePlatformService moviePlatformService)
         {
             this.platformService = platformService;
+            this.moviePlatformService = moviePlatformService;
         }
 
         [HttpPost]
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public async Task<IActionResult> DeleteAsync(int platformId, int movieId)
         {
-            await this.platformService.RemoveRelationBetweenMoviePlatformsAndPlatformsTablesAsync(platformId, movieId);
+            await this.moviePlatformService.RemoveRelationBetweenMoviePlatformsAndPlatformsTablesAsync(platformId, movieId);
 
             await this.platformService.DeleteAsync(platformId);
 
@@ -44,7 +47,7 @@
                 platform = await this.platformService.CreateAsync<PlatformViewModel>(platformForm);
             }
 
-            await this.platformService.CreateRowForMappingTableMoviePlatformsAsync(platformForm.MovieId, platform.Id);
+            await this.moviePlatformService.CreateRowForMappingTableMoviePlatformsAsync(platformForm.MovieId, platform.Id);
 
             return this.RedirectToAction("EditMoviePlatforms", "Movies", new { movieId = platformForm.MovieId });
         }

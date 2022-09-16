@@ -10,5 +10,7 @@
 
         // Read
         public IEnumerable<T> GetCommentsForGivenMovie<T>(int movieId);
+
+        public IEnumerable<string> GetUsersIdsThatAreCommentInGivenMovie(int movieId);
     }
 }

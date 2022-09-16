@@ -2,9 +2,9 @@
 {
     using System.Collections.Generic;
     using System.Web.Http;
-
+    using InfinityCinema.Services.Data.ApplicationUserMoviesService;
+    using InfinityCinema.Services.Data.ApplicationUserMoviesService.Models;
     using InfinityCinema.Services.Data.MoviesService;
-    using InfinityCinema.Services.Data.MoviesService.Models;
     using InfinityCinema.Web.Infrastructure;
     using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +12,11 @@
 
     public class ApplicationUsersController : BaseController
     {
-        private readonly IMovieService movieService;
+        private readonly IApplicationUserMovieService applicationUserMovieService;
 
-        public ApplicationUsersController(IMovieService movieService)
+        public ApplicationUsersController(IApplicationUserMovieService applicationUserMovieService)
         {
-            this.movieService = movieService;
+            this.applicationUserMovieService = applicationUserMovieService;
         }
 
         [HttpGet]
@@ -24,7 +24,7 @@
         public IActionResult WatchList()
         {
             string userId = ClaimsPrincipalExtensions.GetId(this.User);
-            IEnumerable<UserSavedMovieViewModel> userSavedMovieViewModels = this.movieService.GetUserSavedMovies(userId);
+            IEnumerable<UserSavedMovieViewModel> userSavedMovieViewModels = this.applicationUserMovieService.GetUserSavedMovies(userId);
 
             return this.View(userSavedMovieViewModels);
         }

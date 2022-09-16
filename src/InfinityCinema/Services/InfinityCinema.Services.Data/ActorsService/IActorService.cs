@@ -17,17 +17,11 @@
 
         ActorViewModel GetActorByNames(string fullName);
 
-        IEnumerable<T> GetActorsForGivenMovie<T>(int movieId);
-
         T GetViewModelByIdAsync<T>(int id);
 
         // Update
 
         // Delete
-        Task DeleteActorsForParticularMovie(int movieId);
-
-        Task RemoveRelationBetweenMovieActorsAndActosTablesAsync(int actorId, int movieId);
-
         Task DeleteAsync(int id);
     }
 }

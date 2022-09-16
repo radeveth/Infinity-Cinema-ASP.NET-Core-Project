@@ -13,12 +13,10 @@
 
         T GetViewModelById<T>(int id);
 
-        IEnumerable<string> GetLanguagesForParticularMovie(int movieId);
-
         // Update
 
         // Delete
-        Task DeleteLanguagesForParticularMovie(int movieId);
+        Task DeleteAsync(int id);
 
         bool IsLanguageExist(string languageName);
     }

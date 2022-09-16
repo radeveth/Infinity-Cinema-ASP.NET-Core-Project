@@ -26,8 +26,6 @@
 
         List<MovieHomeViewModel> GetTopThreeRatedMovies();
 
-        IEnumerable<UserSavedMovieViewModel> GetUserSavedMovies(string userId);
-
         MovieFormModel GetMovieFormModel(int id);
 
         int GetMovieIdByName(string name);

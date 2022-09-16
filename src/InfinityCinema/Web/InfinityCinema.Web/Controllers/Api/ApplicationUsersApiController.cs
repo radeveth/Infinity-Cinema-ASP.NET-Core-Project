@@ -1,9 +1,10 @@
 ﻿namespace InfinityCinema.Web.Controllers.Api
 {
     using System.Threading.Tasks;
-
+    using InfinityCinema.Services.Data.ApplicationUserMoviesService;
     using InfinityCinema.Services.Data.ApplicationUsersService;
     using InfinityCinema.Services.Data.MoviesService;
+    using InfinityCinema.Services.Data.MovieUserStarRatingsService;
     using InfinityCinema.Web.Infrastructure;
     using Microsoft.AspNetCore.Mvc;
 
@@ -11,13 +12,15 @@
     [ApiController]
     public class ApplicationUsersApiController : ControllerBase
     {
-        private readonly IApplicationUserService applicationUserService;
+        private readonly IApplicationUserMovieService applicationUserMoviesService;
+        private readonly IMovieUserStarRatingService movieUserStarRatingService;
         private readonly IMovieService movieService;
 
-        public ApplicationUsersApiController(IApplicationUserService applicationUserService, IMovieService movieService)
+        public ApplicationUsersApiController(IApplicationUserMovieService applicationUserMoviesService, IMovieService movieService, IMovieUserStarRatingService movieUserStarRatingService)
         {
-            this.applicationUserService = applicationUserService;
+            this.applicationUserMoviesService = applicationUserMoviesService;
             this.movieService = movieService;
+            this.movieUserStarRatingService = movieUserStarRatingService;
         }
 
         [HttpGet]
@@ -31,7 +34,7 @@
                 return this.RedirectToAction("Details", "Movies", id);
             }
 
-            await this.applicationUserService.SaveMovieToWatchLaterAsync(id, userId);
+            await this.applicationUserMoviesService.SaveMovieToWatchLaterAsync(id, userId);
 
             return "Successfully saved to watch later!";
         }
@@ -47,7 +50,7 @@
                 return this.RedirectToAction("Details", "Movies", id);
             }
 
-            await this.applicationUserService.RemoveMovieFromWatchLaterAsync(id, userId);
+            await this.applicationUserMoviesService.RemoveMovieFromWatchLaterAsync(id, userId);
 
             return "Removed from watch later!";
         }
@@ -68,12 +71,12 @@
                 return this.RedirectToAction("Details", "Movies", id);
             }
 
-            if (this.applicationUserService.CheckIfUserIsAlreadyRatedThisMovie(id, userId))
+            if (this.movieUserStarRatingService.CheckIfUserIsAlreadyRatedThisMovie(id, userId))
             {
                 return "You are already rated this movie";
             }
 
-            await this.applicationUserService.RateMovie(id, userId, rating);
+            await this.movieUserStarRatingService.RateMovie(id, userId, rating);
 
             return $"Successfully rate this movie with {rating}";
         }

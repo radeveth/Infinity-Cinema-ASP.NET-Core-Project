@@ -30,7 +30,6 @@
         }
 
         // Read
-        // MovieCommentViewModel
         public IEnumerable<T> GetCommentsForGivenMovie<T>(int movieId)
             => this.dbContext
                     .MovieUserComments
@@ -38,5 +37,12 @@
                     .Select(m => m.MovieComment)
                     .AsQueryable()
                     .To<T>();
+
+        public IEnumerable<string> GetUsersIdsThatAreCommentInGivenMovie(int movieId)
+        {
+            IQueryable<MovieUserComment> movieUserComments = this.dbContext.MovieUserComments.Where(m => m.MovieId == movieId).Distinct();
+            IQueryable<MovieComment> movieComments = movieUserComments.Select(m => m.MovieComment);
+            return (IEnumerable<string>)movieComments.Select(m => m.UserId);
+        }
     }
 }

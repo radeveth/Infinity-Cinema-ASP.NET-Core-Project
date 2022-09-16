@@ -35,14 +35,6 @@
             return this.GetViewModelById<T>(platform.Id);
         }
 
-        public async Task CreateRowForMappingTableMoviePlatformsAsync(int movieId, int platformId)
-        {
-            MoviePlatform moviePlatform = new MoviePlatform() { MovieId = movieId, PlatformId = platformId };
-
-            await this.dbContext.MoviePlatform.AddAsync(moviePlatform);
-            await this.dbContext.SaveChangesAsync();
-        }
-
         // Read
         public IEnumerable<T> All<T>(string searchName = null)
         {
@@ -54,17 +46,6 @@
             }
 
             return platforms.To<T>();
-        }
-
-        public IEnumerable<T> GetPlatformsForGivenMovie<T>(int movieId)
-        {
-            IQueryable<Platform> platfromsForTargetMovie = this.dbContext.MoviePlatform
-                .Where(m => m.MovieId == movieId)
-                .Select(p => p.Platform);
-
-            IEnumerable<T> platforms = platfromsForTargetMovie.To<T>();
-
-            return platforms;
         }
 
         public T GetViewModelByName<T>(string platfrom)
@@ -84,27 +65,6 @@
         // Update
 
         // Delete
-        public async Task DeletePlatformsForParticulatMovie(int movieId)
-        {
-            IQueryable<MoviePlatform> moviePlatforms = this.dbContext.MoviePlatform.Where(m => m.MovieId == movieId);
-
-            this.dbContext.MoviePlatform.RemoveRange(moviePlatforms);
-            await this.dbContext.SaveChangesAsync();
-        }
-
-        public async Task RemoveRelationBetweenMoviePlatformsAndPlatformsTablesAsync(int platformId, int movieId)
-        {
-            foreach (var moviePlatform in this.dbContext.MoviePlatform.Where(m => m.PlatformId == platformId && m.MovieId == movieId).ToList())
-            {
-                moviePlatform.IsDeleted = true;
-                moviePlatform.DeletedOn = DateTime.UtcNow;
-            }
-
-;
-
-            await this.dbContext.SaveChangesAsync();
-        }
-
         public async Task DeleteAsync(int id)
         {
             Platform platform = await this.dbContext.Platforms.FindAsync(id);

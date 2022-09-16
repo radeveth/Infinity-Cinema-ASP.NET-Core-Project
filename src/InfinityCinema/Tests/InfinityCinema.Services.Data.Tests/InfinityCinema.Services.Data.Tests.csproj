@@ -31,4 +31,8 @@
     <ProjectReference Include="..\..\Services\InfinityCinema.Services.Data\InfinityCinema.Services.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Seeding\" />
+  </ItemGroup>
+
 </Project>

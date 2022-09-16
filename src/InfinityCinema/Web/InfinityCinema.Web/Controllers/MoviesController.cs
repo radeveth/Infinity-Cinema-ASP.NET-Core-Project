@@ -10,8 +10,10 @@
     using InfinityCinema.Services.Data.GenresService;
     using InfinityCinema.Services.Data.ImagesService;
     using InfinityCinema.Services.Data.ImagesService.Models;
+    using InfinityCinema.Services.Data.MovieActorsService;
     using InfinityCinema.Services.Data.MovieCommentsService;
     using InfinityCinema.Services.Data.MovieCommentsService.Models;
+    using InfinityCinema.Services.Data.MoviePlatformsService;
     using InfinityCinema.Services.Data.MoviesService;
     using InfinityCinema.Services.Data.MoviesService.Models;
     using InfinityCinema.Services.Data.MovieUserCommentsService;
@@ -30,8 +32,10 @@
         private readonly IPlatformService platformService;
         private readonly IMovieCommentService movieCommentService;
         private readonly IMovieUserCommentService movieUserCommentService;
+        private readonly IMovieActorService movieActorService;
+        private readonly IMoviePlatformService moviePlatformService;
 
-        public MoviesController(IMovieService movieService, IGenreService genreService, IActorService actorService, IImageService imagesService, IPlatformService platformService, IMovieCommentService movieCommentService, IMovieUserCommentService movieUserCommentService)
+        public MoviesController(IMovieService movieService, IGenreService genreService, IActorService actorService, IImageService imagesService, IPlatformService platformService, IMovieCommentService movieCommentService, IMovieUserCommentService movieUserCommentService, IMovieActorService movieActorService, IMoviePlatformService moviePlatformService)
         {
             this.movieService = movieService;
             this.genreService = genreService;
@@ -40,6 +44,8 @@
             this.platformService = platformService;
             this.movieCommentService = movieCommentService;
             this.movieUserCommentService = movieUserCommentService;
+            this.movieActorService = movieActorService;
+            this.moviePlatformService = moviePlatformService;
         }
 
         [HttpGet]
@@ -213,7 +219,7 @@
             return this.View(new EditActorsServiceModel()
             {
                 MovieId = actorsService.MovieId,
-                ExistingActors = this.actorService.GetActorsForGivenMovie<ActorViewModel>(actorsService.MovieId),
+                ExistingActors = this.movieActorService.GetActorsForGivenMovie<ActorViewModel>(actorsService.MovieId),
                 NewActor = new ActorFormModel(),
             });
         }
@@ -227,7 +233,7 @@
             return this.View(new EditPlatformsServiceModel()
             {
                 MovieId = platformsService.MovieId,
-                ExistingPlatforms = this.platformService.GetPlatformsForGivenMovie<PlatformViewModel>(platformsService.MovieId),
+                ExistingPlatforms = this.moviePlatformService.GetPlatformsForGivenMovie<PlatformViewModel>(platformsService.MovieId),
                 NewPlatform = new PlatformFormModel(),
             });
         }

@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.GenresService
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -67,13 +68,6 @@
         public IEnumerable<string> AllApplicationMovieGenres()
             => this.dbContext.Genres.Select(g => g.Name);
 
-        public IEnumerable<T> GetGenresForParticularMovie<T>(int movieId)
-            => this.dbContext
-                .MovieGenres
-                .Where(m => m.MovieId == movieId)
-                .Select(m => m.Genre)
-                .To<T>();
-
         public T GetViewModelById<T>(int id)
             => this.dbContext
                 .Directors
@@ -84,11 +78,13 @@
         // Update
 
         // Delete
-        public async Task DeleteGenresForParticularMovie(int movieId)
+        public async Task DeleteAsync(int id)
         {
-            IQueryable<MovieGenre> movieGenres = this.dbContext.MovieGenres.Where(m => m.MovieId == movieId);
+            Genre genre = await this.dbContext.Genres.FindAsync(id);
 
-            this.dbContext.MovieGenres.RemoveRange(movieGenres);
+            genre.IsDeleted = true;
+            genre.DeletedOn = DateTime.UtcNow;
+
             await this.dbContext.SaveChangesAsync();
         }
 

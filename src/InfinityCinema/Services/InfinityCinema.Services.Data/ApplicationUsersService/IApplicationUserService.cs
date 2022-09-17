@@ -6,7 +6,5 @@
     public interface IApplicationUserService
     {
         T GetViewModelById<T>(string id);
-
-        IEnumerable<string> GetUsersIdsThatAreSaveGivenMovie(int movieId);
     }
 }

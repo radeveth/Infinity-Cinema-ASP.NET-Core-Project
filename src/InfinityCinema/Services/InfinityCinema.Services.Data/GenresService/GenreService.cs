@@ -26,6 +26,7 @@
             {
                 Name = genreFormModel.Name,
                 ImageUrl = genreFormModel.ImageUrl,
+                Description = genreFormModel.Description,
             };
 
             await this.dbContext.Genres.AddAsync(genre);
@@ -35,7 +36,7 @@
         }
 
         // Read
-        public IEnumerable<T> All<T>(string searchName)
+        public IEnumerable<T> All<T>(string searchName = null)
         {
             IQueryable<Genre> genres = this.dbContext.Genres;
 
@@ -70,7 +71,7 @@
 
         public T GetViewModelById<T>(int id)
             => this.dbContext
-                .Directors
+                .Genres
                 .Where(d => d.Id == id)
                 .To<T>()
                 .FirstOrDefault();
@@ -81,6 +82,11 @@
         public async Task DeleteAsync(int id)
         {
             Genre genre = await this.dbContext.Genres.FindAsync(id);
+
+            if (genre == null)
+            {
+                throw new NullReferenceException();
+            }
 
             genre.IsDeleted = true;
             genre.DeletedOn = DateTime.UtcNow;

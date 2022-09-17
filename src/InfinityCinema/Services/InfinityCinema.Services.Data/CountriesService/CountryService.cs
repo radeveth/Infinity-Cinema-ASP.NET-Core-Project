@@ -69,25 +69,11 @@
         public Country GetCountryByName(string countryName)
             => this.dbContext
                 .Countries
-                .FirstOrDefault(c => c.Name == countryName);
-
-        public int GetCountryIdByGivenName(string givenName)
-        {
-            Country country = this.dbContext.Countries.FirstOrDefault(c => c.Name == givenName);
-
-            if (country == null)
-            {
-                return 0;
-            }
-
-            return country.Id;
-        }
+                .FirstOrDefault(c => c.Name.ToLower() == countryName.ToLower());
 
         public string GetCountryNameById(int id)
         {
-            Country country = this.dbContext.Countries.Find(id);
-
-            return country.Name;
+            return this.dbContext.Countries.FirstOrDefault(c => c.Id == id).Name;
         }
 
         public T GetViewModelById<T>(int id)
@@ -96,28 +82,6 @@
                 .Where(c => c.Id == id)
                 .To<T>()
                 .FirstOrDefault();
-
-        // Update
-        public async Task<bool> EditCountryAsync(int countryId, string countryName)
-        {
-            try
-            {
-                Country country = this.dbContext.Countries.FirstOrDefault(c => c.Id == countryId);
-
-                country.Name = countryName;
-                country.Abbreviation = this.GenerateCountryAbbreviation(countryName);
-            }
-            catch (Exception)
-            {
-                throw new InvalidOperationException();
-            }
-
-            await this.dbContext.SaveChangesAsync();
-
-            return true;
-        }
-
-        // Delete
 
         // Useful methods
         public bool CheckIfCountryExist(string countryName)

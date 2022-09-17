@@ -69,6 +69,11 @@
         {
             Platform platform = await this.dbContext.Platforms.FindAsync(id);
 
+            if (platform == null)
+            {
+                throw new NullReferenceException();
+            }
+
             platform.IsDeleted = true;
             platform.DeletedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();

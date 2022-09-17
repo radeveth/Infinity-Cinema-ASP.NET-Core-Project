@@ -10,6 +10,7 @@
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Data.ActorsService;
     using InfinityCinema.Services.Data.ActorsService.Models;
+    using InfinityCinema.Services.Data.ApplicationUserMoviesService;
     using InfinityCinema.Services.Data.ApplicationUsersService;
     using InfinityCinema.Services.Data.CountriesService;
     using InfinityCinema.Services.Data.CountriesService.Models;
@@ -38,39 +39,36 @@
     public class MovieService : IMovieService
     {
         private readonly InfinityCinemaDbContext dbContext;
-        private readonly IDirectorService directorService;
+
         private readonly IImageService imageService;
-        private readonly ICountryService countryService;
         private readonly IActorService actorService;
+        private readonly ICountryService countryService;
+        private readonly IDirectorService directorService;
         private readonly IPlatformService platformService;
         private readonly ILanguageService languageService;
-        private readonly IGenreService genreService;
-        private readonly IMovieCommentService movieCommentService;
-        private readonly IMovieUserCommentService movieUserCommentService;
-        private readonly IApplicationUserService applicationUserService;
         private readonly IMovieActorService movieActorService;
         private readonly IMovieGenreService movieGenreService;
         private readonly IMovieLanguageService movieLanguageService;
         private readonly IMoviePlatformService moviePlatformService;
+        private readonly IMovieUserCommentService movieUserCommentService;
+        private readonly IApplicationUserMovieService applicationUserMovieService;
 
         private readonly UserManager<ApplicationUser> userManager;
 
         public MovieService(InfinityCinemaDbContext dbContext,
-            UserManager<ApplicationUser> userManager,
-            IDirectorService directorService,
             IImageService imageService,
-            ICountryService countryService,
             IActorService actorService,
+            ICountryService countryService,
             IPlatformService platformService,
+            IDirectorService directorService,
             ILanguageService languageService,
-            IGenreService genreService,
-            IMovieCommentService movieCommentService,
-            IMovieUserCommentService movieUserCommentService,
-            IApplicationUserService applicationUserService,
             IMovieActorService movieActorService,
             IMovieGenreService movieGenreService,
             IMovieLanguageService movieLanguageService,
-            IMoviePlatformService moviePlatformService)
+            IMoviePlatformService moviePlatformService,
+            IMovieUserCommentService movieUserCommentService,
+            IApplicationUserMovieService applicationUserMovieService,
+            UserManager<ApplicationUser> userManager)
         {
             this.dbContext = dbContext;
             this.directorService = directorService;
@@ -80,14 +78,12 @@
             this.userManager = userManager;
             this.platformService = platformService;
             this.languageService = languageService;
-            this.genreService = genreService;
-            this.movieCommentService = movieCommentService;
             this.movieUserCommentService = movieUserCommentService;
-            this.applicationUserService = applicationUserService;
             this.movieActorService = movieActorService;
             this.movieGenreService = movieGenreService;
             this.movieLanguageService = movieLanguageService;
             this.moviePlatformService = moviePlatformService;
+            this.applicationUserMovieService = applicationUserMovieService;
         }
 
         // Create
@@ -135,7 +131,7 @@
                 await this.countryService.CreateAsync<CountryViewModel>(countryName);
             }
 
-            int countryId = this.countryService.GetCountryIdByGivenName(countryName);
+            int countryId = this.countryService.GetCountryByName(countryName).Id;
 
             // Get UserId
             string userId = this.GetUserId(user);
@@ -222,7 +218,7 @@
             IEnumerable<string> languages = this.movieLanguageService.GetLanguagesForParticularMovie(id);
             IEnumerable<PlatformViewModel> platforms = this.moviePlatformService.GetPlatformsForGivenMovie<PlatformViewModel>(id);
             DirectorViewModel director = this.directorService.GetViewModelById<DirectorViewModel>(movie.DirectorId);
-            IEnumerable<string> applicationUsersId = this.applicationUserService.GetUsersIdsThatAreSaveGivenMovie(id);
+            IEnumerable<string> applicationUsersId = this.applicationUserMovieService.GetUsersIdsThatAreSaveGivenMovie(id);
             IEnumerable<MovieCommentViewModel> comments = this.movieUserCommentService
                 .GetCommentsForGivenMovie<MovieCommentViewModel>(id)
                 .OrderByDescending(c => c.Id);
@@ -449,7 +445,7 @@
                 await this.countryService.CreateAsync<CountryViewModel>(countryName);
             }
 
-            int countryId = this.countryService.GetCountryIdByGivenName(countryName);
+            int countryId = this.countryService.GetCountryByName(countryName).Id;
             movie.CountryId = countryId;
 
             await this.dbContext.SaveChangesAsync();

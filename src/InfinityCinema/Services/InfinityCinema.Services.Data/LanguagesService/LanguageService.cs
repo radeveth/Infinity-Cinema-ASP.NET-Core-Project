@@ -54,6 +54,11 @@
         {
             Language language = await this.dbContext.Languages.FindAsync(id);
 
+            if (language == null)
+            {
+                throw new NullReferenceException();
+            }
+
             language.IsDeleted = true;
             language.DeletedOn = DateTime.UtcNow;
 

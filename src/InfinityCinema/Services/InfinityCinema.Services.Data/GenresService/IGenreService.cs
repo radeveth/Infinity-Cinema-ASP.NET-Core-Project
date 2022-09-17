@@ -11,7 +11,7 @@
         Task<T> CreateAsync<T>(GenreFormModel genreFormModel);
 
         // Read
-        IEnumerable<T> All<T>(string seacrhName);
+        IEnumerable<T> All<T>(string seacrhName = null);
 
         int GetGenreIdByGivenName(string genreName);
 

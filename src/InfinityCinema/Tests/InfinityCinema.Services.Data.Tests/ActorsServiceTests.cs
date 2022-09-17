@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Services.Data.Tests
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -184,6 +185,22 @@
             await actorService.DeleteAsync(2);
 
             Assert.Equal(expectedActorsCount, dbContext.Actors.Count());
+        }
+
+        // Test #8
+        [Fact]
+        public async Task DeleteAsyncShouldThrowNullReferenceExceptionIfActorWithGivenIdExisting()
+        {
+            // Arrange
+            InfinityCinemaDbContext dbContext = new InfinityCinemaDbContext(this.PrepareOptionsForDbContext(8));
+            ActorService actorService = new ActorService(dbContext);
+            List<Actor> actors = this.SeedingInformationForActor();
+
+            await dbContext.Actors.AddRangeAsync(actors);
+            await dbContext.SaveChangesAsync();
+
+            // Act & Assert
+            await Assert.ThrowsAsync<NullReferenceException>(async () => await actorService.DeleteAsync(actors.Count + 100));
         }
 
         private List<Actor> SeedingInformationForActor()

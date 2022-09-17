@@ -20,7 +20,7 @@
         // Update
 
         // Delete
-        Task DeleteImagesForParticularMovie(int movieId);
+        Task DeleteImagesForParticularMovieAsync(int movieId);
 
         Task DeleteAsync(int id);
     }

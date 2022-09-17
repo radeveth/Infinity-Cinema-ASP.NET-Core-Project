@@ -36,10 +36,19 @@
 
         // Read
         public IEnumerable<string> GetImagesForGivenMovie(int movieId)
-            => this.dbContext
+        {
+            IEnumerable<string> images = this.dbContext
                 .Images
                 .Where(i => i.MovieId == movieId)
                 .Select(i => i.Url);
+
+            if (images.Any())
+            {
+                return images;
+            }
+
+            return null;
+        }
 
         public T GetViewModelById<T>(int id)
             => this.dbContext
@@ -49,25 +58,47 @@
                 .FirstOrDefault();
 
         public IEnumerable<T> GetViewModelByMovieId<T>(int movieId)
-            => this.dbContext
+        {
+            IEnumerable<T> images = this.dbContext
                 .Images
                 .Where(i => i.MovieId == movieId)
                 .To<T>();
 
+            if (images.Any())
+            {
+                return images;
+            }
+
+            return null;
+        }
+
         // Update
 
         // Delete
-        public async Task DeleteImagesForParticularMovie(int movieId)
+        public async Task DeleteImagesForParticularMovieAsync(int movieId)
         {
             IQueryable<Image> images = this.dbContext.Images.Where(i => i.MovieId == movieId);
 
-            this.dbContext.RemoveRange(images);
-            await this.dbContext.SaveChangesAsync();
+            if (images.Any())
+            {
+                foreach (var image in images)
+                {
+                    image.IsDeleted = true;
+                    image.DeletedOn = DateTime.UtcNow;
+                }
+
+                await this.dbContext.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteAsync(int id)
         {
             Image image = await this.dbContext.Images.FindAsync(id);
+
+            if (image == null)
+            {
+                throw new NullReferenceException();
+            }
 
             image.IsDeleted = true;
             image.DeletedOn = DateTime.UtcNow;

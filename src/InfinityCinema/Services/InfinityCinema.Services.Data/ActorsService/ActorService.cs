@@ -104,6 +104,11 @@
         {
             Actor actor = await this.dbContext.Actors.FindAsync(id);
 
+            if (actor == null)
+            {
+                throw new NullReferenceException();
+            }
+
             actor.IsDeleted = true;
             actor.DeletedOn = DateTime.UtcNow;
             await this.dbContext.SaveChangesAsync();

@@ -37,5 +37,18 @@
 
             await this.dbContext.SaveChangesAsync();
         }
+
+        public async Task MatchGenresWithMovie(int movieId, IEnumerable<int> genresIds)
+        {
+            List<MovieGenre> movieGenres = new List<MovieGenre>();
+
+            foreach (int genreId in genresIds.ToList())
+            {
+                movieGenres.Add(new MovieGenre() { MovieId = movieId, GenreId = genreId });
+            }
+
+            await this.dbContext.MovieGenres.AddRangeAsync(movieGenres);
+            await this.dbContext.SaveChangesAsync();
+        }
     }
 }

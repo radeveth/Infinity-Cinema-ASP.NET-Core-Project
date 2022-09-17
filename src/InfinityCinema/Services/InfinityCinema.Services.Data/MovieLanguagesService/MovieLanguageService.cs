@@ -35,5 +35,18 @@
                 await this.dbContext.SaveChangesAsync();
             }
         }
+
+        public async Task MatchLanguagesWithMovie(int movieId, IEnumerable<int> languagesIds)
+        {
+            List<MovieLanguage> movieLanguages = new List<MovieLanguage>();
+
+            foreach (int languageId in languagesIds.ToList())
+            {
+                movieLanguages.Add(new MovieLanguage() { MovieId = movieId, LanguageId = languageId });
+            }
+
+            await this.dbContext.MovieLanguages.AddRangeAsync(movieLanguages);
+            await this.dbContext.SaveChangesAsync();
+        }
     }
 }

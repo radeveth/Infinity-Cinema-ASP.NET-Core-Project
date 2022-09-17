@@ -63,5 +63,18 @@
 
             await this.dbContext.SaveChangesAsync();
         }
+
+        public async Task MatchPlatformsWithMovie(int movieId, ICollection<int> platformsIds)
+        {
+            ICollection<MoviePlatform> moviePlatforms = new HashSet<MoviePlatform>();
+
+            foreach (int platformId in platformsIds)
+            {
+                moviePlatforms.Add(new MoviePlatform() { MovieId = movieId, PlatformId = platformId });
+            }
+
+            await this.dbContext.AddRangeAsync(moviePlatforms);
+            await this.dbContext.SaveChangesAsync();
+        }
     }
 }

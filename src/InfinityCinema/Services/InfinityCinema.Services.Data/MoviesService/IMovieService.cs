@@ -13,7 +13,7 @@
         // Create
         Task<T> CreateAsync<T>(MovieFormModel movieFormModel, int dealerId, int countryId, string userId);
 
-        Task CreateMovieAsync(CreateMovieServiceModel movieModel, ClaimsPrincipal user);
+        Task CreateMovieAsync(CreateMovieServiceModel movieModel, string userId);
 
         // Read
         MovieDetailsServiceModel Details(int id);

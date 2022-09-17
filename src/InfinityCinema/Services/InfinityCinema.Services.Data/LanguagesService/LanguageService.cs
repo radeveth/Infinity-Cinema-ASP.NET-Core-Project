@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using AngleSharp.Html;
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;

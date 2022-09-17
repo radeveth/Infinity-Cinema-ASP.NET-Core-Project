@@ -1,6 +1,7 @@
 ﻿namespace InfinityCinema.Services.Data.ForumSystem.VotesService
 {
     using System.Threading.Tasks;
+
     using InfinityCinema.Services.Data.ForumSystem.VotesService.Models;
 
     public interface IVoteService

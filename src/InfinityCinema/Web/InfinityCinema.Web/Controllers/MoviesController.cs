@@ -75,7 +75,7 @@
                 { OverallMovieInformation = CreateInitializationOfMovieGenres(new MovieFormModel(), this.genreService) });
             }
 
-            await this.movieService.CreateMovieAsync(movieModel, this.User);
+            await this.movieService.CreateMovieAsync(movieModel, ClaimsPrincipalExtensions.GetId(this.User));
 
             return this.RedirectToAction(nameof(this.All), "Movies");
         }

@@ -10,5 +10,7 @@
         Task DeleteActorsForParticularMovie(int movieId);
 
         Task RemoveRelationBetweenMovieActorsAndActosTablesAsync(int actorId, int movieId);
+
+        Task MatchActorsWithMovie(int movieId, ICollection<int> actorsIds);
     }
 }

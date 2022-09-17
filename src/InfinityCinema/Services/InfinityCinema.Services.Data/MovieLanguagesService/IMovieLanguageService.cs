@@ -7,6 +7,8 @@
     {
         IEnumerable<string> GetLanguagesForParticularMovie(int movieId);
 
-        public Task DeleteLanguagesForParticularMovie(int movieId);
+        Task DeleteLanguagesForParticularMovie(int movieId);
+
+        Task MatchLanguagesWithMovie(int movieId, IEnumerable<int> languagesIds);
     }
 }

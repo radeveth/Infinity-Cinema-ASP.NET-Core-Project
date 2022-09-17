@@ -12,5 +12,7 @@
         Task DeletePlatformsForParticulatMovie(int movieId);
 
         Task RemoveRelationBetweenMoviePlatformsAndPlatformsTablesAsync(int platformId, int movieId);
+
+        Task MatchPlatformsWithMovie(int movieId, ICollection<int> platformsIds);
     }
 }

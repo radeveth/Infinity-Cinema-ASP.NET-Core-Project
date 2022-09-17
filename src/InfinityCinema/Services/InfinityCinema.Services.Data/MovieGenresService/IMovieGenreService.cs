@@ -8,5 +8,7 @@
         IEnumerable<T> GetGenresForParticularMovie<T>(int movieId);
 
         Task DeleteGenresForParticularMovie(int movieId);
+
+        Task MatchGenresWithMovie(int movieId, IEnumerable<int> genresIds);
     }
 }

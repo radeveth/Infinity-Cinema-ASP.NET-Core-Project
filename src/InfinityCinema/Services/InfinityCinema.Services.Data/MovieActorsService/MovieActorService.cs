@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using InfinityCinema.Data;
     using InfinityCinema.Data.Models;
     using InfinityCinema.Services.Mapping;
@@ -39,6 +40,19 @@
                 movieActor.DeletedOn = DateTime.UtcNow;
             }
 
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task MatchActorsWithMovie(int movieId, ICollection<int> actorsIds)
+        {
+            ICollection<MovieActor> movieActors = new HashSet<MovieActor>();
+
+            foreach (int actorId in actorsIds)
+            {
+                movieActors.Add(new MovieActor() { MovieId = movieId, ActorId = actorId });
+            }
+
+            await this.dbContext.MovieActors.AddRangeAsync(movieActors);
             await this.dbContext.SaveChangesAsync();
         }
     }

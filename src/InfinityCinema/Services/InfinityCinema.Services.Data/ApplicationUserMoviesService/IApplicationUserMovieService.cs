@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
     using InfinityCinema.Services.Data.ApplicationUserMoviesService.Models;
 
     public interface IApplicationUserMovieService

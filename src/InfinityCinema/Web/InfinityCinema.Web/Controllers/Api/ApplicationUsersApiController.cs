@@ -1,6 +1,7 @@
 ﻿namespace InfinityCinema.Web.Controllers.Api
 {
     using System.Threading.Tasks;
+
     using InfinityCinema.Services.Data.ApplicationUserMoviesService;
     using InfinityCinema.Services.Data.ApplicationUsersService;
     using InfinityCinema.Services.Data.MoviesService;

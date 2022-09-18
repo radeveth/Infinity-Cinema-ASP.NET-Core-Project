@@ -19,3 +19,36 @@ Give a :star: if you like this project!
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+## Images
+#### • The application have modern and beautiful headr and footer.
+#### • SignUp/SignIn Pages
+![2022-09-18 (29)](https://user-images.githubusercontent.com/88380154/190923172-b9b5002c-cbd3-43cf-96c5-e8adbc8f5601.png)
+![2022-09-18 (30)](https://user-images.githubusercontent.com/88380154/190923174-34f51b27-fa16-4fe0-a1f5-769ec9fc49f6.png)
+#### • Home Page: Shows the three highest rated movies. If the user is not sign in show jumbotron with beautiful design and buttons for "Register" and "Login" to can access watchlist. If the user is sign in show area with his up to first five saved movie if have.
+![2022-09-18 (2)](https://user-images.githubusercontent.com/88380154/190923103-8757266c-72b8-4331-91eb-fec9d614d2eb.png)
+![2022-09-18 (4)](https://user-images.githubusercontent.com/88380154/190923105-087bd394-d96d-4339-bb39-b2442ffb6d31.png)
+![2022-09-18 (27)](https://user-images.githubusercontent.com/88380154/190923167-41ca38ca-17f5-481b-baef-1dccd35c5618.png)
+![2022-09-18 (31)](https://user-images.githubusercontent.com/88380154/190924238-228a84ad-aaeb-41b0-925f-f4d2c698fe46.png)
+#### • All Page
+![2022-09-18 (5)](https://user-images.githubusercontent.com/88380154/190923107-ac094cf8-3577-4e8c-ae45-aa4cc842237e.png)
+![2022-09-18 (6)](https://user-images.githubusercontent.com/88380154/190923110-a8a81433-a8f0-48b6-9ddf-8c22f573edc7.png)
+![2022-09-18 (7)](https://user-images.githubusercontent.com/88380154/190923113-41f3ef23-f1aa-4641-ad66-b657a8d99b84.png)
+![2022-09-18 (8)](https://user-images.githubusercontent.com/88380154/190923118-3063ad5c-2d83-4359-a2e6-91687eb77c99.png)
+![2022-09-18 (9)](https://user-images.githubusercontent.com/88380154/190923121-2ece16ec-55f6-4ee5-8b88-7c01c6839123.png)
+![2022-09-18 (10)](https://user-images.githubusercontent.com/88380154/190923122-f07261f9-f914-42c6-aa9b-e9c29082963f.png)
+![2022-09-18 (11)](https://user-images.githubusercontent.com/88380154/190923124-667250db-989f-4b83-a66c-c3ab8351524a.png)
+![2022-09-18 (12)](https://user-images.githubusercontent.com/88380154/190923134-886ad67b-f583-4e04-b944-05e9b9beb74f.png)![2022-09-18 (13)](https://user-images.githubusercontent.com/88380154/190923137-6489c6f9-cad3-48a8-b4db-ee2c00429ddf.png)
+![2022-09-18 (14)](https://user-images.githubusercontent.com/88380154/190923138-91756c88-43a5-4e27-8bf4-f978bb40ac48.png)
+![2022-09-18 (15)](https://user-images.githubusercontent.com/88380154/190923140-dba78d4c-da5e-40b3-b1c8-6c0f0cb8e4b2.png)
+![2022-09-18 (16)](https://user-images.githubusercontent.com/88380154/190923143-106efea7-8a22-451f-8ca9-70e37af56bf5.png)
+![2022-09-18 (17)](https://user-images.githubusercontent.com/88380154/190923144-fe740546-806f-4b6f-b425-2ac8e518faa7.png)
+![2022-09-18 (18)](https://user-images.githubusercontent.com/88380154/190923150-7696bd5d-6c8b-4aae-bd35-538fe5f78ba3.png)
+![2022-09-18 (19)](https://user-images.githubusercontent.com/88380154/190923153-ce9acd95-5d92-43ba-9b12-3a7f645174d9.png)
+![2022-09-18 (20)](https://user-images.githubusercontent.com/88380154/190923154-a6fa4216-928c-4ded-974d-9df8b484ac05.png)
+![2022-09-18 (21)](https://user-images.githubusercontent.com/88380154/190923156-8153b4f4-596d-4bcd-baff-20e10f34f85b.png)
+![2022-09-18 (22)](https://user-images.githubusercontent.com/88380154/190923157-a630e8c2-3b19-4944-80a1-2dc7c8ab0f75.png)
+![2022-09-18 (23)](https://user-images.githubusercontent.com/88380154/190923161-b0427632-3054-4e80-8bd5-2df4600f2793.png)
+![2022-09-18 (25)](https://user-images.githubusercontent.com/88380154/190923163-b3d42bb3-0de9-45e9-966e-9fe118e58404.png)
+![2022-09-18 (26)](https://user-images.githubusercontent.com/88380154/190923166-afc65fa1-b406-48e5-a7c6-c8be0fdafa49.png)
+![2022-09-18 (28)](https://user-images.githubusercontent.com/88380154/190923168-388b4a5c-ee47-4f05-8247-d610cae3b5b2.png)

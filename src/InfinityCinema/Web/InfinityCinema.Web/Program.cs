@@ -61,6 +61,12 @@ namespace InfinityCinema.Web
             services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
                 .AddRoles<ApplicationRole>().AddEntityFrameworkStores<InfinityCinemaDbContext>();
 
+            services.AddAuthentication().AddFacebook(options =>
+            {
+                options.AppId = "123";
+                options.AppSecret = "123";
+            });
+
             services.Configure<CookiePolicyOptions>(
                 options =>
                 {

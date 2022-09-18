@@ -46,9 +46,26 @@
                     PostId = voteFormModel.PostId,
                     UserId = voteFormModel.UserId,
                 });
+
+                vote.Type = voteFormModel.IsLikeVote ? VoteType.Like : VoteType.Dislike;
+                await this.dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                if (voteFormModel.IsLikeVote == true && vote.Type == VoteType.Like)
+                {
+                    vote.Type = VoteType.Neutral;
+                }
+                else if (voteFormModel.IsLikeVote == false && vote.Type == VoteType.Dislike)
+                {
+                    vote.Type = VoteType.Neutral;
+                }
+                else
+                {
+                    vote.Type = voteFormModel.IsLikeVote ? VoteType.Like : VoteType.Dislike;
+                }
             }
 
-            vote.Type = voteFormModel.IsLikeVote ? VoteType.Like : VoteType.Dislike;
             await this.dbContext.SaveChangesAsync();
         }
 

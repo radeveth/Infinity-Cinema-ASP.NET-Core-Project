@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Site Map";
+
+    bool isUserIsSignIn = this.User.Identity.IsAuthenticated;
+}
+
+<center>
+    <div class="mt-5 mb-5">
+        <h1>@ViewData["Title"]</h1>
+    </div>
+</center>
+
+<div class="container">
+    -> <span class="badge badge-warning mb-3"><a asp-controller="Home" asp-action="Index">Home</a></span>
+    <br>
+    -> <span class="badge badge-warning mb-3"><a asp-controller="Movies" asp-action="All">All Movies</a></span>
+    <br>
+    -> <span class="badge badge-warning mb-3"><a asp-controller="Genres" asp-action="All">All Genres</a></span>
+    <br>
+    -> <span class="badge badge-warning mb-3"><a asp-controller="Home" asp-action="Index">All</a></span>
+    <br>
+    <div>
+        -> <span class="badge badge-warning mb-2"><a asp-controller="ForumHome" asp-action="Index">Forum</a></span>
+        <div style="margin-left:20px">
+            -> <span class="badge badge-warning mb-2"><a asp-controller="ForumCategories" asp-action="GetCategory" asp-route-CategoryId="5">Actors, Awards & Directors</a></span>
+            <br />
+            -> <span class="badge badge-warning mb-2"><a asp-controller="ForumCategories" asp-action="GetCategory" asp-route-CategoryId="2">Events</a></span>
+            <br />
+            -> <span class="badge badge-warning mb-2"><a asp-controller="ForumCategories" asp-action="GetCategory" asp-route-CategoryId="1">General Movie Discussion</a></span>
+            <br />
+            -> <span class="badge badge-warning mb-2"><a asp-controller="ForumCategories" asp-action="GetCategory" asp-route-CategoryId="4">Movie Reviews</a></span>
+            <br />
+            -> <span class="badge badge-warning mb-2"><a asp-controller="ForumCategories" asp-action="GetCategory" asp-route-CategoryId="3">News</a></span>
+            <br />
+        </div>
+    </div>
+    @if (isUserIsSignIn)
+    {
+        <span>
+            -> <span class="badge badge-warning mt-2 mb-3"><a asp-controller="ApplicationUsers" asp-action="WatchList">Watchlist</a></span>
+            <br>
+        </span>
+    }
+    else
+    {
+        <div class="mt-2"></div>
+    }
+    -> <span class="badge badge-warning mb-3"><a asp-area="Identity" asp-controller="Account" asp-action="Register">Register</a></span>
+    <br>
+    -> <span class="badge badge-warning mb-3"><a asp-area="Identity" asp-controller="Account" asp-action="Login">Login</a></span>
+    <br>
+</div>

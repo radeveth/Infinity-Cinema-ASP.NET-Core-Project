@@ -56,12 +56,22 @@
                 {
                     MovieCommentId = commentId,
                     UserId = userId,
+                    Vote = isLikeVote == true ? VoteType.Like : VoteType.Dislike,
                 };
+
                 await this.dbContext.MovieCommentVotes.AddAsync(movieCommentVote);
                 await this.dbContext.SaveChangesAsync();
             }
 
-            movieCommentVote.Vote = isLikeVote == true ? VoteType.Like : VoteType.Dislike;
+            if ((movieCommentVote.Vote == VoteType.Like && isLikeVote == true) || (movieCommentVote.Vote == VoteType.Dislike && isLikeVote == false))
+            {
+                movieCommentVote.Vote = VoteType.Neutral;
+            }
+            else
+            {
+                movieCommentVote.Vote = isLikeVote == true ? VoteType.Like : VoteType.Dislike;
+            }
+
             await this.dbContext.SaveChangesAsync();
 
             MovieCommentViewModel comment = this.GetViewModelById<MovieCommentViewModel>(commentId);

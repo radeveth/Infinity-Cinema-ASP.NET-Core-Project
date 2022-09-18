@@ -65,5 +65,11 @@
             return this.View(
                 new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
         }
+
+        [HttpGet]
+        public IActionResult SiteMap()
+        {
+            return this.View();
+        }
     }
 }

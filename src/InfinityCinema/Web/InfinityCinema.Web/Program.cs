@@ -138,13 +138,18 @@ namespace InfinityCinema.Web
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
             }
+            else if (app.Environment.IsProduction())
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
+            }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 
-            // app.UseStatusCodePagesWithRedirects("/Home/HttpError?statusCode={0}");
+            app.UseStatusCodePagesWithRedirects("/Home/StatusCodeError?statusCode={0}");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -158,6 +163,14 @@ namespace InfinityCinema.Web
             app.MapControllerRoute(name: "areaRoute", pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+
+            app.Map("/forme", (app) =>
+            {
+                app.Run(async (context) =>
+                {
+                    await context.Response.WriteAsync("Hello, I am Rado");
+                });
+            });
         }
     }
 }

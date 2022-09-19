@@ -1,5 +1,6 @@
 ﻿namespace InfinityCinema.Web.Controllers
 {
+    using System;
     using System.Diagnostics;
 
     using InfinityCinema.Data.Models;
@@ -70,6 +71,17 @@
         public IActionResult SiteMap()
         {
             return this.View();
+        }
+
+        public IActionResult StatusCodeError(int statusCode)
+        {
+            if (statusCode == 404)
+            {
+                return this.View();
+            }
+
+            return this.RedirectToAction(nameof(this.Error), "Home");
+
         }
     }
 }

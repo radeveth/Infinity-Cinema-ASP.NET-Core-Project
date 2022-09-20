@@ -7,6 +7,12 @@
 
     public class IndexViewModel
     {
+        public IndexViewModel()
+        {
+            this.TopThreeRatedMovies = new List<MovieHomeViewModel>();
+            this.SavdMoviesFromUser = new List<UserSavedMovieViewModel>();
+        }
+
         public List<MovieHomeViewModel> TopThreeRatedMovies { get; set; }
 
         public IEnumerable<UserSavedMovieViewModel> SavdMoviesFromUser { get; set; }

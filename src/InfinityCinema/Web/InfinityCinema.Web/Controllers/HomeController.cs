@@ -28,7 +28,7 @@
         [HttpGet]
         public IActionResult Index()
         {
-            IndexViewModel indexViewModel;
+            IndexViewModel indexViewModel = new IndexViewModel();
             if (this.signInManager.IsSignedIn(this.User))
             {
                 string userId = ClaimsPrincipalExtensions.GetId(this.User);

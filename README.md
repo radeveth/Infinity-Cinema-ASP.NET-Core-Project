@@ -13,6 +13,23 @@ Infinity Cinema is an application in which you can read a brief description, vie
 https://infinitycinema.azurewebsites.net/
 
 
+## :hammer: Used technologies
+* [ASP.NET Core 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+* ASP.NET Core areas
+* [Entity Framework Core 6.0](https://learn.microsoft.com/en-us/ef/core/)
+* [SendGrid](https://github.com/sendgrid)
+* [HtmlSanitizer](https://github.com/mganss/HtmlSanitizer)
+* [TinyMCE](https://github.com/tinymce/)
+* [Bootstrap](https://github.com/twbs/bootstrap)
+* [Bootstrap Lazy Kit](https://bootstrapbay.github.io/lazy-kit/)
+* [Moment.js](https://www.nuget.org/packages/Moment.js/ "Moment.js")
+* AJAX real-time Requests
+* [jQuery](https://github.com/jquery/jquery)
+* JavaScript
+* [xUnit](https://github.com/xunit/xunit)
+* [In-Memory Database](https://learn.microsoft.com/en-us/sql/relational-databases/in-memory-database?view=sql-server-ver16)
+
+
 ## Images
 #### • The application have modern and beautiful header and footer.
 #### • SignUp/SignIn Pages
@@ -62,23 +79,6 @@ https://infinitycinema.azurewebsites.net/
 ![2022-09-18 (35)](https://user-images.githubusercontent.com/88380154/190926373-f3db309c-95ce-41a2-824c-697442f9ce24.png)
 ![2022-09-18 (37)](https://user-images.githubusercontent.com/88380154/190926565-9d5e5809-d470-42b9-b3d0-87baf760edf5.png)
 ![2022-09-18 (38)](https://user-images.githubusercontent.com/88380154/190926597-29d57620-d498-4c73-b31d-aceb3bbc01c1.png)
-
-
-## :hammer: Used technologies
-* [ASP.NET Core 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
-* ASP.NET Core areas
-* [Entity Framework Core 6.0](https://learn.microsoft.com/en-us/ef/core/)
-* [SendGrid](https://github.com/sendgrid)
-* [HtmlSanitizer](https://github.com/mganss/HtmlSanitizer)
-* [TinyMCE](https://github.com/tinymce/)
-* [Bootstrap](https://github.com/twbs/bootstrap)
-* [Bootstrap Lazy Kit](https://bootstrapbay.github.io/lazy-kit/)
-* [Moment.js](https://www.nuget.org/packages/Moment.js/ "Moment.js")
-* AJAX real-time Requests
-* [jQuery](https://github.com/jquery/jquery)
-* JavaScript
-* [xUnit](https://github.com/xunit/xunit)
-* [In-Memory Database](https://learn.microsoft.com/en-us/sql/relational-databases/in-memory-database?view=sql-server-ver16)
 
 
 ## Author

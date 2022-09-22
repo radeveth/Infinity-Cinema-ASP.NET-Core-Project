@@ -14,6 +14,8 @@
 
 	<PropertyGroup>
 		<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+		<ApplicationInsightsResourceId>/subscriptions/3aad2176-691e-4045-9d32-4d8b05a8fa2e/resourceGroups/infinitycinema_group/providers/microsoft.insights/components/InfinityCinemaWeb</ApplicationInsightsResourceId>
+		<EnableMSDeployAppOffline>true</EnableMSDeployAppOffline>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -29,6 +31,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="HtmlSanitizer" Version="7.1.542" />
+		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="6.0.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />

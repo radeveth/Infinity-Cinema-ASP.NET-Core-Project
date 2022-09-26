@@ -33,6 +33,7 @@
 		<PackageReference Include="HtmlSanitizer" Version="7.1.542" />
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="6.0.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.8">

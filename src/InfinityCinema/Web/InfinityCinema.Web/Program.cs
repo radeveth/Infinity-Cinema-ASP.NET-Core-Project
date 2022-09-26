@@ -44,6 +44,8 @@ namespace InfinityCinema.Web
 
     public class Program
     {
+        private const string CorsName = "AllowOrigin";
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -119,6 +121,21 @@ namespace InfinityCinema.Web
             services.AddTransient<IVoteService, VoteService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<ICategoryService, CategoryService>();
+
+            services.AddCors();
+
+            // Named Policy
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    name: CorsName,
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:44351", "http://localhost:4200")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+            });
         }
 
         private static void Configure(WebApplication app)
@@ -163,6 +180,9 @@ namespace InfinityCinema.Web
             app.MapControllerRoute(name: "areaRoute", pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+
+            app.UseCors();
+            app.UseCors(CorsName);
 
             app.Map("/forme", (app) =>
             {

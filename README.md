@@ -15,7 +15,7 @@ https://infinitycinema.azurewebsites.net/
 
 ## :hammer: Used technologies
 * [ASP.NET Core 6.0](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
-* ASP.NET Core areas
+* [ASP.NET Core Areas](https://learn.microsoft.com/en-us/aspnet/core/mvc/controllers/areas?view=aspnetcore-6.0)
 * [Entity Framework Core 6.0](https://learn.microsoft.com/en-us/ef/core/)
 * [SendGrid](https://github.com/sendgrid)
 * [HtmlSanitizer](https://github.com/mganss/HtmlSanitizer)
@@ -23,7 +23,7 @@ https://infinitycinema.azurewebsites.net/
 * [Bootstrap](https://github.com/twbs/bootstrap)
 * [Bootstrap Lazy Kit](https://bootstrapbay.github.io/lazy-kit/)
 * [Moment.js](https://www.nuget.org/packages/Moment.js/ "Moment.js")
-* AJAX real-time Requests
+* AJAX
 * [jQuery](https://github.com/jquery/jquery)
 * JavaScript
 * [xUnit](https://github.com/xunit/xunit)
